@@ -1,4 +1,4 @@
-package graphWiz.visual;
+package graphWiz;
 
 
 import java.awt.*;
@@ -16,6 +16,7 @@ import org.jgrapht.graph.*;
 // resolve ambiguity
 //import org.jgrapht.graph.DefaultEdge;
 import graphWiz.model.*;
+import graphWiz.visual.GWizCellViewFactory;
 
 /**
  * A demo applet that shows how to use JGraph to visualize JGraphT graphs.

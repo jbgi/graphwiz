@@ -11,17 +11,17 @@ public class Dijkstra extends GraphManipulator implements Algorithm {
 	}
 
 	private void checkAllSuccessorUpdated(GWizVertex vertex){
-		Iterator<GWizEdge> i = getCurrentGraph().outgoingEdgesOf(vertex).iterator();
+		Iterator<GWizEdge> i = getGraph().outgoingEdgesOf(vertex).iterator();
 		boolean allUpdated = true;
 		while (i.hasNext() && allUpdated){
-			allUpdated = getCurrentGraph().getEdgeTarget(i.next()).isUpdated() && allUpdated;
+			allUpdated = getGraph().getEdgeTarget(i.next()).isUpdated() && allUpdated;
 		}
 		if (allUpdated){
 			vertex.fixeMe();
-			Iterator<GWizEdge> j = getCurrentGraph().outgoingEdgesOf(vertex).iterator();
+			Iterator<GWizEdge> j = getGraph().outgoingEdgesOf(vertex).iterator();
 			while (j.hasNext()){
 				GWizEdge edge = j.next();
-				getCurrentGraph().getEdgeTarget(edge).setUpdated(false);
+				getGraph().getEdgeTarget(edge).setUpdated(false);
 				edge.setDescription(Description.REGULAR);
 			}
 		}
@@ -52,7 +52,7 @@ public class Dijkstra extends GraphManipulator implements Algorithm {
 
 	public boolean isEnd() {
 		boolean allFixed = true;
-		Iterator<GWizVertex> i = getCurrentGraph().vertexSet().iterator();
+		Iterator<GWizVertex> i = getGraph().vertexSet().iterator();
 		while (i.hasNext() && !allFixed)
 			allFixed = allFixed && i.next().isFixed();
 		return allFixed;
@@ -64,9 +64,15 @@ public class Dijkstra extends GraphManipulator implements Algorithm {
 	
 	public void nextStep(){
 		saveGraph();
-		if (!isEnd())
-			updateSuccessorOf(selectVertex());
+		if (!isEnd()){
+			GWizVertex selectedVertex = selectVertex();
+			if (selectedVertex.isFixing())
+				updateSuccessorOf(selectedVertex);
+			else
+				selectedVertex.setFixing(true);
 		}
+		//this.
+	}
 
 	public void previousStep(){
 		if(!isStart())
@@ -76,7 +82,7 @@ public class Dijkstra extends GraphManipulator implements Algorithm {
 	private GWizVertex selectVertex() {
 		GWizVertex selectedVertex = startingVertex;
 		double minValuation = Double.POSITIVE_INFINITY;
-		Iterator<GWizVertex> i = getCurrentGraph().vertexSet().iterator();
+		Iterator<GWizVertex> i = getGraph().vertexSet().iterator();
 		GWizVertex nextVertex;
 		while (i.hasNext()){
 			nextVertex = i.next();
@@ -87,7 +93,6 @@ public class Dijkstra extends GraphManipulator implements Algorithm {
 				minValuation = selectedVertex.getValuation();
 			}
 		}
-		selectedVertex.setFixing(true);
 		return selectedVertex;
 	}
 
@@ -96,15 +101,15 @@ public class Dijkstra extends GraphManipulator implements Algorithm {
 	}
 
 	private void updateSuccessorOf(GWizVertex vertex){
-		Iterator<GWizEdge> i = getCurrentGraph().outgoingEdgesOf(vertex).iterator();
+		Iterator<GWizEdge> i = getGraph().outgoingEdgesOf(vertex).iterator();
 		GWizVertex succ;
 		GWizEdge edge;
 		boolean oneUpdate=false;
 		while (i.hasNext() && !oneUpdate){
 			edge = i.next();
-		   	succ = getCurrentGraph().getEdgeTarget(edge);
-		   	if (!succ.isFixed() && !succ.isUpdated() && vertex.getValuation() + getCurrentGraph().getEdgeWeight(edge) <= succ.getValuation()){
-		   		succ.setValuation(vertex.getValuation()+getCurrentGraph().getEdgeWeight(edge));
+		   	succ = getGraph().getEdgeTarget(edge);
+		   	if (!succ.isFixed() && !succ.isUpdated() && vertex.getValuation() + getGraph().getEdgeWeight(edge) <= succ.getValuation()){
+		   		succ.setValuation(vertex.getValuation()+getGraph().getEdgeWeight(edge));
 		   		succ.setPred(vertex);
 		   		succ.setUpdated(true);
 				edge.setDescription(Description.EXPLORER);
