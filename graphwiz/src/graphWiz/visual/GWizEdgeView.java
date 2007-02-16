@@ -1,0 +1,88 @@
+/*
+ * @(#)EdgeView.java	1.0 03-JUL-04
+ * 
+ * Copyright (c) 2001-2004 Gaudenz Alder
+ *  
+ */
+package graphWiz.visual;
+
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.SwingUtilities;
+
+import org.jgraph.JGraph;
+import org.jgraph.plaf.GraphUI;
+import org.jgraph.plaf.basic.BasicGraphUI;
+import org.jgraph.graph.AbstractCellView;
+import org.jgraph.graph.CellHandle;
+import org.jgraph.graph.CellMapper;
+import org.jgraph.graph.CellView;
+import org.jgraph.graph.CellViewRenderer;
+import org.jgraph.graph.Edge;
+import org.jgraph.graph.EdgeView;
+import org.jgraph.graph.GraphConstants;
+import org.jgraph.graph.GraphContext;
+import org.jgraph.graph.GraphModel;
+import org.jgraph.graph.PortView;
+import org.jgraph.graph.ConnectionSet;
+
+/**
+ * The default implementation of an edge view. The getGWizEdgeRenderer method
+ * assumes a renderer of type GWizEdgeRenderer. If you provide a custom renderer to
+ * a subclass, you must also override the methods that call this method, namely:
+ * getShape, getLabelBounds, getExtraLabelBounds, intersects and getBounds.
+ * 
+ * @version 1.0 1/1/02
+ * @author Gaudenz Alder
+ */
+
+public class GWizEdgeView extends EdgeView {
+
+	/** Renderer for the class. */
+	public static transient GWizEdgeRenderer renderer = new GWizEdgeRenderer();
+
+	/**
+	 * Constructs an empty edge view.
+	 */
+	public GWizEdgeView() {
+		super();
+	}
+
+	/**
+	 * Constructs an edge view for the specified model object.
+	 * 
+	 * @param cell
+	 *            reference to the model object
+	 */
+	public GWizEdgeView(Object cell) {
+		super(cell);
+	}
+
+	//
+	// Data Source
+	//
+
+
+	/**
+	 * Returns a renderer for the class.
+	 */
+	public CellViewRenderer getRenderer() {
+		return renderer;
+	}
+}

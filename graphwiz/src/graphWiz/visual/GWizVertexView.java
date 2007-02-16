@@ -48,7 +48,7 @@ public class GWizVertexView extends VertexView {
 		 */
 		public Dimension getPreferredSize() {
 			Dimension d = super.getPreferredSize();
-			d.width += d.width / 8;
+			d.width += d.width / 2;
 			d.height += d.height / 2;
 			return d;
 		}

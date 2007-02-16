@@ -3,6 +3,7 @@ package graphWiz;
 
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Vector;
 
 import javax.swing.*;
 
@@ -17,6 +18,7 @@ import org.jgrapht.graph.*;
 //import org.jgrapht.graph.DefaultEdge;
 import graphWiz.model.*;
 import graphWiz.visual.GWizCellViewFactory;
+import graphWiz.visual.SpringEmbeddedLayoutAlgorithm;
 
 /**
  * A demo applet that shows how to use JGraph to visualize JGraphT graphs.
@@ -37,7 +39,7 @@ public class Graphtest
     //~ Instance fields -------------------------------------------------------
 
     //
-    private JGraphModelAdapter jgAdapter;
+    private GWizModelAdapter jgAdapter;
 
     //~ Methods ---------------------------------------------------------------
 
@@ -69,7 +71,7 @@ public class Graphtest
         GWizGraph g = new GWizGraph();
 
         // create a visualization using JGraph, via an adapter
-        jgAdapter = new JGraphModelAdapter<GWizVertex, GWizEdge>(g);
+        jgAdapter = new GWizModelAdapter(g);
 
         JGraph jgraph = new JGraph(new GraphLayoutCache(jgAdapter, new GWizCellViewFactory()));
 
@@ -77,32 +79,60 @@ public class Graphtest
         getContentPane().add(jgraph);
         resize(DEFAULT_SIZE);
 
-        GWizVertex v1 = new GWizVertex("v1");
-        GWizVertex v2 = new GWizVertex("v2");
-        GWizVertex v3 = new GWizVertex("v3");
-        GWizVertex v4 = new GWizVertex("v4");
-        
+        GWizVertex v1 = new GWizVertex("1");
+
+        GWizVertex v2 = new GWizVertex("2");
+        GWizVertex v3 = new GWizVertex("3");
+        GWizVertex v4 = new GWizVertex("4");
+        GWizVertex v5 = new GWizVertex("5");
         
         // add some sample data (graph manipulated via JGraphT)
         g.addVertex(v1);
         g.addVertex(v2);
         g.addVertex(v3);
         g.addVertex(v4);
+        g.addVertex(v5);
 
         g.addEdge(v1, v2);
+        g.addEdge(v1, v4);
         g.addEdge(v2, v3);
-        g.addEdge(v3, v1);
-        g.addEdge(v4, v3);
+        g.addEdge(v3, v4);
+        g.addEdge(v4, v2);
+        g.addEdge(v3, v5);
+        g.addEdge(v4, v5);
+        
+        g.setEdgeWeight(g.getEdge(v1, v2), 1);
+        g.setEdgeWeight(g.getEdge(v1, v4), 5);
+        g.setEdgeWeight(g.getEdge(v2, v3), 3);
+        g.setEdgeWeight(g.getEdge(v3, v4), 0);
+        g.setEdgeWeight(g.getEdge(v4, v2), 1);
+        g.setEdgeWeight(g.getEdge(v3, v5), 2);
+        g.setEdgeWeight(g.getEdge(v4, v5), 1);
+        
+        Vector<DefaultGraphCell> cellList = new Vector<DefaultGraphCell>();
+        cellList.add(jgAdapter.getVertexCell(v1));
+        cellList.add(jgAdapter.getVertexCell(v2));
+        cellList.add(jgAdapter.getVertexCell(v3));
+        cellList.add(jgAdapter.getVertexCell(v4));
+        cellList.add(jgAdapter.getVertexCell(v5));
+        
+        GraphConstants.setAutoSize(jgAdapter.getVertexCell(v1).getAttributes(), true);
+        GraphConstants.setAutoSize(jgAdapter.getVertexCell(v2).getAttributes(), true);
+        GraphConstants.setAutoSize(jgAdapter.getVertexCell(v3).getAttributes(), true);
+        GraphConstants.setAutoSize(jgAdapter.getVertexCell(v4).getAttributes(), true);
+        GraphConstants.setAutoSize(jgAdapter.getVertexCell(v5).getAttributes(), true);
         
         GraphConstants.setBackground(jgAdapter.getVertexCell(v1).getAttributes(), Color.BLACK);
         // position vertices nicely within JGraph component
-        positionVertexAt(v1, 130, 40);
-        positionVertexAt(v2, 60, 200);
-        positionVertexAt(v3, 310, 230);
-        positionVertexAt(v4, 380, 70);
-
+        //positionVertexAt(v1, 130, 40);
+        //positionVertexAt(v2, 60, 200);
+        //positionVertexAt(v3, 310, 230);
+        //positionVertexAt(v4, 380, 70);
         
-        
+        SpringEmbeddedLayoutAlgorithm layout = new SpringEmbeddedLayoutAlgorithm();
+        layout.setFrame(new Rectangle(220,150));
+        //layout.setMaxIterations(-1);
+        SpringEmbeddedLayoutAlgorithm.applyLayout(jgraph, layout, cellList.toArray());
         // that's all there is to it!...
     }
 

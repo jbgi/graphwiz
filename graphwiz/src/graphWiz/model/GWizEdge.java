@@ -11,7 +11,7 @@ public class GWizEdge extends DefaultWeightedEdge {
 	
 	private Description description;
 	
-	private String info;
+	private String info =  "1";
 
 	public Description getDescription() {
 		return this.description;
@@ -25,8 +25,12 @@ public class GWizEdge extends DefaultWeightedEdge {
 		this.description = description;
 	}
 
-	public void setInfo(final String info) {
+	public void setInfo(String info) {
 		this.info = info;
+	}
+	
+	public String toString(){
+		return info;
 	}
 
 }
