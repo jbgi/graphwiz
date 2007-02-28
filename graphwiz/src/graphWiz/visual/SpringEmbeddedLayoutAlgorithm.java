@@ -166,27 +166,6 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
     }
 
     /**
-     * Replace all cells inside the frame because have cells with valeu negative
-     * for x and y
-     *
-     * @param vertices :
-     *            list all vertices
-     * @param frameRectangle :
-     *            Rectangle where x and y have the minX and minY the all cells
-     *            in the graph.
-     */
-    private void replaceInsideFrame(List vertices, Rectangle2D frameRectangle) {
-        for (int i = 0; i < vertices.size(); i++) {
-            VertexView vertex = (VertexView) vertices.get(i);
-            Rectangle2D vPos = getVertexPosition(vertex, SPRING_EMBEDDED_POS);
-            Rectangle2D newRandomPosition = new Rectangle2D.Double(vPos.getX()
-                    - frameRectangle.getX(), vPos.getY()
-                    - frameRectangle.getY(), vPos.getWidth(), vPos.getHeight());
-            updateVertexPosition(vertex, SPRING_EMBEDDED_POS, newRandomPosition);
-        }
-    }
-
-    /**
      * The implementation of the layout algorithm.
      *
      * @param graph :
@@ -246,10 +225,6 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
         //calculate the stretch factor and the movement factor
         //to fit the calculated frame to the selected Frame
         Rectangle2D calculateFrame = calculateNewFrame(vertices);
-        //replaceInsideFrame(vertices, calculateFrame);
-
-        //calculateFrame.setFrame(0, 0, 900, 900);//this is necessary because
-                                      // the frame have w=500 and h=500
 
         double stretchX = (myFrame.width) / (calculateFrame.getWidth());
 
@@ -259,9 +234,6 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
 
         int movementY = (int) (myFrame.y - calculateFrame.getY());
 
-        System.out.println("calculateFrame : " + calculateFrame);
-        
-        
         Map viewMap = drawGraph(layoutCache.getMapping(dynamic_cells, false),
                 movementX, stretchX, movementY, stretchY);
 
