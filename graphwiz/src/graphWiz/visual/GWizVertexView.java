@@ -8,12 +8,14 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-
 import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.VertexRenderer;
 import org.jgraph.graph.VertexView;
 
+/**
+ * @author  jbg
+ */
 @SuppressWarnings("serial")
 public class GWizVertexView extends VertexView {
 
@@ -34,6 +36,7 @@ public class GWizVertexView extends VertexView {
 	}
 
 	/**
+	 * @uml.property  name="renderer"
 	 */
 	public CellViewRenderer getRenderer() {
 		return renderer;
@@ -48,8 +51,8 @@ public class GWizVertexView extends VertexView {
 		 */
 		public Dimension getPreferredSize() {
 			Dimension d = super.getPreferredSize();
-			d.width += d.width / 2;
-			d.height += d.height / 2;
+			d.width *= 2.5 ;
+			d.height *= 2 ;
 			return d;
 		}
 		

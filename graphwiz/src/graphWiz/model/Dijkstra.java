@@ -1,11 +1,13 @@
 package graphWiz.model;
 import graphWiz.model.GWizEdge.Description;
-
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Stack;
 import java.util.Vector;
 
+/**
+ * @author  jbg
+ */
 public class Dijkstra extends Observable implements Algorithm {
 
 	private Stack<Vector<Description>> edgesDescriptionHistory;
@@ -79,6 +81,10 @@ public class Dijkstra extends Observable implements Algorithm {
 		}
 	}
 
+	/**
+	 * @param graph  the graph to set
+	 * @uml.property  name="graph"
+	 */
 	public void setGraph(GWizGraph gWizGraph) {
 		graph = gWizGraph;
 		edgesDescriptionHistory.clear();
@@ -87,6 +93,10 @@ public class Dijkstra extends Observable implements Algorithm {
 		verticesValuationHistory.clear();
 	}
 
+	/**
+	 * @param startingVertex  the startingVertex to set
+	 * @uml.property  name="startingVertex"
+	 */
 	public void setStartingVertex (GWizVertex startingVertex) {
 		this.startingVertex = startingVertex;
 	}

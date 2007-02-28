@@ -30,12 +30,10 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import org.jgraph.JGraph;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.GraphConstants;
@@ -43,7 +41,7 @@ import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.VertexView;
 
 /**
- *
+ * @author  jbg
  */
 public abstract class JGraphLayoutAlgorithm {
 
@@ -64,7 +62,11 @@ public abstract class JGraphLayoutAlgorithm {
 	/**
 	 * Set to non zero if you want to indicate progress
 	 */
-	int progress = 0, maximumProgress = 0;
+	int progress = 0 ;
+	/**
+	 * Set to non zero if you want to indicate progress
+	 */
+	int maximumProgress = 0 ;
 
 	/**
 	 * Subclassers may return a new JComponent that
@@ -106,13 +108,15 @@ public abstract class JGraphLayoutAlgorithm {
 								Object[] static_cells);
 
 	/**
-	 * @return Returns the isAllowedToRun.
+	 * @return  Returns the isAllowedToRun.
+	 * @uml.property  name="isAllowedToRun"
 	 */
 	public boolean isAllowedToRun() {
 		return isAllowedToRun;
 	}
 	/**
-	 * @param isAllowedToRun The isAllowedToRun to set.
+	 * @param isAllowedToRun  The isAllowedToRun to set.
+	 * @uml.property  name="isAllowedToRun"
 	 */
 	public void setAllowedToRun(boolean isAllowedToRun) {
 		this.isAllowedToRun = isAllowedToRun;
@@ -120,6 +124,7 @@ public abstract class JGraphLayoutAlgorithm {
 	
 	/**
 	 * Returns the maximum progress
+	 * @uml.property  name="maximumProgress"
 	 */
 	public int getMaximumProgress() {
 		return maximumProgress;
@@ -127,6 +132,7 @@ public abstract class JGraphLayoutAlgorithm {
 
 	/**
 	 * Sets the maximum progress.
+	 * @uml.property  name="maximumProgress"
 	 */
 	public void setMaximumProgress(int maximumProgress) {
 		this.maximumProgress = maximumProgress;
@@ -134,13 +140,15 @@ public abstract class JGraphLayoutAlgorithm {
 
 	/**
 	 * Returns the current progress
+	 * @uml.property  name="progress"
 	 */
 	public int getProgress() {
 		return progress;
 	}
 
 	/**
-	 * @param progress The progress complete amount
+	 * @param progress  The progress complete amount
+	 * @uml.property  name="progress"
 	 */
 	public void setProgress(int progress) {
 		this.progress = progress;

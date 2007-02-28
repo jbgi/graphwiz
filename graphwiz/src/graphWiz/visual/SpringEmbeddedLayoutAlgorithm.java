@@ -107,6 +107,8 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
     private Rectangle myFrame = null;
 
     private int myMaxIterations = -1;
+    
+    private double scale = 1;
 
     public SpringEmbeddedLayoutAlgorithm() {
         myFrame = new Rectangle(0, 0, 500, 500); //It's ok 500,500
@@ -244,9 +246,9 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
         //calculate the stretch factor and the movement factor
         //to fit the calculated frame to the selected Frame
         Rectangle2D calculateFrame = calculateNewFrame(vertices);
-        replaceInsideFrame(vertices, calculateFrame);
+        //replaceInsideFrame(vertices, calculateFrame);
 
-        calculateFrame.setFrame(0, 0, 900, 900);//this is necessary because
+        //calculateFrame.setFrame(0, 0, 900, 900);//this is necessary because
                                       // the frame have w=500 and h=500
 
         double stretchX = (myFrame.width) / (calculateFrame.getWidth());
@@ -257,6 +259,9 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
 
         int movementY = (int) (myFrame.y - calculateFrame.getY());
 
+        System.out.println("calculateFrame : " + calculateFrame);
+        
+        
         Map viewMap = drawGraph(layoutCache.getMapping(dynamic_cells, false),
                 movementX, stretchX, movementY, stretchY);
 
@@ -291,21 +296,12 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
             VertexView vertex = (VertexView) vertices.get(loop);
             vertW = (int) vertex.getBounds().getWidth();
             vertH = (int) vertex.getBounds().getHeight();
-
             frameW = myFrame.width;
             frameH = myFrame.height;
 
             newX = random.nextInt(frameW);
-            //Verify if newX is out of MyFrame
-            while (newX < 0) {
-                newX = random.nextInt(frameW);
-            }
 
             newY = random.nextInt(frameH);
-            //Verify if newY is out of MyFrame
-            while (newY < 0) {
-                newY = random.nextInt(frameW);
-            }
 
             //System.out.println("Vertex = " + vertex.getCell().toString() + "
             // x = " + newX + " y = " + newY + " w = " + vertW + " h = "
@@ -460,18 +456,18 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
             Random random = new Random();
 
             //Take the new position inside the Frame
-            int newX = random.nextInt(500);
+            int newX = random.nextInt((int) myFrame.getWidth());
 
             //Verify if newX is outSide of MyFrame
             while (newX < 0) {
-                newX = random.nextInt((int) vertex.getBounds().getCenterX());
+                newX = random.nextInt((int) myFrame.getWidth());
             }
 
             //Take the new position inside the Frame
-            int newY = random.nextInt(500);
+            int newY = random.nextInt((int) myFrame.getHeight());
             //Verify if newY is outSide of MyFrame
             while (newY < 0) {
-                newY = random.nextInt((int) vertex.getBounds().getCenterY());
+                newY = random.nextInt((int) myFrame.getHeight());
             }
 
             //System.out.println("Vertex = " + vertex.getCell().toString() + "
@@ -553,7 +549,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
 
 
     private Rectangle2D calculateNewFrame(List vertices) {
-        double x = 0, y = 0, w = 0, h = 0;
+        double x = Double.POSITIVE_INFINITY, y = Double.POSITIVE_INFINITY, w = 0, h = 0;
         // find the new positions for the
         // calculated frame
         Rectangle2D calculatedFrame = new Rectangle2D.Double();
@@ -564,35 +560,30 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
 
             //System.out.println( "vertex get: vPos = " + vPos ) ;
 
-            x = calculatedFrame.getX();
-            y = calculatedFrame.getY();
-            w = calculatedFrame.getWidth();
-            h = calculatedFrame.getHeight();
-
-            if (vPos.getX() < calculatedFrame.getX()) {
+            if (vPos.getX() < x) {
                 x = vPos.getX();
             }
-            if (vPos.getY() < calculatedFrame.getY()) {
+            if (vPos.getY() < y) {
                 y = vPos.getY();
             }
+        }
+        for (int vCount = 0; vCount < vertices.size(); vCount++) {
+            VertexView v = (VertexView) vertices.get(vCount);
+            Rectangle2D vPos = getVertexPosition(v, SPRING_EMBEDDED_POS);
 
-            double width = vPos.getX() - calculatedFrame.getX();
-            if (width > calculatedFrame.getWidth()) {
+            double width = vPos.getX() - x;
+            if (width > w) {
                 w = width;
             }
 
-            double height = vPos.getY() - calculatedFrame.getY();
-            if (height > calculatedFrame.getHeight()) {
+            double height = vPos.getY() - y;
+            if (height > h) {
                 h = height;
             }
 
             //System.out.println( "vertex =" + v.getCell());
-            //System.out.println("x = " + x + " y = " + y + " w = " + w + " h =
-            // " + h);
-
-            calculatedFrame.setFrame(x, y, w, h);
-
         }
+        calculatedFrame.setFrame(x, y, w, h);
         return (calculatedFrame);
     }
 
@@ -620,16 +611,20 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
 
                 removeVertexPosition(vertex, SPRING_EMBEDDED_DISP);
 
-                //System.out.println( "vertex" + vertex.getCell() + "children =
-                // " + vertex.getChildViews().length+ " newPosition = " +
-                // newPosition);
+                System.out.println( "vertex" + vertex.getCell() + "children ="
+                		+ vertex.getChildViews().length+ " newPosition = "
+                		+ newPosition);
 
                 // update the location to get the correct
-                newPosition.setFrame((newPosition.getX() + movementX)
-                        * stretchX,
-                        (newPosition.getY() + movementY) * stretchY,
-                        newPosition.getWidth(), newPosition.getHeight());
-
+                newPosition.setFrame(Math.min(Math.max((newPosition.getX() + movementX) * stretchX, 25/scale),
+                		myFrame.getWidth()-newPosition.getWidth() - 25/scale),
+                        Math.min(Math.max((newPosition.getY() + movementY) * stretchY, 25/scale),
+                        		myFrame.getHeight()-newPosition.getHeight() - 25/scale), 
+                        newPosition.getWidth(),newPosition.getHeight());
+                
+                System.out.println( "vertex" + vertex.getCell() + "children =" 
+                		+ vertex.getChildViews().length+ " newPosition = " 
+                		+ newPosition);
                 // update the view
                 AttributeMap vertAttrib = new AttributeMap();
                 GraphConstants.setBounds(vertAttrib, newPosition);
@@ -711,4 +706,9 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
         double norm = Math.sqrt(x * x + y * y);
         return norm;
     }
+
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
+
 }

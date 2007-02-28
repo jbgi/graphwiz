@@ -49,13 +49,10 @@ package graphWiz;
 import graphWiz.model.GWizEdge;
 import graphWiz.model.GWizGraph;
 import graphWiz.model.GWizVertex;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.*;
-
 import java.io.*;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,50 +61,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.swing.*;
-
 import org.jgraph.event.*;
 import org.jgraph.event.GraphModelEvent.*;
 import org.jgraph.graph.*;
-
 import org.jgrapht.*;
 import org.jgrapht.event.*;
 
 /**
- * An adapter that reflects a JGraphT graph as a JGraph graph. This adapter is
- * useful when using JGraph in order to visualize JGraphT graphs. For more about
- * JGraph see <a href="http://jgraph.sourceforge.net">
- * http://jgraph.sourceforge.net</a>
- * 
- * <p>
- * Modifications made to the underlying JGraphT graph are reflected to this
- * JGraph model if and only if the underlying JGraphT graph is a {@link
- * org.jgrapht.ListenableGraph}. If the underlying JGraphT graph is <i>not</i>
- * ListenableGraph, then this JGraph model represent a snapshot if the graph at
- * the time of its creation.
- * </p>
- * 
- * <p>
- * Changes made to this JGraph model are also reflected back to the underlying
- * JGraphT graph. To avoid confusion, variables are prefixed according to the
- * JGraph/JGraphT object(s) they are referring to.
- * </p>
- * 
- * <p>
- * <b>KNOWN BUGS:</b> There is a small issue to be aware of. JGraph allows
- * 'dangling edges' incident with just one vertex; JGraphT doesn't. Such a
- * configuration can arise when adding an edge or removing a vertex. The code
- * handles this by removing the newly-added dangling edge or removing all edges
- * incident with the vertex before actually removing the vertex, respectively.
- * This works very well, only it doesn't play all that nicely with the
- * undo-manager in the JGraph: for the second situation where you remove a
- * vertex incident with some edges, if you undo the removal, the vertex is
- * 'unremoved' but the edges aren't.
- * </p>
- * 
- * @author Barak Naveh
- * @since Aug 2, 2003
+ * An adapter that reflects a JGraphT graph as a JGraph graph. This adapter is useful when using JGraph in order to visualize JGraphT graphs. For more about JGraph see <a href="http://jgraph.sourceforge.net"> http://jgraph.sourceforge.net</a> <p> Modifications made to the underlying JGraphT graph are reflected to this JGraph model if and only if the underlying JGraphT graph is a  {@link org.jgrapht.ListenableGraph} . If the underlying JGraphT graph is <i>not</i> ListenableGraph, then this JGraph model represent a snapshot if the graph at the time of its creation. </p> <p> Changes made to this JGraph model are also reflected back to the underlying JGraphT graph. To avoid confusion, variables are prefixed according to the JGraph/JGraphT object(s) they are referring to. </p> <p> <b>KNOWN BUGS:</b> There is a small issue to be aware of. JGraph allows 'dangling edges' incident with just one vertex; JGraphT doesn't. Such a configuration can arise when adding an edge or removing a vertex. The code handles this by removing the newly-added dangling edge or removing all edges incident with the vertex before actually removing the vertex, respectively. This works very well, only it doesn't play all that nicely with the undo-manager in the JGraph: for the second situation where you remove a vertex incident with some edges, if you undo the removal, the vertex is 'unremoved' but the edges aren't. </p>
+ * @author  Barak Naveh
+ * @since  Aug 2, 2003
  */
 
 /*
@@ -510,11 +474,15 @@ public class GWizModelAdapter extends DefaultGraphModel {
 	private final CellFactory<GWizVertex, GWizEdge> cellFactory;
 	/**
 	 * Maps JGraph edges to JGraphT edges
+	 * @uml.property  name="cellToEdge"
+	 * @uml.associationEnd  qualifier="key:java.lang.Object graphWiz.model.GWizEdge"
 	 */
 	private final Map<org.jgraph.graph.Edge, GWizEdge> cellToEdge = new HashMap<org.jgraph.graph.Edge, GWizEdge>();
 
 	/**
 	 * Maps JGraph vertices to JGraphT vertices
+	 * @uml.property  name="cellToVertex"
+	 * @uml.associationEnd  qualifier="key:java.lang.Object graphWiz.model.GWizVertex"
 	 */
 	private final Map<GraphCell, GWizVertex> cellToVertex = new HashMap<GraphCell, GWizVertex>();
 
@@ -525,6 +493,8 @@ public class GWizModelAdapter extends DefaultGraphModel {
 
 	/**
 	 * Maps JGraphT edges to JGraph edges
+	 * @uml.property  name="edgeToCell"
+	 * @uml.associationEnd  qualifier="key:java.lang.Object org.jgraph.graph.Edge"
 	 */
 	private final Map<GWizEdge, org.jgraph.graph.Edge> edgeToCell = new HashMap<GWizEdge, org.jgraph.graph.Edge>();
 
@@ -532,6 +502,8 @@ public class GWizModelAdapter extends DefaultGraphModel {
 
 	/**
 	 * Maps JGraphT vertices to JGraph vertices
+	 * @uml.property  name="vertexToCell"
+	 * @uml.associationEnd  qualifier="key:java.lang.Object org.jgraph.graph.GraphCell"
 	 */
 	private final Map<GWizVertex, GraphCell> vertexToCell = new HashMap<GWizVertex, GraphCell>();
 
@@ -665,8 +637,8 @@ public class GWizModelAdapter extends DefaultGraphModel {
 
 	/**
 	 * Returns the cell factory used to create the JGraph cells.
-	 * 
-	 * @return the cell factory used to create the JGraph cells.
+	 * @return  the cell factory used to create the JGraph cells.
+	 * @uml.property  name="cellFactory"
 	 */
 	public CellFactory<GWizVertex, GWizEdge> getCellFactory() {
 		return cellFactory;
@@ -674,19 +646,17 @@ public class GWizModelAdapter extends DefaultGraphModel {
 
 	/**
 	 * Returns the default edge attributes used for creating new JGraph edges.
-	 * 
-	 * @return the default edge attributes used for creating new JGraph edges.
+	 * @return  the default edge attributes used for creating new JGraph edges.
+	 * @uml.property  name="defaultEdgeAttributes"
 	 */
 	public AttributeMap getDefaultEdgeAttributes() {
 		return defaultEdgeAttributes;
 	}
 
 	/**
-	 * Returns the default vertex attributes used for creating new JGraph
-	 * vertices.
-	 * 
-	 * @return the default vertex attributes used for creating new JGraph
-	 *         vertices.
+	 * Returns the default vertex attributes used for creating new JGraph vertices.
+	 * @return  the default vertex attributes used for creating new JGraph  vertices.
+	 * @uml.property  name="defaultVertexAttributes"
 	 */
 	public AttributeMap getDefaultVertexAttributes() {
 		return defaultVertexAttributes;
@@ -706,6 +676,10 @@ public class GWizModelAdapter extends DefaultGraphModel {
 		return (DefaultEdge) edgeToCell.get(jGraphTEdge);
 	}
 
+	public GWizEdge getCellEdge(Edge jGraphEdge) {
+		return (GWizEdge) cellToEdge.get(jGraphEdge);
+	}
+	
 	/**
 	 * Returns the JGraph vertex cell that corresponds to the specified JGraphT
 	 * vertex. If no corresponding cell found, returns <code>null</code>.
@@ -742,9 +716,8 @@ public class GWizModelAdapter extends DefaultGraphModel {
 
 	/**
 	 * Sets the default edge attributes used for creating new JGraph edges.
-	 * 
-	 * @param defaultEdgeAttributes
-	 *            the default edge attributes to set.
+	 * @param defaultEdgeAttributes  the default edge attributes to set.
+	 * @uml.property  name="defaultEdgeAttributes"
 	 */
 	public void setDefaultEdgeAttributes(AttributeMap defaultEdgeAttributes) {
 		this.defaultEdgeAttributes = defaultEdgeAttributes;
@@ -752,9 +725,8 @@ public class GWizModelAdapter extends DefaultGraphModel {
 
 	/**
 	 * Sets the default vertex attributes used for creating new JGraph vertices.
-	 * 
-	 * @param defaultVertexAttributes
-	 *            the default vertex attributes to set.
+	 * @param defaultVertexAttributes  the default vertex attributes to set.
+	 * @uml.property  name="defaultVertexAttributes"
 	 */
 	public void setDefaultVertexAttributes(AttributeMap defaultVertexAttributes) {
 		this.defaultVertexAttributes = defaultVertexAttributes;
@@ -854,28 +826,10 @@ public class GWizModelAdapter extends DefaultGraphModel {
 			if (cellToEdge.containsKey(jEdge)) {
 				// edge already has a corresponding JGraphT edge.
 				// check if any change to its endpoints.
-				GWizEdge jtEdge = cellToEdge.get(jEdge);
-
-				Object jSource = getSourceVertex(this, jEdge);
-				Object jTarget = getTargetVertex(this, jEdge);
-
-				Object jtSource = cellToVertex.get(jSource);
-				Object jtTarget = cellToVertex.get(jTarget);
-
-				if ((jtGraph.getEdgeSource(jtEdge) == jtSource)
-						&& (jtGraph.getEdgeTarget(jtEdge) == jtTarget)) {
-					handleJGraphRemovedEdge(jEdge);
-					handleJGraphInsertedEdge(jEdge);
-					// no change in edge's endpoints -- nothing to do.
-				} else {
-					// edge's end-points have changed -- need to refresh the
-					// JGraphT edge. Refresh by faking as if the edge has been
-					// removed from JGraph and then added again.
-					// ALSO HERE: consider an alternative that maintains user
-					// data
-					handleJGraphRemovedEdge(jEdge);
-					handleJGraphInsertedEdge(jEdge);
-				}
+				
+				handleJGraphRemovedEdge(jEdge);
+				handleJGraphInsertedEdge(jEdge);
+				
 			} else {
 				// a new edge
 				handleJGraphInsertedEdge(jEdge);
@@ -909,8 +863,15 @@ public class GWizModelAdapter extends DefaultGraphModel {
 			GWizVertex jtTarget = cellToVertex.get(jTarget);
 
 			GWizEdge jtEdge = jtGraph.addEdge(jtSource, jtTarget);
-			
+			try {
 			gWizGraph.setEdgeWeight(jtEdge, Double.parseDouble(jEdge.toString()));
+			}
+			catch (NumberFormatException e){
+				gWizGraph.setEdgeWeight(jtEdge, 1);
+			}
+			catch (NullPointerException e){
+				gWizGraph.setEdgeWeight(jtEdge, 1);
+			}
 
 			if (jtEdge != null) {
 				cellToEdge.put(jEdge, jtEdge);
@@ -1123,5 +1084,9 @@ public class GWizModelAdapter extends DefaultGraphModel {
 		if (vertexCell.getChildCount() > 0) {
 			remove(new Object[] { vertexCell.getChildAt(0) });
 		}
+	}
+
+	public GWizGraph getGWizGraph() {
+		return gWizGraph;
 	}
 }

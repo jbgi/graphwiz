@@ -2,6 +2,9 @@ package graphWiz.model;
 
 import org.jgrapht.VertexFactory;
 
+/**
+ * @author  jbg
+ */
 @SuppressWarnings("serial")
 public class GWizVertex implements VertexFactory<GWizVertex> {
 
@@ -37,10 +40,18 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 		fixed = true;
 	}
 
+	/**
+	 * @return  the name
+	 * @uml.property  name="name"
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @return  the pred
+	 * @uml.property  name="pred"
+	 */
 	public GWizVertex getPred() {
 		if (hasPred())
 			return pred;
@@ -48,14 +59,26 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 			return this;
 	}
 
+	/**
+	 * @return  the previousPred
+	 * @uml.property  name="previousPred"
+	 */
 	public GWizVertex getPreviousPred() {
 		return previousPred;
 	}
 
+	/**
+	 * @return  the previousValuation
+	 * @uml.property  name="previousValuation"
+	 */
 	public double getPreviousValuation() {
 		return previousValuation;
 	}
 
+	/**
+	 * @return  the valuation
+	 * @uml.property  name="valuation"
+	 */
 	public double getValuation() {
 		return valuation;
 	}
@@ -64,14 +87,26 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 		return hasPred;
 	}
 
+	/**
+	 * @return  the fixed
+	 * @uml.property  name="fixed"
+	 */
 	public boolean isFixed() {
 		return fixed;
 	}
 
+	/**
+	 * @return  the fixing
+	 * @uml.property  name="fixing"
+	 */
 	public boolean isFixing() {
 		return fixing;
 	}
 
+	/**
+	 * @return  the updated
+	 * @uml.property  name="updated"
+	 */
 	public boolean isUpdated() {
 		return updated;
 	}
@@ -80,40 +115,76 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 		return (valuation != Float.POSITIVE_INFINITY);
 	}
 	
+	/**
+	 * @param fixed  the fixed to set
+	 * @uml.property  name="fixed"
+	 */
 	public void setFixed(boolean fixed) {
 		this.fixed = fixed;
 	}
 
+	/**
+	 * @param fixing  the fixing to set
+	 * @uml.property  name="fixing"
+	 */
 	public void setFixing(boolean fixing) {
 		this.fixing = fixing;
 	}
 	
+	/**
+	 * @param hasPred  the hasPred to set
+	 * @uml.property  name="hasPred"
+	 */
 	public void setHasPred(boolean hasPred) {
 		this.hasPred = hasPred;
 	}
 
+	/**
+	 * @param name  the name to set
+	 * @uml.property  name="name"
+	 */
 	public void setName(final String nomDuNoeud) {
 		this.name = nomDuNoeud;
 	}
 
+	/**
+	 * @param pred  the pred to set
+	 * @uml.property  name="pred"
+	 */
 	public void setPred(GWizVertex pred) {
 		setPreviousPred(pred);
 		this.pred = pred;
 		hasPred = true;
 	}
 
+	/**
+	 * @param previousPred  the previousPred to set
+	 * @uml.property  name="previousPred"
+	 */
 	public void setPreviousPred(GWizVertex previousPred) {
 		this.previousPred = previousPred;
 	}
 
+	/**
+	 * @param previousValuation  the previousValuation to set
+	 * @uml.property  name="previousValuation"
+	 */
 	public void setPreviousValuation(double previousValuation) {
 		this.previousValuation = previousValuation;
 	}
 
+	/**
+	 * @param updated  the updated to set
+	 * @uml.property  name="updated"
+	 */
 	public void setUpdated(boolean updated) {
 		this.updated = updated;
 	}
 
+	/**
+	 * @param valuation  the valuation to set
+	 * @uml.property  name="valuation"
+	 */
 	public void setValuation(double valuation) {
 		setPreviousValuation(this.valuation);
 		this.valuation= valuation;

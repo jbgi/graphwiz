@@ -7,9 +7,10 @@
  */
 package graphWiz.visual;
 
+import graphWiz.GWizModelAdapter;
 import graphWiz.model.GWizEdge;
+import graphWiz.model.GWizEdge.Description;
 import graphWiz.model.GWizGraph;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
@@ -31,34 +32,35 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.Map;
-
 import javax.swing.JComponent;
 import javax.swing.UIManager;
-
 import org.jgraph.JGraph;
-import org.jgraph.util.Bezier;
-import org.jgraph.util.Spline2D;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.CellViewRenderer;
+import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.Edge;
 import org.jgraph.graph.EdgeRenderer;
 import org.jgraph.graph.GraphConstants;
+import org.jgraph.util.Bezier;
+import org.jgraph.util.Spline2D;
 import org.jgrapht.ext.JGraphModelAdapter;
 
 /**
  * This renderer displays entries that implement the CellView interface.
- * 
- * @version 1.0 1/1/02
- * @author Gaudenz Alder
+ * @version  1.0 1/1/02
+ * @author  Gaudenz Alder
  */
 
 public class GWizEdgeRenderer extends EdgeRenderer {
 
+	private GWizModelAdapter jgAdapter;
+	
 	/**
 	 * Constructs a renderer that may be used to render edges.
 	 */
-	public GWizEdgeRenderer() {
+	public GWizEdgeRenderer(GWizModelAdapter jgAdapter) {
 		super();
+		this.jgAdapter=jgAdapter;
 	}
 	
 	/**
@@ -77,7 +79,7 @@ public class GWizEdgeRenderer extends EdgeRenderer {
 				setOpaque(false);
 				//super.paint(g);
 				translateGraphics(g);
-				g.setColor(getForeground());
+				g.setColor(getEdgeColor());
 				if (lineWidth > 0) {
 					g2.setStroke(new BasicStroke(lineWidth, c, j));
 					if (gradientColor != null && !preview) {
@@ -126,7 +128,7 @@ public class GWizEdgeRenderer extends EdgeRenderer {
 				}
 				if (graph.getEditingCell() != view.getCell()) {
 					g.setFont(getFont());
-					Object label = graph.convertValueToString(view.getCell());
+					Object label = jgAdapter.getGWizGraph().getEdgeWeight(jgAdapter.getCellEdge((DefaultEdge) view.getCell()));
 					if (label != null) {
 						paintLabel(g, label.toString(), getLabelPosition(view),
 								true);
@@ -136,6 +138,13 @@ public class GWizEdgeRenderer extends EdgeRenderer {
 		} else {
 			paintSelectionBorder(g);
 		}
+	}
+	
+	private Color getEdgeColor(){
+		if (jgAdapter.getCellEdge((DefaultEdge) view.getCell()).getDescription()==Description.REGULAR )
+			return Color.BLUE;
+		else return Color.BLACK;
+			
 	}
 
 }
