@@ -611,9 +611,9 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
 
                 removeVertexPosition(vertex, SPRING_EMBEDDED_DISP);
 
-                System.out.println( "vertex" + vertex.getCell() + "children ="
-                		+ vertex.getChildViews().length+ " newPosition = "
-                		+ newPosition);
+//                System.out.println( "vertex" + vertex.getCell() + "children ="
+//                		+ vertex.getChildViews().length+ " newPosition = "
+//                		+ newPosition);
 
                 // update the location to get the correct
                 newPosition.setFrame(Math.min(Math.max((newPosition.getX() + movementX) * stretchX, 25/scale),
@@ -621,10 +621,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
                         Math.min(Math.max((newPosition.getY() + movementY) * stretchY, 25/scale),
                         		myFrame.getHeight()-newPosition.getHeight() - 25/scale), 
                         newPosition.getWidth(),newPosition.getHeight());
-                
-                System.out.println( "vertex" + vertex.getCell() + "children =" 
-                		+ vertex.getChildViews().length+ " newPosition = " 
-                		+ newPosition);
+
                 // update the view
                 AttributeMap vertAttrib = new AttributeMap();
                 GraphConstants.setBounds(vertAttrib, newPosition);
