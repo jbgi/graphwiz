@@ -11,15 +11,15 @@ import javax.swing.JScrollPane;
 
 public class ExplicationsDijkstra extends JPanel {
 
-	public static String Algorithme = "/GraphWiz/src/graphWiz/resources/Dijkstra.txt";
+	public static String Algorithme = "../GraphWiz/src/graphWiz/resources/Dijkstra.txt";
 	
-	public static String[] algo = new String[13];
+	public static String[] algo = new String[14];
 	
 	JList explicationsDijkstra;
 	
 	public ExplicationsDijkstra(){
 		super(new GridLayout(1,0));
-		
+		explicationsDijkstra = new JList(algo);
 		add(new JScrollPane(explicationsDijkstra));
 		//explicationsDijkstra.setFocusable(true);
 		
@@ -36,6 +36,8 @@ public class ExplicationsDijkstra extends JPanel {
 				algo[i]=ligne;
 				i++;
 			}
+			algo[13] = "   tttttt";
+			System.out.println(algo[10]);
 			explicationsDijkstra.setListData(algo);
 			System.out.println("algo chargé");
 		}  
