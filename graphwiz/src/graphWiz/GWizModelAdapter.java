@@ -934,7 +934,7 @@ public class GWizModelAdapter extends DefaultGraphModel {
 		} else {
 			GWizVertex gWizVertex = new GWizVertex(jtVertex.toString());
 			jtGraph.addVertex(gWizVertex);
-
+			System.out.println(jtVertex.toString());
 			cellToVertex.put(jVertex, gWizVertex);
 			vertexToCell.put(gWizVertex, jVertex);
 		}

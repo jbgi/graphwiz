@@ -53,14 +53,11 @@ import org.jgrapht.ext.JGraphModelAdapter;
 
 public class GWizEdgeRenderer extends EdgeRenderer {
 
-	private GWizModelAdapter jgAdapter;
-	
 	/**
 	 * Constructs a renderer that may be used to render edges.
 	 */
-	public GWizEdgeRenderer(GWizModelAdapter jgAdapter) {
+	public GWizEdgeRenderer() {
 		super();
-		this.jgAdapter=jgAdapter;
 	}
 	
 	/**
@@ -79,7 +76,7 @@ public class GWizEdgeRenderer extends EdgeRenderer {
 				setOpaque(false);
 				//super.paint(g);
 				translateGraphics(g);
-				g.setColor(getEdgeColor());
+				g.setColor(((GWizEdgeView) view).getEdgeColor());
 				if (lineWidth > 0) {
 					g2.setStroke(new BasicStroke(lineWidth, c, j));
 					if (gradientColor != null && !preview) {
@@ -128,7 +125,7 @@ public class GWizEdgeRenderer extends EdgeRenderer {
 				}
 				if (graph.getEditingCell() != view.getCell()) {
 					g.setFont(getFont());
-					Object label = jgAdapter.getGWizGraph().getEdgeWeight(jgAdapter.getCellEdge((DefaultEdge) view.getCell()));
+					Object label = ((GWizEdgeView) view).getWeight();
 					if (label != null) {
 						paintLabel(g, label.toString(), getLabelPosition(view),
 								true);
@@ -138,13 +135,6 @@ public class GWizEdgeRenderer extends EdgeRenderer {
 		} else {
 			paintSelectionBorder(g);
 		}
-	}
-	
-	private Color getEdgeColor(){
-		if (jgAdapter.getCellEdge((DefaultEdge) view.getCell()).getDescription()==Description.REGULAR )
-			return Color.BLUE;
-		else return Color.BLACK;
-			
 	}
 
 }

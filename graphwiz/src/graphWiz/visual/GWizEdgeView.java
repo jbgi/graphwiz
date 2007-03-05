@@ -7,6 +7,10 @@
 package graphWiz.visual;
 
 import graphWiz.GWizModelAdapter;
+import graphWiz.model.GWizEdge;
+import graphWiz.model.GWizEdge.Description;
+
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -32,6 +36,7 @@ import org.jgraph.graph.CellMapper;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.ConnectionSet;
+import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.Edge;
 import org.jgraph.graph.EdgeView;
 import org.jgraph.graph.GraphConstants;
@@ -49,6 +54,9 @@ import org.jgraph.plaf.basic.BasicGraphUI;
 
 public class GWizEdgeView extends EdgeView {
 
+
+	private GWizModelAdapter jgAdapter;
+	
 	/** Renderer for the class. */
 	public static transient GWizEdgeRenderer renderer;
 
@@ -57,7 +65,9 @@ public class GWizEdgeView extends EdgeView {
 	 */
 	public GWizEdgeView(Object cell, GWizModelAdapter jgAdapter) {
 		super(cell);
-		renderer = new GWizEdgeRenderer(jgAdapter);
+		this.jgAdapter = jgAdapter;
+		renderer = new GWizEdgeRenderer();
+		
 	}
 
 	/**
@@ -82,4 +92,25 @@ public class GWizEdgeView extends EdgeView {
 	public CellViewRenderer getRenderer() {
 		return renderer;
 	}
+	
+	private GWizEdge getModel() {
+		return jgAdapter.getCellEdge((DefaultEdge) getCell());
+	}
+	
+	Color getEdgeColor(){
+		if (getModel()==null) return Color.BLACK;
+		if (getModel().getDescription()==Description.REGULAR )
+			return Color.BLUE;
+		else return Color.BLACK;		
+	}
+	
+	String getWeight() {
+		double weight = jgAdapter.getGWizGraph().getEdgeWeight(getModel());
+		if (weight == (int) weight)
+			return Integer.toString((int) weight);
+		else return Double.toString(weight);
+		
+	}
+	
+	
 }
