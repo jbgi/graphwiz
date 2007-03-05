@@ -209,6 +209,7 @@ public class Dijkstra extends Observable implements Algorithm {
 		   		succ.setPred(vertex);
 		   		succ.setUpdated(true);
 				edge.setDescription(Description.EXPLORER);
+				oneUpdate = true;
 		   	}
 		}
 	}
