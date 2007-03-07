@@ -12,6 +12,7 @@ import javax.swing.JTable;
 
 public class ValPred extends JPanel{
 
+	JTabbedPane tabbedPane;
 	
 	public ValPred(){
 		
@@ -25,7 +26,7 @@ public class ValPred extends JPanel{
         tableVal.setPreferredScrollableViewportSize(new Dimension(500, 70));
         tablePred.setPreferredScrollableViewportSize(new Dimension(500, 70));
         
-        JTabbedPane tabbedPane = new JTabbedPane();
+        this.tabbedPane = new JTabbedPane();
         
         //JComponent panel1 = makeTextPanel("Panel #1");
         //panel1.add(tableVal);
@@ -38,6 +39,10 @@ public class ValPred extends JPanel{
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
         
         add(tabbedPane);       
+	}
+	
+	public JTabbedPane getTabbedPane(){
+		return this.tabbedPane;
 	}
 	
 	 protected JComponent makeTextPanel(String text) {
@@ -54,7 +59,7 @@ public class ValPred extends JPanel{
      * this method should be invoked from the
      * event-dispatching thread.
      */
-    private static void createAndShowGUI() {
+    public static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("SimpleTableDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

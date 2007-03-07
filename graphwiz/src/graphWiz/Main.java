@@ -20,7 +20,8 @@ public class Main extends JApplet{
 	private JPanel panel;
 	private Navigation menu;
 	private TextDijkstra explications;
-	private Graphtest graph;	
+	private Graphtest graph;
+	private ValPred TablValPred;
 	
 	public void init(){
 		
@@ -34,35 +35,49 @@ public class Main extends JApplet{
 		ImageIcon icon = new ImageIcon("image/logo.jpg","notre beau logo");
 		JLabel image = new JLabel(icon);
 		
+		
+		//Création des matrices Val et Pred
+		
+		this.TablValPred = new ValPred();
+		
+		//Création du panel associé
+		JPanel Matrices = new JPanel();
+		Matrices.setBackground(Color.white);
+		Matrices.setMinimumSize(new Dimension(675,250));
+		Matrices.add(this.TablValPred.getTabbedPane());
+		
 		//Création des différents panels
 		
-		//Création du menu d'explications de l'algorithme de DIjkstra
+		
+		//Création du menu d'explications de l'algorithme de Dijkstra
+		
 		this.explications = new TextDijkstra();
 		JPanel explanations = new JPanel();
 		
 		explanations.add(explications.getAlgoDijkstra());
 		explanations.setMinimumSize(new Dimension(425,500));
 		
+		
 		// Création du menu
+		
 		menu = new Navigation();
 		this.menu.setBackground(Color.blue);
 		this.menu.setMinimumSize(new Dimension(675,40));
 		
 		
+		// Création du panel servant au graph
+		
 		this.graph = new Graphtest();
-		//panel4.setBackground(Color.green);
 		graph.setMinimumSize(new Dimension(675,75));
 		
-		JPanel panel5 = new JPanel();
-		panel5.setBackground(Color.white);
-		panel5.setMinimumSize(new Dimension(675,250));
+
 	
 		JSplitPane panegauchetop = new JSplitPane(JSplitPane.VERTICAL_SPLIT,panel,menu);
 		panegauchetop.setOneTouchExpandable(true);
 		panegauchetop.setDividerLocation(75);
 		//panegauchetop.setPreferredSize(new Dimension(1000,750));
 		
-		JSplitPane panegauchebas = new JSplitPane(JSplitPane.VERTICAL_SPLIT,graph,panel5);
+		JSplitPane panegauchebas = new JSplitPane(JSplitPane.VERTICAL_SPLIT,graph,Matrices);
 		panegauchebas.setOneTouchExpandable(true);
 		panegauchebas.setDividerLocation(400);
 		//panegauchebas.setPreferredSize(new Dimension(1000,750));
