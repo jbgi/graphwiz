@@ -44,8 +44,15 @@ public class Dijkstra extends Observable implements Algorithm {
 	}
 
 	public boolean isEligible() {
-		// TODO Auto-generated method stub
-		return false;
+		boolean eligible = true;
+		Iterator<GWizVertex> i = graph.vertexSet().iterator();
+		while (i.hasNext() && eligible){
+			Iterator<GWizVertex> j = graph.vertexSet().iterator();
+			while(j.hasNext() && eligible){
+				eligible = (graph.getEdgeWeight(graph.getEdge(i.next(),j.next())) > 0);
+			}
+		}
+		return eligible;
 	}
 	
 	public boolean isEnd() {
