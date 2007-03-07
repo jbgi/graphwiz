@@ -11,9 +11,9 @@ import javax.swing.JScrollPane;
 
 public class ExplicationsDijkstra extends JPanel {
 
-	public static String Algorithme = "../GraphWiz/src/graphWiz/resources/Dijkstra.txt";
+	public String Algorithme = "../GraphWiz/Dijkstra.txt";
 	
-	public static String[] algo = new String[14];
+	public String[] algo = new String[14];
 	
 	JList explicationsDijkstra;
 	
@@ -26,10 +26,10 @@ public class ExplicationsDijkstra extends JPanel {
 		LireFichierAlgo();
 		
 	}
-
-	private void LireFichierAlgo() {
+	
+	public void LireFichierAlgo() {
 		try {
-			RandomAccessFile raf = new RandomAccessFile(Algorithme, "r");
+			RandomAccessFile raf = new RandomAccessFile("../GraphWiz/Dijkstra.txt", "r");
 			String ligne;
 			int i=0;
 			while ((ligne = raf.readLine()) != null ){
@@ -44,7 +44,6 @@ public class ExplicationsDijkstra extends JPanel {
 		catch (IOException e) {    
 			System.out.println("erreur dans: " + e);
 		}	
-		
 	}
 	
 	/**
@@ -52,7 +51,7 @@ public class ExplicationsDijkstra extends JPanel {
      * this method should be invoked from the
      * event-dispatching thread.
      */
-    private static void createAndShowGUI() {
+    public static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("Explications Dijkstra");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

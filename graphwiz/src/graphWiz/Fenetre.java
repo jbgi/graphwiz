@@ -18,7 +18,7 @@ public class Fenetre {
 
 //		1. Optional: Specify who draws the window decorations. 
 		JFrame.setDefaultLookAndFeelDecorated(true);
-		frame.setSize(1000, 750);
+		frame.setSize(1100, 750);
 
 //		4. Create components and put them in the frame.
 //		...create emptyLabel...

@@ -1,23 +1,26 @@
 package graphWiz;
 
 import javax.swing.*;
-import javax.swing.JOptionPane;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import java.applet.*;
 import java.awt.*;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.*;
+import java.io.RandomAccessFile;
+import java.awt.GridLayout;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 public class Main extends JApplet{
 
 	private Fenetre frame;
 	private JPanel panel;
 	private Navigation menu;
-	private ExplicationsDijkstra explications;
-	private Graphtest graph;
+	private TextDijkstra explications;
+	private Graphtest graph;	
 	
 	public void init(){
 		
@@ -34,8 +37,11 @@ public class Main extends JApplet{
 		//Création des différents panels
 		
 		//Création du menu d'explications de l'algorithme de DIjkstra
-		this.explications = new ExplicationsDijkstra();
-		//this.explications.setMinimumSize(new Dimension(300,500));
+		this.explications = new TextDijkstra();
+		JPanel explanations = new JPanel();
+		
+		explanations.add(explications.getAlgoDijkstra());
+		explanations.setMinimumSize(new Dimension(425,500));
 		
 		// Création du menu
 		menu = new Navigation();
@@ -66,7 +72,7 @@ public class Main extends JApplet{
 		panegauche.setDividerLocation(115);
 		//panegauche.setPreferredSize(new Dimension(1000,750));
 	
-		JSplitPane Panedroite = new JSplitPane(JSplitPane.VERTICAL_SPLIT,explications,image);
+		JSplitPane Panedroite = new JSplitPane(JSplitPane.VERTICAL_SPLIT,explanations,image);
 		Panedroite.setOneTouchExpandable(true);
 		Panedroite.setDividerLocation(630);
 		//Panedroite.setMinimumSize(new Dimension(1000,750));
@@ -74,7 +80,7 @@ public class Main extends JApplet{
 		JSplitPane Mainpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,panegauche,Panedroite);
 		Mainpane.setOneTouchExpandable(true);
 		Mainpane.setDividerLocation(675);
-		Mainpane.setPreferredSize(new Dimension(1000,750));
+		Mainpane.setPreferredSize(new Dimension(1100,750));
 		
 
 		
