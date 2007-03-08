@@ -7,12 +7,13 @@ import java.awt.event.*;
 import java.io.RandomAccessFile;
 import java.awt.GridLayout;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Main extends JApplet{
 
@@ -25,10 +26,18 @@ public class Main extends JApplet{
 	
 	public void init(){
 		
+		//Création d'un bouton de lancement de l'éditeur
+		JButton Editeur = new JButton("Editeur");
+		CréationGraph myListener1 = new CréationGraph();
+		Editeur.addActionListener(myListener1);
+		
 		this.frame = new Fenetre();
 		this.panel = new JPanel();
 		panel.setBackground(Color.pink);
 		panel.setMinimumSize(new Dimension(675,75));
+		
+		//Ajout du bouton au panel
+		panel.add(Editeur);
 		
 		//Création d'une image
 		
@@ -43,7 +52,7 @@ public class Main extends JApplet{
 		//Création du panel associé
 		JPanel Matrices = new JPanel();
 		Matrices.setBackground(Color.white);
-		Matrices.setMinimumSize(new Dimension(675,250));
+		Matrices.setMaximumSize(new Dimension(675,250));
 		Matrices.add(this.TablValPred.getTabbedPane());
 		
 		//Création des différents panels
