@@ -29,6 +29,13 @@ public class Dijkstra extends Observable implements Algorithm {
 		verticesValuationHistory = new Stack<Vector<double[]>>();
 	}
 
+	public void clearAll(){
+		edgesDescriptionHistory.clear();
+		verticesFlagHistory.clear();
+		verticesPredHistory.clear();
+		verticesValuationHistory.clear();
+	}
+	
 	public String checkGraph() {
 		// TODO Auto-generated method stub
 		return null;
