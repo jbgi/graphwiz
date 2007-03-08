@@ -1,4 +1,4 @@
-package graphWiz;
+package widgets;
 
 import javax.swing.JList;
 
@@ -14,7 +14,7 @@ public class TextBellman {
 		this.algo[2] = "  ";
 		this.algo[3] = "V[x] = la valuation du sommet x";
 		this.algo[4] = "  ";
-		this.algo[5] = "W(x,y) = le poids de l’arc (x,y)";
+		this.algo[5] = "W(x,y) = le poids de l'arc (x,y)";
 		this.algo[6] = "  ";
 		this.algo[7] = "    ";
 		this.algo[8] = "Algorithme:";
@@ -24,7 +24,7 @@ public class TextBellman {
 		this.algo[12] = "  ";
 		this.algo[13] = "nbIter :=0";
 		this.algo[14] = "  ";
-		this.algo[15] = "Tant que les valuations sont modifiées d’une itération sur l’autre ou que nbIter != N-1 ";
+		this.algo[15] = "Tant que les valuations sont modifiées d'une itération sur l'autre ou que nbIter != N-1 ";
 		this.algo[16] = "  ";
 		this.algo[17] = "Incrémenter nbIter ";
 		this.algo[18] = "  ";

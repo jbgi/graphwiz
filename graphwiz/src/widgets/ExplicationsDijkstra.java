@@ -1,4 +1,4 @@
-package graphWiz;
+package widgets;
 
 import java.awt.GridLayout;
 import java.io.IOException;
@@ -75,5 +75,4 @@ public class ExplicationsDijkstra extends JPanel {
             }
         });
     }
-	
 }

@@ -1,4 +1,4 @@
-package graphWiz;
+package widgets;
 
 import javax.swing.JList;
 

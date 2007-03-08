@@ -1,4 +1,6 @@
-package graphWiz;
+package widgets;
+
+import graphWiz.Main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

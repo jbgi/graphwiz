@@ -1,21 +1,37 @@
-package graphWiz;
+package widgets;
 
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractButton;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
-public class Commentaires extends JPanel{
-	JTextField Commentaires;
+public class Navigation extends JPanel {
 	
-	public Commentaires(){
+	protected JButton begin, back, pause, play, forward;
+	protected Box bHor; 
+	
+	public Navigation(){
 		super(new GridLayout(1,1));
-		Commentaires = new JTextField("Commentaires, pau, felix, fanja");
-		add(Commentaires);
-	}
+			bHor= Box.createHorizontalBox();
+	        begin = new JButton(new ImageIcon("src/graphWiz/resources/btn_begin.gif"));
+	        back = new JButton(new ImageIcon("src/graphWiz/resources/btn_bf.gif"));
+	        pause = new JButton(new ImageIcon("src/graphWiz/resources/btn_pause.gif"));
+	        play = new JButton(new ImageIcon("src/graphWiz/resources/btn_play.gif"));
+	        forward = new JButton(new ImageIcon("src/graphWiz/resources/btn_ff.gif"));
+	        bHor.add(begin);
+	        bHor.add(back);
+	        bHor.add(pause);
+	        bHor.add(play);
+	        bHor.add(forward);
+	      add(bHor); 
+	    }
 	
-	  /**
+	 /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
      * event-dispatching thread.
@@ -26,7 +42,7 @@ public class Commentaires extends JPanel{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Create and set up the content pane.
-        Commentaires newContentPane = new Commentaires();
+        Navigation newContentPane = new Navigation();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
 
@@ -44,6 +60,5 @@ public class Commentaires extends JPanel{
             }
         });
     }
-		
-	
-}
+    }
+

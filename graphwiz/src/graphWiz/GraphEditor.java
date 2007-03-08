@@ -25,6 +25,7 @@ import graphWiz.visual.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -78,8 +79,10 @@ import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 import org.jgraph.graph.PortView;
 
-public class GraphWiz extends JApplet implements GraphSelectionListener,
+public class GraphEditor extends JPanel implements GraphSelectionListener,
 		KeyListener {
+	
+	public static final String VERSION = "GraphWiz 0.1";
 
     private static final Color DEFAULT_BG_COLOR = Color.decode("#FAFBFF");
     private static final Dimension DEFAULT_SIZE = new Dimension(530, 320);
@@ -101,40 +104,11 @@ public class GraphWiz extends JApplet implements GraphSelectionListener,
 	protected StatusBarGraphListener statusBar;
 
 	//
-	// Main
-	//
-
-	// Main Method
-	public static void main(String[] args) {
-		// Construct Frame
-		JFrame frame = new JFrame("GraphWiz");
-		// Set Close Operation to Exit
-		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// Add an Editor Panel
-		frame.getContentPane().add(new GraphWiz());
-		// Fetch URL to Icon Resource
-		URL jgraphUrl = GraphWiz.class.getClassLoader().getResource(
-				"graphWiz/resources/jgraph.gif");
-		// If Valid URL
-		if (jgraphUrl != null) {
-			// Load Icon
-			ImageIcon jgraphIcon = new ImageIcon(jgraphUrl);
-			// Use in Window
-			frame.setIconImage(jgraphIcon.getImage());
-		}
-		// Set Default Size
-		frame.setSize(DEFAULT_SIZE);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// Show Frame
-		frame.setVisible(true);
-	}
-
-	//
 	// Editor Panel
 	//
 
 	// Construct an Editor Panel
-	public GraphWiz() {
+	public GraphEditor() {
 		// Construct the Graph
 		graph = createGraph();
 		// Use a Custom Marquee Handler
@@ -150,13 +124,13 @@ public class GraphWiz extends JApplet implements GraphSelectionListener,
 	// Hook for subclassers
 	protected void populateContentPane() {
 		// Use Border Layout
-		getContentPane().setLayout(new BorderLayout());
+		setLayout(new BorderLayout());
 		// Add a ToolBar
-		getContentPane().add(createToolBar(), BorderLayout.NORTH);
+		add(createToolBar(), BorderLayout.NORTH);
 		// Add the Graph as Center Component
-		getContentPane().add(new JScrollPane(graph), BorderLayout.CENTER);
+		add(new JScrollPane(graph), BorderLayout.CENTER);
 		statusBar = createStatusBar();
-		getContentPane().add(statusBar, BorderLayout.SOUTH);
+		add(statusBar, BorderLayout.SOUTH);
 	}
 
 	// Hook for subclassers
@@ -181,16 +155,6 @@ public class GraphWiz extends JApplet implements GraphSelectionListener,
 		graph.setPreferredSize(DEFAULT_SIZE);
 		
         Color c = DEFAULT_BG_COLOR;
-        String colorStr = null;
-
-        try {
-            colorStr = getParameter("bgcolor");
-        } catch (Exception e) {
-        }
-
-        if (colorStr != null) {
-            c = Color.decode(colorStr);
-        }
 
         graph.setBackground(c);
 		
@@ -627,8 +591,8 @@ public class GraphWiz extends JApplet implements GraphSelectionListener,
 		ImageIcon layoutIcon = new ImageIcon(springLayoutUrl);
 		toolbar.add(new AbstractAction("", layoutIcon) {
 			public void actionPerformed(ActionEvent e) {
-		        layout.setFrame(new Rectangle((int) (getContentPane().getComponent(1).getBounds().getWidth()/graph.getScale()),
-		        		(int) (getContentPane().getComponent(1).getBounds().getHeight()/graph.getScale())));
+		        layout.setFrame(new Rectangle((int) (getComponent(1).getBounds().getWidth()/graph.getScale()),
+		        		(int) (getComponent(1).getBounds().getHeight()/graph.getScale())));
 		        layout.setScale(graph.getScale());
 		        double i = graph.getScale();
 		        graph.setScale(1);
@@ -686,7 +650,7 @@ public class GraphWiz extends JApplet implements GraphSelectionListener,
 	 * @return a String representing the version of this application
 	 */
 	protected String getVersion() {
-		return JGraph.VERSION;
+		return VERSION;
 	}
 
 	public class StatusBarGraphListener extends JPanel implements GraphModelListener {
