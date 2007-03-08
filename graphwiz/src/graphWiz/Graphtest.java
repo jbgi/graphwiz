@@ -96,9 +96,12 @@ public class Graphtest
         
         // create a visualization using JGraph, via an adapter
         jgAdapter = new GWizModelAdapter(g);
-
+        Object[] test = new Object[] {"hello"};
+        GraphConstants.setExtraLabels(jgAdapter.getEdgeCell(g.getEdge(v1, v2)).getAttributes(), test);
+        
         JGraph jgraph = new JGraph(new GraphLayoutCache(jgAdapter, new GWizCellViewFactory(jgAdapter)));
-
+        Point[] test1 = new Point[] {new Point(20,20)};
+        GraphConstants.setExtraLabelPositions(jgAdapter.getEdgeCell(g.getEdge(v1, v2)).getAttributes(), test1);
         adjustDisplaySettings(jgraph);
         getContentPane().add(jgraph);
         resize(DEFAULT_SIZE);
@@ -119,7 +122,7 @@ public class Graphtest
         cellList.add(jgAdapter.getVertexCell(v5));
         
         SpringEmbeddedLayoutAlgorithm layout = new SpringEmbeddedLayoutAlgorithm();
-        layout.setFrame(new Rectangle(220,150));
+        layout.setFrame(new Rectangle(DEFAULT_SIZE));
         //layout.setMaxIterations(-1);
         SpringEmbeddedLayoutAlgorithm.applyLayout(jgraph, layout, cellList.toArray());
         // that's all there is to it!...
@@ -129,7 +132,6 @@ public class Graphtest
         //((GWizEdge) jgAdapter.getValue(jgAdapter.getEdgeCell(g.getEdge(v1, v2)))).setDescription(Description.PATH);
         jgraph.graphDidChange();
         jgraph.repaint();
-        
     }
 
     private void adjustDisplaySettings(JGraph jg)

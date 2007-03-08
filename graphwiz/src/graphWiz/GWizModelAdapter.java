@@ -82,10 +82,6 @@ import org.jgrapht.event.*;
  */
 public class GWizModelAdapter extends DefaultGraphModel {
 	
-	private GWizGraph gWizGraph;
-
-	// ~ Static fields/initializers --------------------------------------------
-
 	/**
 	 * Creates the JGraph cells that reflect the respective JGraphT elements.
 	 * 
@@ -113,8 +109,6 @@ public class GWizModelAdapter extends DefaultGraphModel {
 		 */
 		public DefaultGraphCell createVertexCell(GWizVertex jGraphTVertex);
 	}
-
-	// ~ Instance fields -------------------------------------------------------
 
 	/**
 	 * A simple default cell factory.
@@ -190,6 +184,7 @@ public class GWizModelAdapter extends DefaultGraphModel {
 
 			if (changedCells != null) {
 				handleChangedEdges(filterEdges(changedCells));
+				handleChangedVertex(filterVertices(changedCells));
 			}
 		}
 
@@ -259,6 +254,14 @@ public class GWizModelAdapter extends DefaultGraphModel {
 				org.jgraph.graph.Edge jEdge = (org.jgraph.graph.Edge) i.next();
 
 				handleJGraphChangedEdge(jEdge);
+			}
+		}
+
+		private void handleChangedVertex(List<Object> jVertices) {
+			for (Iterator<Object> i = jVertices.iterator(); i.hasNext();) {
+				org.jgraph.graph.DefaultGraphCell jVertex = (org.jgraph.graph.DefaultGraphCell) i.next();
+
+				handleJGraphChangedVertex(jVertex);
 			}
 		}
 
@@ -472,13 +475,13 @@ public class GWizModelAdapter extends DefaultGraphModel {
 	}
 
 	private final CellFactory<GWizVertex, GWizEdge> cellFactory;
+
 	/**
 	 * Maps JGraph edges to JGraphT edges
 	 * @uml.property  name="cellToEdge"
 	 * @uml.associationEnd  qualifier="key:java.lang.Object graphWiz.model.GWizEdge"
 	 */
 	private final Map<org.jgraph.graph.Edge, GWizEdge> cellToEdge = new HashMap<org.jgraph.graph.Edge, GWizEdge>();
-
 	/**
 	 * Maps JGraph vertices to JGraphT vertices
 	 * @uml.property  name="cellToVertex"
@@ -487,16 +490,18 @@ public class GWizModelAdapter extends DefaultGraphModel {
 	private final Map<GraphCell, GWizVertex> cellToVertex = new HashMap<GraphCell, GWizVertex>();
 
 	private AttributeMap defaultEdgeAttributes;
+
 	private AttributeMap defaultVertexAttributes;
-
-	// ~ Constructors ----------------------------------------------------------
-
 	/**
 	 * Maps JGraphT edges to JGraph edges
 	 * @uml.property  name="edgeToCell"
 	 * @uml.associationEnd  qualifier="key:java.lang.Object org.jgraph.graph.Edge"
 	 */
 	private final Map<GWizEdge, org.jgraph.graph.Edge> edgeToCell = new HashMap<GWizEdge, org.jgraph.graph.Edge>();
+
+	// ~ Constructors ----------------------------------------------------------
+
+	private GWizGraph gWizGraph;
 
 	private final ShieldedGraph jtGraph;
 
@@ -635,6 +640,10 @@ public class GWizModelAdapter extends DefaultGraphModel {
 		this.addGraphModelListener(new JGraphListener());
 	}
 
+	public GWizEdge getCellEdge(Edge jGraphEdge) {
+		return (GWizEdge) cellToEdge.get(jGraphEdge);
+	}
+
 	/**
 	 * Returns the cell factory used to create the JGraph cells.
 	 * @return  the cell factory used to create the JGraph cells.
@@ -675,11 +684,11 @@ public class GWizModelAdapter extends DefaultGraphModel {
 	public DefaultEdge getEdgeCell(GWizEdge jGraphTEdge) {
 		return (DefaultEdge) edgeToCell.get(jGraphTEdge);
 	}
-
-	public GWizEdge getCellEdge(Edge jGraphEdge) {
-		return (GWizEdge) cellToEdge.get(jGraphEdge);
-	}
 	
+	public GWizGraph getGWizGraph() {
+		return gWizGraph;
+	}
+
 	/**
 	 * Returns the JGraph vertex cell that corresponds to the specified JGraphT
 	 * vertex. If no corresponding cell found, returns <code>null</code>.
@@ -836,6 +845,10 @@ public class GWizModelAdapter extends DefaultGraphModel {
 			}
 		}
 	}
+	
+	void handleJGraphChangedVertex(org.jgraph.graph.DefaultGraphCell jVertex) {
+		cellToVertex.get(jVertex).setName(jVertex.toString());
+	}
 
 	/**
 	 * Adds to the underlying JGraphT graph an edge that corresponds to the
@@ -940,6 +953,8 @@ public class GWizModelAdapter extends DefaultGraphModel {
 		}
 	}
 
+	// ~ Inner Interfaces ------------------------------------------------------
+
 	/**
 	 * Removes the edge corresponding to the specified JGraph edge from the
 	 * JGraphT graph. If the specified edge is not contained in {@link
@@ -964,7 +979,7 @@ public class GWizModelAdapter extends DefaultGraphModel {
 		}
 	}
 
-	// ~ Inner Interfaces ------------------------------------------------------
+	// ~ Inner Classes ---------------------------------------------------------
 
 	/**
 	 * Removes the vertex corresponding to the specified JGraph vertex from the
@@ -1009,8 +1024,6 @@ public class GWizModelAdapter extends DefaultGraphModel {
 			vertexToCell.remove(jtVertex);
 		}
 	}
-
-	// ~ Inner Classes ---------------------------------------------------------
 
 	/**
 	 * Adds the specified JGraphT edge to be reflected by this graph model. To
@@ -1084,9 +1097,5 @@ public class GWizModelAdapter extends DefaultGraphModel {
 		if (vertexCell.getChildCount() > 0) {
 			remove(new Object[] { vertexCell.getChildAt(0) });
 		}
-	}
-
-	public GWizGraph getGWizGraph() {
-		return gWizGraph;
 	}
 }
