@@ -60,6 +60,7 @@ public class Main extends JApplet{
 		
 		explanations.add(explications.getAlgoDijkstra());
 		explanations.setMinimumSize(new Dimension(425,500));
+		explanations.setAutoscrolls(true);
 		
 		//Création du menu de droite
 		JPanel commentaires = new JPanel();
