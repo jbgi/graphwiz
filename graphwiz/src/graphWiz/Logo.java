@@ -2,17 +2,18 @@ package graphWiz;
 
 import java.awt.GridLayout;
 import java.awt.Image;
-
+import javax.swing.*;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.LabelUI;
+import java.awt.*;
 
-public class Logo extends JFrame{
+public class Logo extends JPanel{
 	public Logo(){
 		super();
-		ImageIcon icon = createImageIcon("/GraphWiz/src/graphWiz/resources/logo.JPG","a pretty but meaningless splat");	
-		Image im = icon.getImage(); 
+		ImageIcon icon = createImageIcon("/GraphWiz/src/graphWiz/resources/logo.jpg","a pretty but meaningless splat");	
+		JLabel im = new JLabel(icon);
 		
 	}
 	
