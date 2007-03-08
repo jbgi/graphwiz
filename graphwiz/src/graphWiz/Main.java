@@ -26,10 +26,10 @@ public class Main extends JApplet{
 		Fenetre frame = new Fenetre();
 		
 		//Création des panels
-		JPanel Matrices = new JPanel();
-		JPanel explanations = new JPanel();
-		JPanel commentaires = new JPanel();
-		JPanel graph = new JPanel();
+		JPanel Matrices = new JPanel(new BorderLayout());
+		JPanel explanations = new JPanel(new BorderLayout());
+		JPanel commentaires = new JPanel(new BorderLayout());
+		JPanel graph = new JPanel(new BorderLayout());
 		
 		//Génération de l'algorithme défilant de Dijsktra
 		TextDijkstra explications = new TextDijkstra();
@@ -70,7 +70,8 @@ public class Main extends JApplet{
 
 		//Configuration des différents panels
 		Matrices.setBackground(Color.white);
-		Matrices.add(TablValPred.getTabbedPane());	
+		Matrices.add(TablValPred.getTabbedPane());
+		Matrices.setMaximumSize(new Dimension(675,250));
 		explanations.add(explications.getAlgoDijkstra());
 		explanations.setMinimumSize(new Dimension(425,500));
 		explanations.setAutoscrolls(true);
@@ -83,7 +84,7 @@ public class Main extends JApplet{
 		panegauche.setOneTouchExpandable(true);
 		Panedroite.setOneTouchExpandable(true);
 		Mainpane.setOneTouchExpandable(true);
-		panegauche.setDividerLocation(75);
+		panegauche.setDividerLocation(500);
 		Mainpane.setDividerLocation(675);
 		Panedroitebas.setDividerLocation(370);
 		Panedroite.setDividerLocation(235);
