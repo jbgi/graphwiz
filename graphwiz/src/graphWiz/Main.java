@@ -24,6 +24,9 @@ public class Main extends JApplet{
 	private Graphtest graph;
 	private ValPred TablValPred;
 	
+	public Main(){
+	}
+	
 	public void init(){
 		
 		//Création d'un bouton de lancement de l'éditeur
@@ -31,13 +34,25 @@ public class Main extends JApplet{
 		CréationGraph myListener1 = new CréationGraph();
 		Editeur.addActionListener(myListener1);
 		
+		//Création d'un bouton pour afficher l'algo de Bellman a droite
+		JButton Bellman = new JButton("Bellman");
+		CréationGraph myListener2 = new CréationGraph();
+		Bellman.addActionListener(myListener2);
+		
+		//Même chose pour Dijkstra
+		JButton Dijkstra = new JButton("Dijkstra");
+		CréationGraph myListener3 = new CréationGraph();
+		Dijkstra.addActionListener(myListener3);
+		
 		this.frame = new Fenetre();
 		this.panel = new JPanel();
 		panel.setBackground(Color.pink);
 		panel.setMinimumSize(new Dimension(675,75));
 		
-		//Ajout du bouton au panel
+		//Ajout des boutons au panel
 		panel.add(Editeur);
+		panel.add(Bellman);
+		panel.add(Dijkstra);
 		
 		//Création d'une image
 		
@@ -54,8 +69,6 @@ public class Main extends JApplet{
 		Matrices.setBackground(Color.white);
 		Matrices.setMaximumSize(new Dimension(675,250));
 		Matrices.add(this.TablValPred.getTabbedPane());
-		
-		//Création des différents panels
 		
 		
 		//Création du menu d'explications de l'algorithme de Dijkstra

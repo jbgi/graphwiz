@@ -1,13 +1,10 @@
 package graphWiz;
 
 import javax.swing.*;
-import java.applet.*;
-import java.awt.*;
 
 public class Fenetre {
 
 	private JFrame frame;
-	private JPanel panel;
 	
 	public JFrame getFrame(){
 		return this.frame;
