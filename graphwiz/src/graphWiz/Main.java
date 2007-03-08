@@ -18,41 +18,23 @@ import java.awt.event.WindowEvent;
 public class Main extends JApplet{
 
 	private Fenetre frame;
-	private JPanel panel;
 	private Navigation menu;
 	private TextDijkstra explications;
-	private Graphtest graph;
+	private JPanel graph;
 	private ValPred TablValPred;
+	private GraphWiz Graphwiz;
 	
 	public Main(){
 	}
 	
 	public void init(){
 		
-		//Création d'un bouton de lancement de l'éditeur
-		JButton Editeur = new JButton("Editeur");
-		CréationGraph myListener1 = new CréationGraph();
-		Editeur.addActionListener(myListener1);
-		
-		//Création d'un bouton pour afficher l'algo de Bellman a droite
-		JButton Bellman = new JButton("Bellman");
-		BoutonBellman myListener2 = new BoutonBellman();
-		Bellman.addActionListener(myListener2);
-		
-		//Même chose pour Dijkstra
-		JButton Dijkstra = new JButton("Dijkstra");
-		BoutonDijkstra myListener3 = new BoutonDijkstra();
-		Dijkstra.addActionListener(myListener3);
+		//Création d'un bouton de choix d'algorithme
+		JButton Choix = new JButton("Choix de l'algo");
+		BoutonChoix myListener4 = new BoutonChoix();
+		Choix.addActionListener(myListener4);
 		
 		this.frame = new Fenetre();
-		this.panel = new JPanel();
-		panel.setBackground(Color.pink);
-		panel.setMinimumSize(new Dimension(675,75));
-		
-		//Ajout des boutons au panel
-		panel.add(Editeur);
-		panel.add(Bellman);
-		panel.add(Dijkstra);
 		
 		//Création d'une image
 		
@@ -79,40 +61,48 @@ public class Main extends JApplet{
 		explanations.add(explications.getAlgoDijkstra());
 		explanations.setMinimumSize(new Dimension(425,500));
 		
+		//Création du menu de droite
+		JPanel commentaires = new JPanel();
+		JPanel menuderoulant = new JPanel();
+		JSplitPane Droitehaut = new JSplitPane(JSplitPane.VERTICAL_SPLIT,commentaires,menuderoulant);
+		Droitehaut.setOneTouchExpandable(true);
+		Droitehaut.setDividerLocation(200);
 		
 		// Création du menu
 		
 		menu = new Navigation();
 		this.menu.setBackground(Color.blue);
 		this.menu.setMinimumSize(new Dimension(675,40));
+		menu.add(Choix);
 		
 		
-		// Création du panel servant au graph
-		
-		this.graph = new Graphtest();
+		// Création du logiciel de création de Graph et de son panel
+		this.Graphwiz= new GraphWiz();
+		this.graph = new JPanel();
 		graph.setMinimumSize(new Dimension(675,75));
+		graph.add(Graphwiz);
 		
-
-	
-		JSplitPane panegauchetop = new JSplitPane(JSplitPane.VERTICAL_SPLIT,panel,menu);
-		panegauchetop.setOneTouchExpandable(true);
-		panegauchetop.setDividerLocation(75);
-		//panegauchetop.setPreferredSize(new Dimension(1000,750));
+		
+		//Séparation des frames
 		
 		JSplitPane panegauchebas = new JSplitPane(JSplitPane.VERTICAL_SPLIT,graph,Matrices);
 		panegauchebas.setOneTouchExpandable(true);
-		panegauchebas.setDividerLocation(400);
+		panegauchebas.setDividerLocation(450);
 		//panegauchebas.setPreferredSize(new Dimension(1000,750));
 		
-		JSplitPane panegauche = new JSplitPane(JSplitPane.VERTICAL_SPLIT,panegauchetop,panegauchebas);
+		JSplitPane panegauche = new JSplitPane(JSplitPane.VERTICAL_SPLIT,menu,panegauchebas);
 		panegauche.setOneTouchExpandable(true);
-		panegauche.setDividerLocation(115);
+		panegauche.setDividerLocation(75);
 		//panegauche.setPreferredSize(new Dimension(1000,750));
 	
-		JSplitPane Panedroite = new JSplitPane(JSplitPane.VERTICAL_SPLIT,explanations,image);
-		Panedroite.setOneTouchExpandable(true);
-		Panedroite.setDividerLocation(630);
+		JSplitPane Panedroitebas = new JSplitPane(JSplitPane.VERTICAL_SPLIT,explanations,image);
+		Panedroitebas.setOneTouchExpandable(true);
+		Panedroitebas.setDividerLocation(370);
 		//Panedroite.setMinimumSize(new Dimension(1000,750));
+		
+		JSplitPane Panedroite = new JSplitPane(JSplitPane.VERTICAL_SPLIT,Droitehaut,Panedroitebas);
+		Panedroite.setOneTouchExpandable(true);
+		Panedroite.setDividerLocation(235);
 		
 		JSplitPane Mainpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,panegauche,Panedroite);
 		Mainpane.setOneTouchExpandable(true);

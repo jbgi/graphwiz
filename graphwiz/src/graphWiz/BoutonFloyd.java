@@ -5,9 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-public class CréationGraph implements ActionListener{
+public class BoutonFloyd implements ActionListener{
 	
-	public CréationGraph(){
+	public BoutonFloyd(){
 	}
 	
 	public void actionPerformed(ActionEvent evt) {
