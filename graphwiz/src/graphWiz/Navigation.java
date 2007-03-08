@@ -18,11 +18,11 @@ public class Navigation extends JPanel {
 	public Navigation(){
 		super(new GridLayout(1,1));
 			bHor= Box.createHorizontalBox();
-	        begin = new JButton("begin");
-	        back = new JButton("back");
-	        pause = new JButton("pause");
-	        play = new JButton("play");
-	        forward = new JButton("forward");
+	        begin = new JButton(new ImageIcon("src/graphWiz/resources/btn_begin.gif"));
+	        back = new JButton(new ImageIcon("src/graphWiz/resources/btn_bf.gif"));
+	        pause = new JButton(new ImageIcon("src/graphWiz/resources/btn_pause.gif"));
+	        play = new JButton(new ImageIcon("src/graphWiz/resources/btn_play.gif"));
+	        forward = new JButton(new ImageIcon("src/graphWiz/resources/btn_ff.gif"));
 	        bHor.add(begin);
 	        bHor.add(back);
 	        bHor.add(pause);
