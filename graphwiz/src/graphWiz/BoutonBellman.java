@@ -6,6 +6,9 @@ import javax.swing.*;
 
 public class BoutonBellman implements ActionListener{
 	
+	public BoutonBellman(){
+	}
+	
 	public void actionPerformed(ActionEvent evt) {
 		JFrame frame2 = new JFrame();
 		GraphWiz Graphwiz = new GraphWiz();

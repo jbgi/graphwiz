@@ -6,6 +6,9 @@ import javax.swing.*;
 
 public class BoutonDijkstra implements ActionListener{
 	
+	public BoutonDijkstra(){
+	}
+	
 	public void actionPerformed(ActionEvent evt) {
 		JFrame frame2 = new JFrame();
 		Main main = new Main();

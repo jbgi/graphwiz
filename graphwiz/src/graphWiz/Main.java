@@ -36,12 +36,12 @@ public class Main extends JApplet{
 		
 		//Création d'un bouton pour afficher l'algo de Bellman a droite
 		JButton Bellman = new JButton("Bellman");
-		CréationGraph myListener2 = new CréationGraph();
+		BoutonBellman myListener2 = new BoutonBellman();
 		Bellman.addActionListener(myListener2);
 		
 		//Même chose pour Dijkstra
 		JButton Dijkstra = new JButton("Dijkstra");
-		CréationGraph myListener3 = new CréationGraph();
+		BoutonDijkstra myListener3 = new BoutonDijkstra();
 		Dijkstra.addActionListener(myListener3);
 		
 		this.frame = new Fenetre();
