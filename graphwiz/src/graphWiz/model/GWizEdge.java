@@ -19,7 +19,7 @@ public class GWizEdge extends DefaultWeightedEdge {
 		EXPLORER, PATH, REGULAR
 	}
 	
-	private Description description;
+	private Description description = Description.REGULAR;
 	
 	private String info = "1";
 
@@ -60,14 +60,6 @@ public class GWizEdge extends DefaultWeightedEdge {
 	
 	public String toString(){
 		return getInfo();
-	}
-
-	/**
-	 * @param gWizGraph  the gWizGraph to set
-	 * @uml.property  name="gWizGraph"
-	 */
-	public void setGWizGraph(GWizGraph wizGraph) {
-		gWizGraph = wizGraph;
 	}
 
 }

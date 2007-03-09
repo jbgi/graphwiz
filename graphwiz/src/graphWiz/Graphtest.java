@@ -78,13 +78,13 @@ public class Graphtest
         g.addVertex(v4);
         g.addVertex(v5);
 
-        g.addEdge(v1, v2).setGWizGraph(g);
-        g.addEdge(v1, v4).setGWizGraph(g);
-        g.addEdge(v2, v3).setGWizGraph(g);
-        g.addEdge(v3, v4).setGWizGraph(g);
-        g.addEdge(v4, v2).setGWizGraph(g);
-        g.addEdge(v3, v5).setGWizGraph(g);
-        g.addEdge(v4, v5).setGWizGraph(g);
+        g.addEdge(v1, v2);
+        g.addEdge(v1, v4);
+        g.addEdge(v2, v3);
+        g.addEdge(v3, v4);
+        g.addEdge(v4, v2);
+        g.addEdge(v3, v5);
+        g.addEdge(v4, v5);
         
         g.setEdgeWeight(g.getEdge(v1, v2), 1);
         g.setEdgeWeight(g.getEdge(v1, v4), 5);

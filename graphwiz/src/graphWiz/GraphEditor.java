@@ -249,7 +249,12 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	public Map createEdgeAttributes() {
 		Map map = new Hashtable();
 		// Add a Line End Attribute
-		GraphConstants.setLineEnd(map, GraphConstants.ARROW_DIAMOND);
+		GraphConstants.setLineEnd(map, GraphConstants.ARROW_TECHNICAL);
+		GraphConstants.setLineWidth(map, 2);
+		if (GraphConstants.DEFAULTFONT != null) {
+			GraphConstants.setFont(map, GraphConstants.DEFAULTFONT
+					.deriveFont(10f));
+		}
 		// Add a label along edge attribute
 		GraphConstants.setLabelAlongEdge(map, true);
 		return map;

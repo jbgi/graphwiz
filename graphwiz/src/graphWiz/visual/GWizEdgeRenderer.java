@@ -118,12 +118,11 @@ public class GWizEdgeRenderer extends EdgeRenderer {
 						.getAllAttributes());
 				JGraph graph = (JGraph)this.graph.get();
 				if (labels != null) {
-					System.out.println(labels[0]);
 					for (int i = 0; i < labels.length; i++){
 						paintLabel(g, graph.convertValueToString(labels[i]),
 								getExtraLabelPosition(view, i),
 								false || !simpleExtraLabels);
-						System.out.println(getExtraLabelPosition(view, i));
+						//System.out.println(getExtraLabelPosition(view, i));
 					}
 				}
 				if (graph.getEditingCell() != view.getCell()) {

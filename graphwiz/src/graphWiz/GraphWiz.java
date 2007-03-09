@@ -19,9 +19,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.jgraph.example.GraphEd;
-
-
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -62,7 +59,7 @@ public class GraphWiz extends JApplet{
 		grapheditor= new GraphEditor();
 		
 		//Création du menu de navigation
-		menu = new Navigation(new Dijkstra(((GWizModelAdapter) grapheditor.getGraph().getModel()).getGWizGraph()));
+		menu = new Navigation(grapheditor.getGraph());
 		
 		gauche.add(grapheditor);
 		gauche.add(TablValPred.getTabbedPane());
