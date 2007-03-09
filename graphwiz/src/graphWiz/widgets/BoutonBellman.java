@@ -1,5 +1,4 @@
-package widgets;
-
+package graphWiz.widgets;
 
 import graphWiz.GraphEditor;
 
@@ -7,9 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-public class BoutonFloyd implements ActionListener{
+public class BoutonBellman implements ActionListener{
 	
-	public BoutonFloyd(){
+	public BoutonBellman(){
 	}
 	
 	public void actionPerformed(ActionEvent evt) {
@@ -21,4 +20,5 @@ public class BoutonFloyd implements ActionListener{
 	     frame2.pack();
 	     frame2.setVisible(true);
 	}
+
 }

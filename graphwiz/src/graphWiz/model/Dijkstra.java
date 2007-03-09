@@ -28,6 +28,11 @@ public class Dijkstra extends Observable implements Algorithm {
 		verticesPredHistory = new Stack<Vector<GWizVertex[]>>();
 		verticesValuationHistory = new Stack<Vector<double[]>>();
 	}
+	
+	public Dijkstra(GWizGraph graph) {
+		this();
+		this.graph=graph;
+	}
 
 	public void clearAll(){
 		edgesDescriptionHistory.clear();
@@ -75,6 +80,8 @@ public class Dijkstra extends Observable implements Algorithm {
 	}
 	
 	public void nextStep(){
+		if (startingVertex==null)
+			setStartingVertex((GWizVertex) graph.vertexSet().toArray()[0]);
 		saveGraph();
 		if (!isEnd()){
 			GWizVertex selectedVertex = selectVertex();

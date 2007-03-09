@@ -1,4 +1,4 @@
-package widgets;
+package graphWiz.widgets;
 
 import java.awt.GridLayout;
 import java.awt.Image;

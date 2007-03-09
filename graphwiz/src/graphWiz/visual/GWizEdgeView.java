@@ -101,7 +101,7 @@ public class GWizEdgeView extends EdgeView {
 		if (getModel()==null) return Color.BLACK;
 		if (getModel().getDescription()==Description.REGULAR )
 			return Color.BLUE;
-		else return Color.BLACK;		
+		else return Color.BLACK;	
 	}
 	
 	String getWeight() {

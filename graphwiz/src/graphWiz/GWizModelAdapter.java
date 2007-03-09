@@ -49,6 +49,8 @@ package graphWiz;
 import graphWiz.model.GWizEdge;
 import graphWiz.model.GWizGraph;
 import graphWiz.model.GWizVertex;
+import graphWiz.model.GWizEdge.Description;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.*;
@@ -381,6 +383,8 @@ public class GWizModelAdapter extends DefaultGraphModel {
 
 			boolean added = graph.addEdge(jtSource, jtTarget, jtEdge);
 			jtElementsBeingAdded.remove(jtEdge);
+			
+			jtEdge.setDescription(Description.REGULAR);
 
 			return added ? jtEdge : null;
 		}

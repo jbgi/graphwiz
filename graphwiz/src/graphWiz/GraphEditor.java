@@ -85,7 +85,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	public static final String VERSION = "GraphWiz 0.1";
 
     private static final Color DEFAULT_BG_COLOR = Color.decode("#FAFBFF");
-    private static final Dimension DEFAULT_SIZE = new Dimension(530, 320);
     
     private SpringEmbeddedLayoutAlgorithm layout;
 	
@@ -151,8 +150,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		graph.setCloneable(true);
 		// Jump to default port on connect
 		graph.setJumpToDefaultPort(true);
-		
-		graph.setPreferredSize(DEFAULT_SIZE);
 		
         Color c = DEFAULT_BG_COLOR;
 
