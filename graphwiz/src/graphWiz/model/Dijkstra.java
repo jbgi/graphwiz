@@ -137,9 +137,11 @@ public class Dijkstra extends Algorithm {
 		while (i.hasNext() && !oneUpdate){
 			edge = i.next();
 		   	succ = graph.getEdgeTarget(edge);
-		   	if (!succ.isFixed() && !succ.isUpdated() && vertex.getValuation() + graph.getEdgeWeight(edge) <= succ.getValuation()){
-		   		succ.setValuation(vertex.getValuation()+graph.getEdgeWeight(edge));
-		   		succ.setPred(vertex);
+		   	if (!succ.isFixed() && !succ.isUpdated()){
+		   		if (vertex.getValuation() + graph.getEdgeWeight(edge) <= succ.getValuation()){
+		   			succ.setValuation(vertex.getValuation()+graph.getEdgeWeight(edge));
+		   			succ.setPred(vertex);
+		   		}
 		   		succ.setUpdated(true);
 				edge.setDescription(Description.EXPLORER);
 				oneUpdate = true;
