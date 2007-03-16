@@ -4,6 +4,8 @@ import graphWiz.GWizModelAdapter;
 import graphWiz.model.Algorithm;
 import graphWiz.model.Dijkstra;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -14,7 +16,7 @@ import javax.swing.*;
 import org.jgraph.JGraph;
 
 
-public class Navigation {
+public class Navigation extends JPanel{
 	
 	protected ImageIcon begin, back, pause, play, forward;
 	protected JToolBar bHor; 
@@ -22,10 +24,12 @@ public class Navigation {
 	private Algorithm algo;
 	
 	public Navigation(JGraph graph){
+		super();
+		bHor = new JToolBar();
 		jgraph = graph;
 		algo = new Dijkstra(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
-		bHor = new JToolBar();
-        begin = new ImageIcon(Navigation.class.getClassLoader().getResource(
+		
+		begin = new ImageIcon(Navigation.class.getClassLoader().getResource(
 		"graphWiz/resources/btn_begin.gif"));
         back = new ImageIcon(Navigation.class.getClassLoader().getResource(
 		"graphWiz/resources/btn_bf.gif"));
@@ -35,24 +39,48 @@ public class Navigation {
 		"graphWiz/resources/btn_play.gif"));
         forward = new ImageIcon(Navigation.class.getClassLoader().getResource(
 		"graphWiz/resources/btn_ff.gif"));
-        //bHor.add(begin);
+        
+        
+        bHor.add(new AbstractAction("",begin){
+        	public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub	
+			}});
+        bHor.addSeparator(new Dimension(30,10));
+       
         bHor.add(new AbstractAction("", back) {
 			public void actionPerformed(ActionEvent e) {
 				algo.previousStep();
 				jgraph.repaint();
 			}
         });	
-        //bHor.add(pause);
-        //bHor.add(play);
+        bHor.addSeparator(new Dimension(30,10));
+       
+        bHor.add(new AbstractAction("",pause){
+
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}});
+        bHor.addSeparator(new Dimension(30,10));
+        
         bHor.add(new AbstractAction("", forward) {
 			public void actionPerformed(ActionEvent e) {
 				algo.nextStep();
 				jgraph.repaint();
 			}
 		});
+                
+        bHor.addSeparator(new Dimension(30,10));
+       
+        bHor.add(new AbstractAction("",play){
+
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}}); 
+        
+        add(bHor);
+        this.setRequestFocusEnabled(false);
 	}
 	
-	public JToolBar getNav() {
-		return bHor;
-	}
 }

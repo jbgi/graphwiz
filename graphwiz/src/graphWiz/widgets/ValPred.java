@@ -46,7 +46,7 @@ public class ValPred extends JPanel{
         colVal.setPreferredWidth(width);
         colPred.setPreferredWidth(width);
         }
-        panneau.add(new JLabel("<html><font size=5>  VAL : </font></html>"));
+        panneau.add(new JLabel("<html><blockquote><font size=5>  VAL : </font></blockquote></html>"));
         panneau.add(tableVal);
         panneau.add(new JLabel("<html><blockquote><font size=5> PRED : </font></blockquote></html>"));
         panneau.add(tablePred);  
