@@ -4,38 +4,33 @@ import javax.swing.JList;
 
 public class TextBellman {
 
-	private String[] algo = new String[27];
+	private String[] algo = new String[19];
 	private JList AlgoBellman;
 	
 	public TextBellman(){
-		this.algo = new String[27];
-		this.algo[0] = "  ";
-		this.algo[1] = "Notations: ";
-		this.algo[2] = "  ";
-		this.algo[3] = "V[x] = la valuation du sommet x";
-		this.algo[4] = "  ";
-		this.algo[5] = "W(x,y) = le poids de l'arc (x,y)";
-		this.algo[6] = "  ";
-		this.algo[7] = "    ";
-		this.algo[8] = "Algorithme:";
-		this.algo[9] = "  ";
-		this.algo[10] = "Initialisation de la valuation du sommet de départ à 0";
-		this.algo[11] =	"et de tous les autres sommets à l'infini";
-		this.algo[12] = "  ";
-		this.algo[13] = "nbIter :=0";
-		this.algo[14] = "  ";
-		this.algo[15] = "Tant que les valuations sont modifiées d'une itération sur l'autre ou que nbIter != N-1 ";
-		this.algo[16] = "  ";
-		this.algo[17] = "Incrémenter nbIter ";
-		this.algo[18] = "  ";
-		this.algo[19] = "Pour chaque sommet x de 1 à N";
-		this.algo[20] = "  ";
-		this.algo[21] = "V[x] = min(V[x],  )";
-		this.algo[22] = "  ";
-		this.algo[23] = "Fin Pour";
-		this.algo[24] = "  ";
-		this.algo[25] = "Fin Tant que";
-		this.algo[26] = "Fin de l'algorithme";
+		algo = new String[19];
+		algo[0] = "  ";
+		algo[1] = "<html><I><font size=3><U> Notations:</U>"+
+				"<br>V[x] = valuation du sommet x</br>" +
+				"<br>W(x,y) = poids de l'arc (x,y)</br>" +
+				"<BR> <center> *	*	*	*  </center></BR></font></I></html>";
+		algo[2] =  "<html><font size=4><U> <br>Algorithme: </br></U></font></html>";
+		algo[4] = "  ";
+		algo[4] = "<html><font size=4><Br> Initialiser la valuation du sommet de départ à 0 </br></font></html>";
+		algo[5] = "<html><blockquote><font size=4>et celle de tous les autres sommets à + &#8734 </font></blockquote></html>";
+		algo[6] = "  ";
+		algo[7] = "<html><font size=4>Tant que les valuations sont modifiées d'une itération sur l'autre ou que nbIter&ne;N-1 </font></html>";
+		algo[8] = "  ";
+		algo[9] = "<html><blockquote><font size=4>Incrémenter nbIter </font></blockquote></html>";
+		algo[10] = "  ";
+		algo[11] = "<html><blockquote><font size=4>Pour chaque sommet x de 1 à N</font></blockquote></html>";
+		algo[12] = "  ";
+		algo[13] = "<html><blockquote><blockquote><font size=4>V[x] = min(V[x],min(V[y]+W(y,x), y prédécesseur de x))</font></blockquote></blockquote></html>";
+		algo[14] = "  ";
+		algo[15] = "<html><blockquote><font size=4>Fin Pour</font></blockquote></html>";
+		algo[16] = "  ";
+		algo[17] = "<html><font size=4>Fin Tant que</font></html>";
+		algo[18] = "<html><font size=4>Fin de l'algorithme</font></html>";
 			
 		this.AlgoBellman = new JList();
 		this.AlgoBellman.setListData(algo);

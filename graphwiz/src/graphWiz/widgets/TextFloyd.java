@@ -9,20 +9,16 @@ public class TextFloyd {
 	
 	public TextFloyd(){
 		this.algo = new String[27];
-		this.algo[0] = "  ";
-		this.algo[1] = "Notations: ";
-		this.algo[2] = "  ";
-		this.algo[3] = "	V[x] = valuation du sommet x";
-		this.algo[4] = "  ";
-		this.algo[5] = "	W(x,y) = poids de l’arc (x,y)";
-		this.algo[6] = "  ";
-		this.algo[7] = "    ";
-		this.algo[8] = "Algorithme:";
-		this.algo[9] = "  ";
-		this.algo[10] = "	Initialiser la valuation du sommet ";
-		this.algo[11] =	"   de départ à 0 et celle de tous les autres sommets à INFINI";
-		this.algo[12] = "  ";
-		this.algo[13] = "	Tant que tous les sommets ne sont pas fixés";
+		algo[0] = "  ";
+		algo[1] = "<html><I><font size=3><U> Notations:</U>"+
+				"<br>V[x] = valuation du sommet x</br>" +
+				"<br>W(x,y) = poids de l'arc (x,y)</br>" +
+				"<BR> <center> *	*	*	*  </center></BR></font></I></html>";
+		algo[2] =  "<html><font size=4><U> <br>Algorithme: </br></U></font></html>";
+		algo[4] = "  ";
+		algo[4] = "<html><font size=4><Br> Initialiser la valuation du sommet de départ à 0 </br></font></html>";
+		this.algo[5] = "  ";
+		/**this.algo[13] = " ";
 		this.algo[14] = "  ";
 		this.algo[15] = "		Sélectionner le sommet x non fixé de plus petite valuation";
 		this.algo[16] = "  ";
@@ -35,7 +31,7 @@ public class TextFloyd {
 		this.algo[23] = "		Fixer le sommet x";
 		this.algo[24] = "  ";
 		this.algo[25] = "	Fin Tant Que";
-		this.algo[26] = "Fin de l'algorithme";
+		this.algo[26] = "Fin de l'algorithme";**/
 
 		this.AlgoFloyd = new JList();
 		this.AlgoFloyd.setListData(algo);
