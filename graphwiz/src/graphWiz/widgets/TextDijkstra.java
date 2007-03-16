@@ -27,7 +27,7 @@ public class TextDijkstra {
 		algo[10] = new String("  ");
 		algo[11] = new String("<html><blockquote><font size=4>Pour chaque successeur non fixé y de x </font></blockquote></html>");
 		algo[12] = new String("  ");
-		algo[13] = new String("<html><blockquote><blockquote><font size=4>Si  &quot V[x] + W(x,y)"+" &lt "+" v[y]&quot  alors &quot V[y] = V(x) + W(x,y)&quot</blockquote></blockquote></font></html>");
+		algo[13] = new String("<html><blockquote><blockquote><font size=4>Si  &quot V[x] + W(x,y)"+" &lt "+" v[y]&quot  alors &quot V[y] = V[x] + W(x,y)&quot</blockquote></blockquote></font></html>");
 		algo[14] = new String("  ");
 		algo[15] = new String("<html><blockquote><font size=4>FinPour</font></blockquote></html>");
 		algo[16] = new String("  ");
