@@ -63,7 +63,7 @@ public class GraphWiz extends JApplet{
 		menu = new Navigation(grapheditor.getGraph());
 		
 		gauche.add(grapheditor);
-		gauche.add(TablValPred.getTabbedPane());
+		gauche.add(TablValPred);
 		droite.add(commentaires.getComments());
 		droite.add(menu.getNav());
 		droite.add(explications.getAlgoDijkstra());
