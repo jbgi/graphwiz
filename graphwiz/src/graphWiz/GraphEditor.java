@@ -22,6 +22,7 @@ package graphWiz;
 
 import graphWiz.model.*;
 import graphWiz.visual.*;
+import graphWiz.widgets.Navigation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -32,6 +33,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -48,8 +50,11 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -102,6 +107,11 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	// Status Bar
 	protected StatusBarGraphListener statusBar;
 
+	//Mode
+	private JComboBox mode;
+	private String[] modes = {"Mode Dessin", "Mode Algo"};
+	private String[] algos = {"DIJKSTRA","BELLMAN","FLOYD"};
+	private Navigation navigation;
 	//
 	// Editor Panel
 	//
@@ -602,7 +612,43 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		        graph.setScale(i);
 			}
 		});
-
+		
+		//Mode Algo, Mode Dessin
+		toolbar.addSeparator();
+		mode = new JComboBox(modes);
+		toolbar.add(mode);
+		mode.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
+				if(mode.getSelectedIndex()== 0){
+					//navigation.setFocusable(false);
+				}
+				if (mode.getSelectedIndex()==1){
+					JOptionPane.showInputDialog(null, "Quelle algorithme voulez-vous appliquer ?", "Choix de l'algorithme ", JOptionPane.QUESTION_MESSAGE,
+							null, algos, algos[0]);
+					//navigation.setFocusable(true);
+				}
+			}
+		});
+		
+		toolbar.addSeparator();
+		
+		//Help
+		URL helpUrl = getClass().getClassLoader().getResource(
+		"graphWiz/resources/help.jpg");
+		ImageIcon helpIcon = new ImageIcon(helpUrl);
+		toolbar.add(new AbstractAction("", helpIcon) {
+			public void actionPerformed(ActionEvent e) {
+				//à remplir!
+			}
+		});
+		
+		//Crédits
+		toolbar.addSeparator();
+		toolbar.add(new AbstractAction("Crédits"){
+			public void actionPerformed(ActionEvent e){
+				
+			}
+		});
+		
 		return toolbar;
 	}
 
