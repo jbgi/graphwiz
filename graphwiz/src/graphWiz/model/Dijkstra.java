@@ -1,9 +1,6 @@
 package graphWiz.model;
 import graphWiz.model.GWizEdge.Description;
 import java.util.Iterator;
-import java.util.Observable;
-import java.util.Stack;
-import java.util.Vector;
 
 /**
  * @author  jbg
@@ -11,6 +8,7 @@ import java.util.Vector;
 public class Dijkstra extends Algorithm {
 
 	private GWizVertex startingVertex;
+	private GWizVertex endVertex;
 	
 	public Dijkstra() {
 		super();
@@ -23,6 +21,7 @@ public class Dijkstra extends Algorithm {
 	
 	public String checkGraph() {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -84,6 +83,11 @@ public class Dijkstra extends Algorithm {
 		restorePreviousGraph();
 	}
 
+
+	@Override
+	public void setEndVertex(GWizVertex endVertex) {
+		this.endVertex=endVertex;
+	}
 
 	/**
 	 * @param startingVertex  the startingVertex to set

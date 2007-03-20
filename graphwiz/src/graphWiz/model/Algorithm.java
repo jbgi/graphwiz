@@ -24,6 +24,19 @@ public abstract class Algorithm {
 		verticesPredHistory = new Stack<Vector<GWizVertex[]>>();
 		verticesValuationHistory = new Stack<Vector<double[]>>();
 	}
+	
+	/**
+	 * Check that the current graph eligible for this algorithm.
+	 * @return a String describing why the graph is 
+	 */
+	public abstract String checkGraph();
+	
+	public void clearAll(){
+		edgesDescriptionHistory.clear();
+		verticesFlagHistory.clear();
+		verticesPredHistory.clear();
+		verticesValuationHistory.clear();
+	}
 
 
 	/**
@@ -37,6 +50,12 @@ public abstract class Algorithm {
 	 */
 	public abstract int getCurrentStep();
 
+	public GWizGraph getGraph() {
+		return graph;
+	}
+
+	public abstract boolean isEligible();
+
 	/**
 	 * @return true when the algorithm is finished
 	 */
@@ -47,20 +66,13 @@ public abstract class Algorithm {
 	 * initializing valuations.
 	 */
 	public abstract boolean isStart();
-
+	
 	public abstract void nextStep();
-
+	
 	public abstract void previousStep();
 	
-	public abstract boolean isEligible();
+	public abstract void setEndVertex (GWizVertex endVertex);
 	
-	/**
-	 * Check that the current graph eligible for this algorithm.
-	 * @return a String describing why the graph is 
-	 */
-	public abstract String checkGraph();
-	
-
 	/**
 	 * @param graph  the graph to set
 	 * @uml.property  name="graph"
@@ -72,6 +84,8 @@ public abstract class Algorithm {
 		verticesPredHistory.clear();
 		verticesValuationHistory.clear();
 	}
+	
+	public abstract void setStartingVertex (GWizVertex startingVertex);
 	
 	void restorePreviousGraph() {	
 		if (!verticesFlagHistory.isEmpty()){
@@ -137,17 +151,6 @@ public abstract class Algorithm {
 			edgesDescription.add(j.next().getDescription());
 		
 		edgesDescriptionHistory.add(edgesDescription);
-	}
-	
-	public GWizGraph getGraph() {
-		return graph;
-	}
-	
-	public void clearAll(){
-		edgesDescriptionHistory.clear();
-		verticesFlagHistory.clear();
-		verticesPredHistory.clear();
-		verticesValuationHistory.clear();
 	}
 
 }
