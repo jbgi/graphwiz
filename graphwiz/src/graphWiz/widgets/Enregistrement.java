@@ -1,7 +1,14 @@
 package graphWiz.widgets;
 
+import java.awt.*;
+import java.awt.event.ActionListener;
 
-public class Enregistrement extends JPanel{
+import javax.swing.*;
+
+import org.jgraph.JGraph;
+
+
+public class Enregistrement extends JFrame{
 	  
 	JButton enregistrer;
     JButton annuler;
@@ -18,7 +25,7 @@ public class Enregistrement extends JPanel{
 		this.setLocationRelativeTo(null); // centrage de la fenêtre par rapport à l'écran
 		this.setResizable(false);
 		Container contenu = getContentPane();
-		contenu.setLayout(new BoxLayout());
+		contenu.setLayout(new BoxLayout(contenu, defaultCloseOperation));
 
 			
 		panneauNom = new JPanel();

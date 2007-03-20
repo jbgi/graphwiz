@@ -11,7 +11,7 @@ import javax.swing.plaf.LabelUI;
 public class Logo extends JFrame{
 	public Logo(){
 		super();
-		ImageIcon icon = createImageIcon("/GraphWiz/src/graphWiz/resources/logo.JPG","a pretty but meaningless splat");	
+		ImageIcon icon = createImageIcon("graphWiz/resources/logo.JPG","a pretty but meaningless splat");	
 		Image im = icon.getImage(); 
 		
 	}

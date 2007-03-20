@@ -76,7 +76,7 @@ public class GWizEdgeRenderer extends EdgeRenderer {
 				setOpaque(false);
 				//super.paint(g);
 				translateGraphics(g);
-				g.setColor(((GWizEdgeView) view).getEdgeColor());
+				g.setColor(((GWizEdgeView) view).getColor());
 				if (lineWidth > 0) {
 					g2.setStroke(new BasicStroke(lineWidth, c, j));
 					if (gradientColor != null && !preview) {

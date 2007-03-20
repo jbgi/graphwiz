@@ -6,12 +6,33 @@ import java.util.Iterator;
  * @author  jbg
  */
 public class Dijkstra extends Algorithm {
-
+	
 	private GWizVertex startingVertex;
 	private GWizVertex endVertex;
 	
 	public Dijkstra() {
 		super();
+		
+		algo = new String[6];
+		
+		algo[0] = "<html><I><font size=3><U> Notations:</U><br />"
+			+ "V[x] = valuation du sommet x<br />"
+			+ "W(x,y) = poids de l'arc (x,y)</font><br />"
+			+ "<br /><font size=4><U> Algorithme: </U></font><br /></html>";
+
+		algo[1] = "<html><br /><font size=4>Initialiser la valuation du sommet de départ à 0 <br/>"
+			+ "et celle de tous les autres sommets à +&#8734 </font></html>";
+
+		algo[2] = "<html><br /><font size=4>Tant que tous les sommets ne sont pas fixés<br />"
+			+ "<blockquote>Sélectionner le sommet x non fixé de plus petite valuation</blockquote></font></html>";
+
+		algo[3] = "<html><br /><font size=4><blockquote>Pour chaque successeur non fixé y de x</blockquote><br />"
+			+"<blockquote><blockquote>Si  &quot V[x] + W(x,y)"+" &lt "+" v[y]&quot  alors &quot V[y] = V[x] + W(x,y)&quot</blockquote></blockquote></font></html>";
+
+		algo[4] = "<html><br /><font size=4><blockquote>FinPour</blockquote><br />"
+			+ "<blockquote>Fixer le sommet x</blockquote></font></html>";
+
+		algo[5] =  "<html><br /><font size=4>Fin Tant Que<br /></html>";
 	}
 	
 	public Dijkstra(GWizGraph graph) {
@@ -23,15 +44,6 @@ public class Dijkstra extends Algorithm {
 		// TODO Auto-generated method stub
 		
 		return null;
-	}
-
-	public String[] getAlgo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int getCurrentStep() {
-		return 0;
 	}
 
 	public boolean isEligible() {
@@ -77,6 +89,8 @@ public class Dijkstra extends Algorithm {
 				System.out.println(selectedVertex + " setFixing");
 			}
 		}
+		else
+			currentStep = 5;
 	}
 
 	public void previousStep(){
@@ -102,10 +116,12 @@ public class Dijkstra extends Algorithm {
 		Iterator<GWizEdge> i = graph.outgoingEdgesOf(vertex).iterator();
 		boolean allUpdated = true;
 		while (i.hasNext() && allUpdated){
-			allUpdated = graph.getEdgeTarget(i.next()).isUpdated() && allUpdated;
+			GWizVertex n = graph.getEdgeTarget(i.next());
+			allUpdated = (n.isUpdated()||n.isFixed())  && allUpdated;
 		}
 		if (allUpdated){
 			vertex.fixeMe();
+			currentStep = 4;
 			System.out.println(vertex + " isFixed");
 			Iterator<GWizEdge> j = graph.outgoingEdgesOf(vertex).iterator();
 			while (j.hasNext()){
@@ -128,6 +144,7 @@ public class Dijkstra extends Algorithm {
 			if (nextVertex.getValuation() <= minValuation && !nextVertex.isFixed()){
 				selectedVertex = nextVertex;
 				minValuation = selectedVertex.getValuation();
+				currentStep = 2;
 			}
 		}
 		return selectedVertex;
@@ -149,6 +166,7 @@ public class Dijkstra extends Algorithm {
 		   		succ.setUpdated(true);
 				edge.setDescription(Description.EXPLORER);
 				oneUpdate = true;
+				currentStep = 3;
 		   	}
 		}
 	}

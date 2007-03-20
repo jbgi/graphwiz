@@ -647,6 +647,10 @@ public class GWizModelAdapter extends DefaultGraphModel {
 	public GWizEdge getCellEdge(Edge jGraphEdge) {
 		return (GWizEdge) cellToEdge.get(jGraphEdge);
 	}
+	
+	public GWizVertex getCellVertex(DefaultGraphCell jGraphVertex) {
+		return (GWizVertex) cellToVertex.get(jGraphVertex);
+	}
 
 	/**
 	 * Returns the cell factory used to create the JGraph cells.

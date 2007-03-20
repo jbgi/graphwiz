@@ -1,6 +1,14 @@
 package graphWiz.visual;
 
+import java.awt.Color;
+
+import graphWiz.GWizModelAdapter;
+import graphWiz.model.GWizEdge;
+import graphWiz.model.GWizVertex;
+
 import org.jgraph.graph.CellViewRenderer;
+import org.jgraph.graph.DefaultEdge;
+import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.VertexView;
 
 /**
@@ -8,6 +16,8 @@ import org.jgraph.graph.VertexView;
  */
 @SuppressWarnings("serial")
 public class GWizVertexView extends VertexView {
+	
+	private GWizModelAdapter jgAdapter;
 
 	/**
 	 */
@@ -21,8 +31,9 @@ public class GWizVertexView extends VertexView {
 
 	/**
 	 */
-	public GWizVertexView(Object cell) {
+	public GWizVertexView(Object cell, GWizModelAdapter jgAdapter) {
 		super(cell);
+		this.jgAdapter = jgAdapter;
 	}
 
 	/**
@@ -30,6 +41,21 @@ public class GWizVertexView extends VertexView {
 	 */
 	public CellViewRenderer getRenderer() {
 		return renderer;
+	}
+	
+	private GWizVertex getModel() {
+		return jgAdapter.getCellVertex((DefaultGraphCell) getCell());
+	}
+	
+	Color getColor(){
+		if (getModel()==null) return Color.BLACK;
+		if (getModel().isFixed())
+			return Color.lightGray;
+		if (getModel().isFixing())
+			return Color.CYAN;
+		if (getModel().isUpdated())
+			return Color.BLUE;
+		else return Color.BLACK;	
 	}
 
 }

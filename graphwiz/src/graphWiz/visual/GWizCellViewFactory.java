@@ -15,7 +15,7 @@ public class GWizCellViewFactory extends DefaultCellViewFactory {
 	}
 	
 	protected VertexView createVertexView(Object cell) {
-		return new GWizVertexView(cell);
+		return new GWizVertexView(cell, jgAdapter);
 	}
 	
 	/**

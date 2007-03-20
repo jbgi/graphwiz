@@ -97,7 +97,7 @@ public class GWizEdgeView extends EdgeView {
 		return jgAdapter.getCellEdge((DefaultEdge) getCell());
 	}
 	
-	Color getEdgeColor(){
+	Color getColor(){
 		if (getModel()==null) return Color.BLACK;
 		if (getModel().getDescription()==Description.REGULAR )
 			return Color.BLACK;

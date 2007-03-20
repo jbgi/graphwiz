@@ -22,8 +22,8 @@ public class GWizVertexRenderer extends VertexRenderer {
 	 */
 	public Dimension getPreferredSize() {
 		Dimension d = super.getPreferredSize();
-		d.width *= 2.5 ;
-		d.height *= 2 ;
+		d.width *= 2 ;
+		d.height *= 1.5 ;
 		return d;
 	}
 	
@@ -100,7 +100,7 @@ public class GWizVertexRenderer extends VertexRenderer {
 		Dimension d = getSize();
 		boolean tmp = selected;
 		if (super.isOpaque()) {
-			g.setColor(super.getBackground());
+			g.setColor(((GWizVertexView) view).getColor());
 			if (gradientColor != null && !preview) {
 				setOpaque(false);
 				g2.setPaint(new GradientPaint(0, 0, getBackground(),

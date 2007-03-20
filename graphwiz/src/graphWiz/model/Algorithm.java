@@ -18,6 +18,10 @@ public abstract class Algorithm {
 	
 	Stack<Vector<double[]>> verticesValuationHistory;
 	
+	int currentStep = 1;
+	
+	String[] algo;
+	
 	public Algorithm() {
 		edgesDescriptionHistory = new Stack<Vector<Description>>();
 		verticesFlagHistory = new Stack<Vector<boolean[]>>();
@@ -42,13 +46,17 @@ public abstract class Algorithm {
 	/**
 	 * @return String table describing the algorithm (notations and steps)
 	 */
-	public abstract String[] getAlgo();
+	public String[] getAlgo() {
+		return algo;
+	}
 
 	/**
 	 * @return the index of the String describing the current step. (Index in the
 	 * description table of the algorithm returned by getAlgo)
 	 */
-	public abstract int getCurrentStep();
+	public int getCurrentStep() {
+		return currentStep;
+	}
 
 	public GWizGraph getGraph() {
 		return graph;

@@ -128,6 +128,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		populateContentPane();
 
 		installListeners(graph);
+		
+		graph.setScale(2.0);
 	}
 
 	// Hook for subclassers
@@ -193,12 +195,14 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 
 	// Insert a new Vertex at point
 	public void insert(Point2D point) {
+		if (graph.isEditable()){
 		// Construct Vertex with no Label
 		DefaultGraphCell vertex = createDefaultGraphCell();
 		// Create a Map that holds the attributes for the Vertex
 		vertex.getAttributes().applyMap(createCellAttributes(point));
 		// Insert the Vertex (including child port and attributes)
 		graph.getGraphLayoutCache().insert(vertex);
+		}
 	}
 
 	// Hook for subclassers
@@ -216,11 +220,12 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		// Make sure the cell is resized on insert
 		GraphConstants.setResize(map, true);
 		// Add a nice looking gradient background
-		GraphConstants.setGradientColor(map, Color.blue);
+		//GraphConstants.setGradientColor(map, Color.blue);
 		// Add a Border Color Attribute to the Map
 		GraphConstants.setBorderColor(map, Color.black);
 		// Add a White Background
-		GraphConstants.setBackground(map, Color.white);
+		GraphConstants.setBackground(map, Color.black);
+		GraphConstants.setForeground(map, Color.WHITE);
 		// Make Vertex Opaque
 		GraphConstants.setOpaque(map, true);
 		// Auto-size cell
@@ -263,7 +268,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		GraphConstants.setLineWidth(map, 2);
 		if (GraphConstants.DEFAULTFONT != null) {
 			GraphConstants.setFont(map, GraphConstants.DEFAULTFONT
-					.deriveFont(10f));
+					.deriveFont(13f));
 		}
 		// Add a label along edge attribute
 		GraphConstants.setLabelAlongEdge(map, true);
@@ -536,6 +541,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon connectIcon = new ImageIcon(connectUrl);
 		toolbar.add(new AbstractAction("", connectIcon) {
 			public void actionPerformed(ActionEvent e) {
+				if (graph.isEditable()){
 				graph.setPortsVisible(!graph.isPortsVisible());
 				URL connectUrl;
 				if (graph.isPortsVisible())
@@ -546,6 +552,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 							"graphWiz/resources/connecton.gif");
 				ImageIcon connectIcon = new ImageIcon(connectUrl);
 				putValue(SMALL_ICON, connectIcon);
+				}
 			}
 		});
 
@@ -555,10 +562,12 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon removeIcon = new ImageIcon(removeUrl);
 		remove = new AbstractAction("", removeIcon) {
 			public void actionPerformed(ActionEvent e) {
+				if (graph.isEditable()){
 				if (!graph.isSelectionEmpty()) {
 					Object[] cells = graph.getSelectionCells();
 					cells = graph.getDescendants(cells);
 					graph.getModel().remove(cells);
+				}
 				}
 			}
 		};
@@ -572,7 +581,9 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon zoomIcon = new ImageIcon(zoomUrl);
 		toolbar.add(new AbstractAction("", zoomIcon) {
 			public void actionPerformed(ActionEvent e) {
-				graph.setScale(1.0);
+				if (graph.isEditable()){
+				graph.setScale(2.0);
+				}
 			}
 		});
 		// Zoom In
@@ -581,7 +592,9 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon zoomInIcon = new ImageIcon(zoomInUrl);
 		toolbar.add(new AbstractAction("", zoomInIcon) {
 			public void actionPerformed(ActionEvent e) {
-				graph.setScale(2 * graph.getScale());
+				if (graph.isEditable()){
+				graph.setScale(1.5 * graph.getScale());
+				}
 			}
 		});
 		// Zoom Out
@@ -590,11 +603,11 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon zoomOutIcon = new ImageIcon(zoomOutUrl);
 		toolbar.add(new AbstractAction("", zoomOutIcon) {
 			public void actionPerformed(ActionEvent e) {
-				graph.setScale(graph.getScale() / 2);
+				if (graph.isEditable()){
+				graph.setScale(graph.getScale() / 1.5);
+				}
 			}
 		});
-		
-		toolbar.add(remove);
 
 		// Layout Algorithm
 		toolbar.addSeparator();
@@ -603,6 +616,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon layoutIcon = new ImageIcon(springLayoutUrl);
 		toolbar.add(new AbstractAction("", layoutIcon) {
 			public void actionPerformed(ActionEvent e) {
+				if (graph.isEditable()){
 		        layout.setFrame(new Rectangle((int) (getComponent(1).getBounds().getWidth()/graph.getScale()),
 		        		(int) (getComponent(1).getBounds().getHeight()/graph.getScale())));
 		        layout.setScale(graph.getScale());
@@ -610,6 +624,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		        graph.setScale(1);
 		        SpringEmbeddedLayoutAlgorithm.applyLayout(graph, layout, graph.getRoots());
 		        graph.setScale(i);
+				}
 			}
 		});
 		
@@ -619,9 +634,19 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(mode);
 		mode.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
 				if(mode.getSelectedIndex()== 0){
+					graph.setPortsVisible(true);
+					graph.setEditable(true);
+					graph.setMoveable(true);
+					graph.setSelectionEnabled(true);
 					//navigation.setFocusable(false);
 				}
 				if (mode.getSelectedIndex()==1){
+					graph.clearSelection();
+					graph.stopEditing();
+					graph.setPortsVisible(false);
+					graph.setEditable(false);
+					graph.setMoveable(false);
+					graph.setSelectionEnabled(false);
 					JOptionPane.showInputDialog(null, "Quelle algorithme voulez-vous appliquer ?", "Choix de l'algorithme ", JOptionPane.QUESTION_MESSAGE,
 							null, algos, algos[0]);
 					//navigation.setFocusable(true);

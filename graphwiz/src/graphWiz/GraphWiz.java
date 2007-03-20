@@ -25,7 +25,6 @@ import java.awt.event.WindowEvent;
 public class GraphWiz extends JApplet{
 
 	private Navigation menu;
-	private TextDijkstra explications;
 	private ValPred TablValPred;
 	private GraphEditor grapheditor;
 	
@@ -34,17 +33,10 @@ public class GraphWiz extends JApplet{
 		//Création de la fenetre principale
 		setLayout(new BoxLayout(getContentPane(),BoxLayout.X_AXIS));
 		JPanel gauche = new JPanel();
-		JPanel droite = new JPanel();
 		//gauche.setAutoscrolls(true);
-		//droite.setAutoscrolls(true);
-		droite.setPreferredSize(new Dimension(540,750));
 		gauche.setPreferredSize(new Dimension(700,750));
 		gauche.setLayout(new BoxLayout(gauche, BoxLayout.Y_AXIS));
-		droite.setLayout(new BoxLayout(droite, BoxLayout.Y_AXIS));
 
-		Commentaires commentaires = new Commentaires();		
-		//Génération de l'algorithme défilant de Dijsktra
-		explications = new TextDijkstra();
 		
 		//Création du logo
 		URL graphWizUrl = GraphWiz.class.getClassLoader().getResource(
@@ -64,12 +56,8 @@ public class GraphWiz extends JApplet{
 		
 		gauche.add(grapheditor);
 		gauche.add(TablValPred);
-		droite.add(commentaires.getComments());
-		droite.add(menu);
-		droite.add(explications.getAlgoDijkstra());
-		droite.add(image);
 		add(gauche);
-		add(droite);		
+		add(menu);		
 	}
 	
 	public static void main(String[] args) {
