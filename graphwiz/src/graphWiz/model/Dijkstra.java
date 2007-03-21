@@ -85,8 +85,10 @@ public class Dijkstra extends Algorithm {
 				updateSuccessorOf(selectedVertex);
 			}
 			else {
-				selectedVertex.setFixing(true);
-				System.out.println(selectedVertex + " setFixing");
+				if (!selectedVertex.isFixed()){
+					selectedVertex.setFixing(true);
+					System.out.println(selectedVertex + " setFixing");
+				}
 			}
 		}
 		else
@@ -116,19 +118,23 @@ public class Dijkstra extends Algorithm {
 		Iterator<GWizEdge> i = graph.outgoingEdgesOf(vertex).iterator();
 		boolean allUpdated = true;
 		while (i.hasNext() && allUpdated){
-			GWizVertex n = graph.getEdgeTarget(i.next());
+			GWizEdge edge = i.next();
+			GWizVertex n = graph.getEdgeTarget(edge);
 			allUpdated = (n.isUpdated()||n.isFixed())  && allUpdated;
+			if (graph.getEdgeSource(edge)==graph.getEdgeTarget(edge).getPred())
+				edge.setDescription(Description.PATH);
+			else
+				if (graph.getEdgeTarget(edge).isUpdated()||graph.getEdgeTarget(edge).isFixed())
+					edge.setDescription(Description.REGULAR);
 		}
 		if (allUpdated){
 			vertex.fixeMe();
+			vertex.setFixing(false);
 			currentStep = 4;
 			System.out.println(vertex + " isFixed");
 			Iterator<GWizEdge> j = graph.outgoingEdgesOf(vertex).iterator();
-			while (j.hasNext()){
-				GWizEdge edge = j.next();
-				graph.getEdgeTarget(edge).setUpdated(false);
-				edge.setDescription(Description.REGULAR);
-			}
+			while (j.hasNext())
+				graph.getEdgeTarget(j.next()).setUpdated(false);
 		}
 	}
 
@@ -139,13 +145,21 @@ public class Dijkstra extends Algorithm {
 		GWizVertex nextVertex;
 		while (i.hasNext()){
 			nextVertex = i.next();
-			if (nextVertex.isFixing())
+			if (nextVertex.isFixing()){
 				checkAllSuccessorUpdated(nextVertex);
+				if (nextVertex.isFixed())
+					return nextVertex;
+			}
 			if (nextVertex.getValuation() <= minValuation && !nextVertex.isFixed()){
 				selectedVertex = nextVertex;
 				minValuation = selectedVertex.getValuation();
 				currentStep = 2;
 			}
+		}
+		if (!selectedVertex.isFixed()){
+			Iterator<GWizEdge> e = graph.outgoingEdgesOf(selectedVertex).iterator();
+			while (e.hasNext())
+				e.next().setDescription(Description.SELECT);
 		}
 		return selectedVertex;
 	}

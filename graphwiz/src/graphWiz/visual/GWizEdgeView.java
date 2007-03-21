@@ -8,6 +8,7 @@ package graphWiz.visual;
 
 import graphWiz.GWizModelAdapter;
 import graphWiz.model.GWizEdge;
+import graphWiz.model.GWizVertex;
 import graphWiz.model.GWizEdge.Description;
 
 import java.awt.Color;
@@ -31,6 +32,7 @@ import java.util.Map;
 import javax.swing.SwingUtilities;
 import org.jgraph.JGraph;
 import org.jgraph.graph.AbstractCellView;
+import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.CellHandle;
 import org.jgraph.graph.CellMapper;
 import org.jgraph.graph.CellView;
@@ -53,7 +55,12 @@ import org.jgraph.plaf.basic.BasicGraphUI;
  */
 
 public class GWizEdgeView extends EdgeView {
-
+	
+	EdgeView predStroke;
+	
+	JGraph graph;
+	
+	boolean updated =false ;
 
 	private GWizModelAdapter jgAdapter;
 	
@@ -68,16 +75,6 @@ public class GWizEdgeView extends EdgeView {
 		this.jgAdapter = jgAdapter;
 		renderer = new GWizEdgeRenderer();
 		
-	}
-
-	/**
-	 * Constructs an edge view for the specified model object.
-	 * 
-	 * @param cell
-	 *            reference to the model object
-	 */
-	public GWizEdgeView(Object cell) {
-		super(cell);
 	}
 
 	//
@@ -99,13 +96,27 @@ public class GWizEdgeView extends EdgeView {
 	
 	Color getColor(){
 		if (getModel()==null) return Color.BLACK;
+		if (getModel().getDescription()==Description.PATH)
+			return Color.GREEN;
+		if (getModel().getDescription()==Description.SELECT)
+			return Color.BLUE;
 		if (getModel().getDescription()==Description.REGULAR )
 			return Color.BLACK;
 		if (getModel().getDescription()==Description.EXPLORER )
-			return Color.BLUE;
-		if (getModel().getDescription()==Description.PATH )
-			return Color.GREEN;
-		else return Color.BLACK;	
+			return Color.CYAN;
+		else return Color.BLACK;
+	}
+	
+	void paintPred(){
+		if (getModel()!=null && !updated){
+		//	if (jgAdapter.getGWizGraph().getEdgeSource(getModel()) == jgAdapter.getGWizGraph().getEdgeTarget(getModel()).getPred()){
+				GraphConstants.setLineBegin(getAllAttributes(), GraphConstants.ARROW_CIRCLE);
+		//	}
+		jgAdapter.cellsChanged(new Object[] { getCell()});
+		updated = true;
+		}
+		else
+			updated = false;
 	}
 	
 	String getWeight() {
@@ -113,7 +124,6 @@ public class GWizEdgeView extends EdgeView {
 		if (weight == (int) weight)
 			return Integer.toString((int) weight);
 		else return Double.toString(weight);
-		
 	}
 	
 	

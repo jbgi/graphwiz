@@ -64,6 +64,7 @@ public class GWizEdgeRenderer extends EdgeRenderer {
 	 * Paint the renderer.
 	 */
 	public void paint(Graphics g) {
+		//((GWizEdgeView) view).paintPred();
 		if (view.isLeaf()) {
 			Shape edgeShape = view.getShape();
 			// Sideeffect: beginShape, lineShape, endShape

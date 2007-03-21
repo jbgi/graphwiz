@@ -147,7 +147,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	// Hook for subclassers
 	protected JGraph createGraph() {
 		jgAdapter = new GWizModelAdapter(new GWizGraph());
-		JGraph graph = new JGraph(new GraphLayoutCache(jgAdapter, new GWizCellViewFactory(jgAdapter)));
+		graph = new JGraph(new GraphLayoutCache(jgAdapter, new GWizCellViewFactory(jgAdapter)));
 		// Make Ports Visible by Default
 		graph.setPortsVisible(true);
 		// Use the Grid (but don't make it Visible)

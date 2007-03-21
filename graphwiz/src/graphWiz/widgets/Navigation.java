@@ -3,6 +3,7 @@ package graphWiz.widgets;
 import graphWiz.GWizModelAdapter;
 import graphWiz.model.Algorithm;
 import graphWiz.model.Dijkstra;
+import graphWiz.visual.GWizEdgeView;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -15,6 +16,10 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 import org.jgraph.JGraph;
+import org.jgraph.graph.CellView;
+import org.jgraph.graph.DefaultEdge;
+import org.jgraph.graph.Edge;
+import org.jgraph.graph.GraphConstants;
 
 
 public class Navigation extends JPanel{
@@ -75,6 +80,15 @@ public class Navigation extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				algo.nextStep();
 				algoText.setSelectedIndex(algo.getCurrentStep());
+				//Object[] edges = jgraph.getGraphLayoutCache().getCells(false, false, false, true);
+				//for (int i = 0; i < edges.length; i++){
+				//	GWizEdgeView revert = new GWizEdgeView(edges[i], 1, (GWizModelAdapter) jgraph.getGraphLayoutCache().getModel());
+				//	GraphConstants.setLineBegin(revert.getAllAttributes(),GraphConstants.ARROW_DIAMOND);
+				//	GraphConstants.setLineEnd(revert.getAllAttributes(),GraphConstants.ARROW_TECHNICAL);
+				//	GraphConstants.setLineWidth(revert.getAllAttributes(), 1);
+				//	GraphConstants.setLineColor(revert.getAllAttributes(), Color.GREEN);
+				//	jgraph.getGraphLayoutCache().insertViews(new CellView[] {revert});
+				//}
 				jgraph.repaint();
 			}
 		});

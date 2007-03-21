@@ -16,7 +16,7 @@ public class GWizEdge extends DefaultWeightedEdge {
 	 * @author  jbg
 	 */
 	public enum Description {
-		EXPLORER, PATH, REGULAR
+		SELECT, EXPLORER, PATH, REGULAR
 	}
 	
 	private Description description = Description.REGULAR;
