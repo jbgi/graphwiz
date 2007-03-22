@@ -7,6 +7,8 @@ import org.jgrapht.VertexFactory;
  */
 @SuppressWarnings("serial")
 public class GWizVertex implements VertexFactory<GWizVertex> {
+	
+	private int count = 0;
 
 	private boolean fixed = false;
 	
@@ -14,26 +16,29 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 	
 	private boolean hasPred = false;
 	
+	private boolean updatedDone = false;
+	
 	private String name;
 	
-	private GWizVertex pred;
+	private GWizVertex pred = null;
 	
 	private GWizVertex previousPred = null;
 
-	private double previousValuation = Double.POSITIVE_INFINITY;
+	private double previousValuation = Float.POSITIVE_INFINITY;
 
 	private boolean updated = false;
 
 	private double valuation;
 
 	public GWizVertex(String name) {
-
 		this.name = name;
 		this.valuation = Float.POSITIVE_INFINITY;
 	}
 
 	public GWizVertex createVertex() {
-		return new GWizVertex("#");
+		count++;
+		return new GWizVertex(Integer.toString(count));
+		
 	}
 	
 	public void fixeMe() {
@@ -179,6 +184,8 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 	 */
 	public void setUpdated(boolean updated) {
 		this.updated = updated;
+		if (!updated)
+			setUpdatedDone(false);
 	}
 
 	/**
@@ -192,6 +199,26 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 
 	public String toString() {
 		return this.name;
+	}
+
+	public boolean isUpdatedDone() {
+		return updatedDone;
+	}
+
+	protected void setUpdatedDone(boolean updatedDone) {
+		this.updatedDone = updatedDone;
+	}
+	
+	protected void reset(){
+		setUpdatedDone(false);
+		setFixed(false);
+		setFixing(false);
+		setHasPred(false);
+		setUpdated(false);
+		pred = null;
+		previousPred = null;
+		previousValuation = Float.POSITIVE_INFINITY;
+		valuation = Float.POSITIVE_INFINITY;
 	}
 
 }

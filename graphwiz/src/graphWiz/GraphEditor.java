@@ -22,6 +22,7 @@ package graphWiz;
 
 import graphWiz.model.*;
 import graphWiz.visual.*;
+import graphWiz.widgets.GWizGraphGeneratorDialog;
 import graphWiz.widgets.Navigation;
 
 import java.awt.BorderLayout;
@@ -67,6 +68,7 @@ import org.jgraph.event.GraphModelEvent;
 import org.jgraph.event.GraphModelListener;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
+import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.BasicMarqueeHandler;
 import org.jgraph.graph.CellHandle;
 import org.jgraph.graph.CellView;
@@ -84,6 +86,8 @@ import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 import org.jgraph.graph.PortView;
 
+import com.jgraph.example.JGraphGraphFactory;
+
 public class GraphEditor extends JPanel implements GraphSelectionListener,
 		KeyListener {
 	
@@ -97,6 +101,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	protected JGraph graph;
 	
 	private GWizModelAdapter jgAdapter;
+	
+	GWizGraphGeneratorDialog generatorDialog;
 
 	// Actions which Change State
 	protected Action remove;
@@ -112,6 +118,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	private String[] modes = {"Mode Dessin", "Mode Algo"};
 	private String[] algos = {"DIJKSTRA","BELLMAN","FLOYD"};
 	private Navigation navigation;
+
+	private GWizGraph gwizGraph;
 	//
 	// Editor Panel
 	//
@@ -125,6 +133,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		
         layout = new SpringEmbeddedLayoutAlgorithm();
 		
+        generatorDialog = new GWizGraphGeneratorDialog(this);
+        
 		populateContentPane();
 
 		installListeners(graph);
@@ -146,7 +156,10 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 
 	// Hook for subclassers
 	protected JGraph createGraph() {
-		jgAdapter = new GWizModelAdapter(new GWizGraph());
+		
+		gwizGraph = new GWizGraph();
+		
+		jgAdapter = new GWizModelAdapter(gwizGraph, new AttributeMap(createCellAttributes(new Point(10,10))), new AttributeMap(createEdgeAttributes()));
 		graph = new JGraph(new GraphLayoutCache(jgAdapter, new GWizCellViewFactory(jgAdapter)));
 		// Make Ports Visible by Default
 		graph.setPortsVisible(true);
@@ -524,6 +537,16 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	public JToolBar createToolBar() {
 		JToolBar toolbar = new JToolBar();
 		toolbar.setFloatable(false);
+		
+		//New Random Graph
+		URL randomUrl = getClass().getClassLoader().getResource(
+		"graphWiz/resources/tree.gif");
+		ImageIcon randomIcon = new ImageIcon(randomUrl);
+		toolbar.add(new AbstractAction("Insert Random Graph", randomIcon) {
+			public void actionPerformed(ActionEvent e) {
+				generatorDialog.newRandomGraph();
+			}
+		});
 
 		// Insert
 		URL insertUrl = getClass().getClassLoader().getResource(
@@ -616,15 +639,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon layoutIcon = new ImageIcon(springLayoutUrl);
 		toolbar.add(new AbstractAction("", layoutIcon) {
 			public void actionPerformed(ActionEvent e) {
-				if (graph.isEditable()){
-		        layout.setFrame(new Rectangle((int) (getComponent(1).getBounds().getWidth()/graph.getScale()),
-		        		(int) (getComponent(1).getBounds().getHeight()/graph.getScale())));
-		        layout.setScale(graph.getScale());
-		        double i = graph.getScale();
-		        graph.setScale(1);
-		        SpringEmbeddedLayoutAlgorithm.applyLayout(graph, layout, graph.getRoots());
-		        graph.setScale(i);
-				}
+				applySpringLayout();
 			}
 		});
 		
@@ -634,19 +649,11 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(mode);
 		mode.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
 				if(mode.getSelectedIndex()== 0){
-					graph.setPortsVisible(true);
-					graph.setEditable(true);
-					graph.setMoveable(true);
-					graph.setSelectionEnabled(true);
+					startEdition();
 					//navigation.setFocusable(false);
 				}
 				if (mode.getSelectedIndex()==1){
-					graph.clearSelection();
-					graph.stopEditing();
-					graph.setPortsVisible(false);
-					graph.setEditable(false);
-					graph.setMoveable(false);
-					graph.setSelectionEnabled(false);
+					stopEdition();
 					JOptionPane.showInputDialog(null, "Quelle algorithme voulez-vous appliquer ?", "Choix de l'algorithme ", JOptionPane.QUESTION_MESSAGE,
 							null, algos, algos[0]);
 					//navigation.setFocusable(true);
@@ -675,6 +682,18 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		});
 		
 		return toolbar;
+	}
+	
+	public void applySpringLayout(){
+		if (graph.isEditable()){
+	        layout.setFrame(new Rectangle((int) (getComponent(1).getBounds().getWidth()/graph.getScale()),
+	        		(int) (getComponent(1).getBounds().getHeight()/graph.getScale())));
+	        layout.setScale(graph.getScale());
+	        double i = graph.getScale();
+	        graph.setScale(1);
+	        SpringEmbeddedLayoutAlgorithm.applyLayout(graph, layout, graph.getRoots());
+	        graph.setScale(i);
+		}
 	}
 
 	/**
@@ -821,5 +840,25 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	 */
 	public void setRemove(Action remove) {
 		this.remove = remove;
+	}
+
+	public GWizGraph getGwizGraph() {
+		return gwizGraph;
+	}
+	
+	public void startEdition() {
+		graph.setPortsVisible(true);
+		graph.setEditable(true);
+		graph.setMoveable(true);
+		graph.setSelectionEnabled(true);
+	}
+
+	public void stopEdition() {
+		graph.clearSelection();
+		graph.stopEditing();
+		graph.setPortsVisible(false);
+		graph.setEditable(false);
+		graph.setMoveable(false);
+		graph.setSelectionEnabled(false);
 	}
 }

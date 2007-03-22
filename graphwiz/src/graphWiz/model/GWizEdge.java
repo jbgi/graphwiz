@@ -62,5 +62,9 @@ public class GWizEdge extends DefaultWeightedEdge {
 		return getInfo();
 	}
 
+	protected void reset() {
+		description = Description.REGULAR;
+	}
+
 }
 

@@ -1,4 +1,6 @@
 package graphWiz.model;
+import java.util.Iterator;
+
 import org.jgrapht.graph.ListenableDirectedWeightedGraph;
 
 /**
@@ -27,6 +29,14 @@ public class GWizGraph extends ListenableDirectedWeightedGraph<GWizVertex, GWizE
 	 */
 	public void setInfo(String info) {
 		this.info = info;
+	}
+	
+	public void clear() {
+		if (vertexSet().size()!=0){
+			Object[] v = vertexSet().toArray();
+			for (int i=0 ; i<v.length; i++)
+				this.removeVertex((GWizVertex)v[i]);
+		}
 	}
 
 }

@@ -18,6 +18,8 @@ public abstract class Algorithm {
 	
 	Stack<Vector<double[]>> verticesValuationHistory;
 	
+	Stack<Integer> currentStepHistory;
+	
 	int currentStep = 1;
 	
 	String[] algo;
@@ -27,6 +29,7 @@ public abstract class Algorithm {
 		verticesFlagHistory = new Stack<Vector<boolean[]>>();
 		verticesPredHistory = new Stack<Vector<GWizVertex[]>>();
 		verticesValuationHistory = new Stack<Vector<double[]>>();
+		currentStepHistory = new Stack<Integer>();
 	}
 	
 	/**
@@ -35,11 +38,24 @@ public abstract class Algorithm {
 	 */
 	public abstract String checkGraph();
 	
-	public void clearAll(){
+	public void clearHistory(){
 		edgesDescriptionHistory.clear();
 		verticesFlagHistory.clear();
 		verticesPredHistory.clear();
 		verticesValuationHistory.clear();
+		currentStepHistory.clear();
+	}
+	
+	public void retoreInitialState(){
+		Iterator<GWizVertex> v = graph.vertexSet().iterator();
+		while (v.hasNext())
+			v.next().reset();
+		
+		Iterator<GWizEdge> e = graph.edgeSet().iterator();
+		while (e.hasNext())
+			e.next().reset();
+		
+		clearHistory();
 	}
 
 
@@ -86,6 +102,7 @@ public abstract class Algorithm {
 	 * @uml.property  name="graph"
 	 */
 	public void setGraph(GWizGraph gWizGraph) {
+		currentStepHistory.clear();
 		graph = gWizGraph;
 		edgesDescriptionHistory.clear();
 		verticesFlagHistory.clear();
@@ -110,7 +127,7 @@ public abstract class Algorithm {
 				v.setFixing(verticesFlag.get(j)[1]);
 				v.setUpdated(verticesFlag.get(j)[2]);
 				v.setHasPred(verticesFlag.get(j)[3]);
-				
+				v.setUpdatedDone(verticesFlag.get(j)[4]);
 				v.setPred(verticesPred.get(j)[0]);
 				v.setPreviousPred(verticesPred.get(j)[1]);
 				
@@ -140,7 +157,7 @@ public abstract class Algorithm {
 		while (i.hasNext()){
 			GWizVertex v = i.next();
 			
-			boolean[] t1 = new boolean[] {v.isFixed(), v.isFixing(), v.isUpdated(), v.hasPred()};
+			boolean[] t1 = new boolean[] {v.isFixed(), v.isFixing(), v.isUpdated(), v.hasPred(), v.isUpdatedDone()};
 			verticesFlag.add(t1);
 			
 			GWizVertex[] t2 = {v.getPred(), v.getPreviousPred()};

@@ -855,7 +855,8 @@ public class GWizModelAdapter extends DefaultGraphModel {
 	}
 	
 	void handleJGraphChangedVertex(org.jgraph.graph.DefaultGraphCell jVertex) {
-		cellToVertex.get(jVertex).setName(jVertex.toString());
+		if (cellToVertex.containsKey(jVertex))
+			cellToVertex.get(jVertex).setName(jVertex.toString());
 	}
 
 	/**
