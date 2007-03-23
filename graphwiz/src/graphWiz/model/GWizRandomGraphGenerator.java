@@ -151,7 +151,7 @@ public class GWizRandomGraphGenerator<V, E>
                 orderToVertexMap.put(Integer.valueOf(i), newVertex);
                 if (lastVertex != null) {
                     target.addEdge(lastVertex, newVertex);
-                    ((GWizGraph) target).setEdgeWeight(((GWizGraph) target).getEdge((GWizVertex) lastVertex, (GWizVertex) newVertex), randomizer.nextInt(maxWeight+minWeight)-minWeight);
+                    ((GWizGraph) target).setEdgeWeight(((GWizGraph) target).getEdge((GWizVertex) lastVertex, (GWizVertex) newVertex), randomizer.nextInt(1+maxWeight-minWeight)+minWeight);
                 }
                 lastVertex = newVertex;
             }

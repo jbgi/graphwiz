@@ -72,24 +72,15 @@ public class Dijkstra extends Algorithm {
 	
 	public void nextStep(){
 		System.out.println("nextStep");
-		if (startingVertex==null){
+		if (startingVertex==null)
 			setStartingVertex(graph.vertexSet().iterator().next());
-			System.out.println("startingVertex==null");
-		}
 		if (!isEnd()){
 			saveGraph();
-			System.out.println("not End");
 			GWizVertex selectedVertex = selectVertex();
-			if (selectedVertex.isFixing()){
-				System.out.println(selectedVertex + " isFixing");
+			if (selectedVertex.isFixing())
 				updateSuccessorOf(selectedVertex);
-			}
-			else {
-				if (!selectedVertex.isFixed()){
-					selectedVertex.setFixing(true);
-					System.out.println(selectedVertex + " setFixing");
-				}
-			}
+			else if (!selectedVertex.isFixed())
+				selectedVertex.setFixing(true);
 		}
 		else
 			currentStep = 5;
@@ -122,21 +113,18 @@ public class Dijkstra extends Algorithm {
 			GWizVertex n = graph.getEdgeTarget(edge);
 			allUpdated = (n.isUpdated()||n.isFixed()) && allUpdated;
 			if (graph.getEdgeSource(edge)==graph.getEdgeTarget(edge).getPred()) {
-				System.out.println("getPred");
 				Iterator<GWizEdge> i2 = graph.incomingEdgesOf(graph.getEdgeTarget(edge)).iterator();
 				while (i2.hasNext())
 					i2.next().setDescription(Description.REGULAR);
 				edge.setDescription(Description.PATH);
 			}
-			else
-				if (graph.getEdgeTarget(edge).isUpdated()||graph.getEdgeTarget(edge).isFixed())
-					edge.setDescription(Description.REGULAR);
+			else if (graph.getEdgeTarget(edge).isUpdated()||graph.getEdgeTarget(edge).isFixed())
+				edge.setDescription(Description.REGULAR);
 		}
 		if (allUpdated){
 			vertex.fixeMe();
 			vertex.setFixing(false);
 			currentStep = 4;
-			System.out.println(vertex + " isFixed");
 			Iterator<GWizEdge> j = graph.outgoingEdgesOf(vertex).iterator();
 			while (j.hasNext())
 				graph.getEdgeTarget(j.next()).setUpdated(false);
@@ -190,9 +178,8 @@ public class Dijkstra extends Algorithm {
 				oneUpdate = true;
 				currentStep = 3;
 		   	}
-		   	else if (succ.isUpdated()){
+		   	else if (succ.isUpdated())
 		   		succ.setUpdatedDone(true);
-		   	}
 		}
 	}
 
