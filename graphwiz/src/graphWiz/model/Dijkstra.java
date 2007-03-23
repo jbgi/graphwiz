@@ -13,7 +13,7 @@ public class Dijkstra extends Algorithm {
 	public Dijkstra() {
 		super();
 		
-		algo = new String[6];
+		algo = new String[7];
 		
 		algo[0] = "<html><I><font size=3><U> Notations:</U><br />"
 			+ "V[x] = valuation du sommet x<br />"
@@ -21,18 +21,19 @@ public class Dijkstra extends Algorithm {
 			+ "<br /><font size=4><U> Algorithme: </U></font><br /></html>";
 
 		algo[1] = "<html><br /><font size=4>Initialiser la valuation du sommet de départ à 0 <br/>"
-			+ "et celle de tous les autres sommets à +&#8734 </font></html>";
+			+ "et celle de tous les autres sommets à +&#8734 </font><br /><br /></html>";
+		
+		algo[2] = "<html><font size=4>Tant que tous les sommets ne sont pas fixés<br /></font></html>";
 
-		algo[2] = "<html><br /><font size=4>Tant que tous les sommets ne sont pas fixés<br />"
-			+ "<blockquote>Sélectionner le sommet x non fixé de plus petite valuation</blockquote></font></html>";
+		algo[3] = "<html><font size=4><blockquote>Sélectionner le sommet x non fixé<br />de plus petite valuation</blockquote></font></html>";
 
-		algo[3] = "<html><br /><font size=4><blockquote>Pour chaque successeur non fixé y de x</blockquote><br />"
-			+"<blockquote><blockquote>Si  &quot V[x] + W(x,y)"+" &lt "+" v[y]&quot  alors &quot V[y] = V[x] + W(x,y)&quot</blockquote></blockquote></font></html>";
+		algo[4] = "<html><font size=4><blockquote>Pour chaque successeur non fixé y de x</blockquote>"
+			+"<blockquote><blockquote><b>Si</b>  V[x] + W(x,y)"+" &lt "+" v[y] <br /> <b> alors </b> V[y] = V[x] + W(x,y)</blockquote></blockquote></font></html>";
 
-		algo[4] = "<html><br /><font size=4><blockquote>FinPour</blockquote><br />"
+		algo[5] = "<html><font size=4><blockquote>FinPour</blockquote>"
 			+ "<blockquote>Fixer le sommet x</blockquote></font></html>";
 
-		algo[5] =  "<html><br /><font size=4>Fin Tant Que<br /></html>";
+		algo[6] =  "<html><font size=4>Fin Tant Que</html>";
 	}
 	
 	public Dijkstra(GWizGraph graph) {
@@ -71,7 +72,6 @@ public class Dijkstra extends Algorithm {
 	}
 	
 	public void nextStep(){
-		System.out.println("nextStep");
 		if (startingVertex==null)
 			setStartingVertex(graph.vertexSet().iterator().next());
 		if (!isEnd()){
@@ -83,7 +83,7 @@ public class Dijkstra extends Algorithm {
 				selectedVertex.setFixing(true);
 		}
 		else
-			currentStep = 5;
+			currentStep = 6;
 	}
 
 	public void previousStep(){
@@ -124,7 +124,7 @@ public class Dijkstra extends Algorithm {
 		if (allUpdated){
 			vertex.fixeMe();
 			vertex.setFixing(false);
-			currentStep = 4;
+			currentStep = 5;
 			Iterator<GWizEdge> j = graph.outgoingEdgesOf(vertex).iterator();
 			while (j.hasNext())
 				graph.getEdgeTarget(j.next()).setUpdated(false);
@@ -146,7 +146,7 @@ public class Dijkstra extends Algorithm {
 			if (nextVertex.getValuation() <= minValuation && !nextVertex.isFixed()){
 				selectedVertex = nextVertex;
 				minValuation = selectedVertex.getValuation();
-				currentStep = 2;
+				currentStep = 3;
 			}
 		}
 		if (!selectedVertex.isFixed()){
@@ -176,7 +176,7 @@ public class Dijkstra extends Algorithm {
 		   		succ.setUpdated(true);
 				edge.setDescription(Description.EXPLORER);
 				oneUpdate = true;
-				currentStep = 3;
+				currentStep = 4;
 		   	}
 		   	else if (succ.isUpdated())
 		   		succ.setUpdatedDone(true);

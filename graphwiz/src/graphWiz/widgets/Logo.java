@@ -2,32 +2,21 @@ package graphWiz.widgets;
 
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.LabelUI;
 
-public class Logo extends JFrame{
+public class Logo extends JPanel{
 	public Logo(){
 		super();
-		ImageIcon icon = createImageIcon("graphWiz/resources/logo.JPG","a pretty but meaningless splat");	
-		Image im = icon.getImage(); 
+		URL logoUrl = getClass().getClassLoader().getResource(
+		"graphWiz/resources/logo.png");
+		ImageIcon icon = new ImageIcon(logoUrl);	
+		Image im = icon.getImage();
 		
 	}
-	
-	/** Returns an ImageIcon, or null if the path was invalid. */
-	protected static ImageIcon createImageIcon(String path,
-	                                           String description) {
-	    java.net.URL imgURL = LabelUI.class.getResource(path);
-	    if (imgURL != null) {
-	        return new ImageIcon(imgURL, description);
-	    } else {
-	        System.err.println("Couldn't find file: " + path);
-	        return null;
-	    }
-	}
-
-
 
 }

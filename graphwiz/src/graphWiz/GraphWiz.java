@@ -34,16 +34,8 @@ public class GraphWiz extends JApplet{
 		setLayout(new BoxLayout(getContentPane(),BoxLayout.X_AXIS));
 		JPanel gauche = new JPanel();
 		//gauche.setAutoscrolls(true);
-		gauche.setPreferredSize(new Dimension(700,750));
+		gauche.setPreferredSize(new Dimension(2048,2048));
 		gauche.setLayout(new BoxLayout(gauche, BoxLayout.Y_AXIS));
-
-		
-		//Création du logo
-		URL graphWizUrl = GraphWiz.class.getClassLoader().getResource(
-		"graphWiz/resources/logo.jpg");
-		ImageIcon icon = new ImageIcon(graphWizUrl,"notre beau logo");
-		JLabel image = new JLabel(icon);
-		image.setMaximumSize(new Dimension(540,80));
 		
 		//Création du tableau de matrices
 		TablValPred = new ValPred();
@@ -57,7 +49,8 @@ public class GraphWiz extends JApplet{
 		gauche.add(grapheditor);
 		gauche.add(TablValPred);
 		add(gauche);
-		add(menu);		
+		add(menu);
+		
 	}
 	
 	public static void main(String[] args) {

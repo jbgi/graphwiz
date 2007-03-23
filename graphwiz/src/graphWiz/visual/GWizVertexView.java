@@ -50,7 +50,7 @@ public class GWizVertexView extends VertexView {
 	Color getColor(){
 		if (getModel()==null) return Color.BLACK;
 		if (getModel().isFixed())
-			return Color.GRAY;
+			return Color.DARK_GRAY;
 		if (getModel().isFixing())
 			return Color.BLUE;
 		if (getModel().isUpdatedDone())

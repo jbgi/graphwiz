@@ -54,8 +54,9 @@ public abstract class Algorithm {
 		Iterator<GWizEdge> e = graph.edgeSet().iterator();
 		while (e.hasNext())
 			e.next().reset();
-		
+		currentStep = currentStepHistory.firstElement();
 		clearHistory();
+		
 	}
 
 
@@ -143,6 +144,7 @@ public abstract class Algorithm {
 				e.next().setDescription(edgesDescription.get(k));
 				k++;
 			}
+			currentStep = currentStepHistory.pop();
 		}
 	}
 	
@@ -176,6 +178,8 @@ public abstract class Algorithm {
 			edgesDescription.add(j.next().getDescription());
 		
 		edgesDescriptionHistory.add(edgesDescription);
+		
+		currentStepHistory.add(Integer.valueOf(currentStep));
 	}
 
 }

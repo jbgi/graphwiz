@@ -285,7 +285,7 @@ public class GWizRandomGraphGenerator<V, E>
                 	//System.out.println("1");
                     EE resultEdge = targetGraph.addEdge(startVertex, endVertex);
                     if (resultEdge != null) {
-                    	((GWizGraph) targetGraph).setEdgeWeight(((GWizGraph) targetGraph).getEdge((GWizVertex) startVertex, (GWizVertex) endVertex), randomizer.nextInt(maxWeight+minWeight)-minWeight);
+                    	((GWizGraph) targetGraph).setEdgeWeight(((GWizGraph) targetGraph).getEdge((GWizVertex) startVertex, (GWizVertex) endVertex), randomizer.nextInt(1+maxWeight-minWeight)+minWeight);
                     	//System.out.println("2");
                         edgesCounter++;                       
                     }

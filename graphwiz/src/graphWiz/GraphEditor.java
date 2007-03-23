@@ -166,9 +166,9 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		// Make Ports Visible by Default
 		graph.setPortsVisible(true);
 		// Use the Grid (but don't make it Visible)
-		graph.setGridEnabled(true);
+		graph.setGridEnabled(false);
 		// Set the Grid Size to 10 Pixel
-		graph.setGridSize(6);
+		graph.setGridSize(5);
 		// Set the Tolerance to 2 Pixel
 		graph.setTolerance(2);
 		// Accept edits if click on background
@@ -251,7 +251,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 
 	// Hook for subclassers
 	protected DefaultGraphCell createDefaultGraphCell() {
-		DefaultGraphCell cell = new DefaultGraphCell(getGwizGraph().vertexSet().size() + cellCount++);
+		DefaultGraphCell cell = new DefaultGraphCell(getCellCount(graph) + cellCount++);
 		// Add one Floating Port
 		cell.addPort();
 		return cell;
