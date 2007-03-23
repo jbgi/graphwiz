@@ -40,6 +40,7 @@ package graphWiz.model;
 import java.util.*;
 
 import org.jgrapht.*;
+import org.jgrapht.util.*;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.graph.*;
 
@@ -58,7 +59,6 @@ import org.jgrapht.graph.*;
  * @since Aug 6, 2005
  */
 public class GWizRandomGraphGenerator<V, E>
-    implements GraphGenerator<V, E, V>
 {
 
     //~ Static fields/initializers --------------------------------------------
@@ -72,10 +72,19 @@ public class GWizRandomGraphGenerator<V, E>
     protected Random randomizer;
     private long randomizerSeed;
 
+	public boolean connectedGraph;
+
+	private int maxWeight;
+
+	private int minWeight;
+
     //~ Constructors ----------------------------------------------------------
 
-    public GWizRandomGraphGenerator(int aNumOfVertexes, int aNumOfEdges)
+    public GWizRandomGraphGenerator(int aNumOfVertexes, int aNumOfEdges, boolean connected, int minWeight, int maxWeight)
     {
+    	connectedGraph=connected;
+    	this.minWeight = minWeight;
+    	this.maxWeight = maxWeight;
         if ((numOfVertexes < 0) || (numOfEdges < 0)) {
             throw new IllegalArgumentException("must be non-negative");
         }
@@ -123,22 +132,36 @@ public class GWizRandomGraphGenerator<V, E>
      *
      * @see GraphGenerator#generateGraph(Graph, VertexFactory, Map)
      */
-    public void generateGraph(
+    public HashMap<Integer, V> generateGraph(
         Graph<V, E> target,
-        VertexFactory<V> vertexFactory,
-        Map<String, V> resultMap)
+        VertexFactory<V> vertexFactory)
     {
         resetRandomSeed();
 
         // key = generation order (1st,2nd,3rd,...) value=vertex Object
         // will be used later
-        Map<Integer, V> orderToVertexMap =
+        HashMap<Integer, V> orderToVertexMap =
             new HashMap<Integer, V>(this.numOfVertexes);
-
-        for (int i = 0; i < this.numOfVertexes; i++) {
-            V currVertex = vertexFactory.createVertex();
-            target.addVertex(currVertex);
-            orderToVertexMap.put(Integer.valueOf(i), currVertex);
+        
+        if (connectedGraph){
+            V lastVertex = null;
+            for (int i = 0; i < numOfVertexes; ++i) {
+                V newVertex = vertexFactory.createVertex();
+                target.addVertex(newVertex);
+                orderToVertexMap.put(Integer.valueOf(i), newVertex);
+                if (lastVertex != null) {
+                    target.addEdge(lastVertex, newVertex);
+                    ((GWizGraph) target).setEdgeWeight(((GWizGraph) target).getEdge((GWizVertex) lastVertex, (GWizVertex) newVertex), randomizer.nextInt(maxWeight+minWeight)-minWeight);
+                }
+                lastVertex = newVertex;
+            }
+        }
+        else {
+            for (int i = 0; i < this.numOfVertexes; i++) {
+                V currVertex = vertexFactory.createVertex();
+                target.addVertex(currVertex);
+                orderToVertexMap.put(Integer.valueOf(i), currVertex);
+            }
         }
 
         // use specific type of edge factory, depending of the graph type
@@ -146,13 +169,7 @@ public class GWizRandomGraphGenerator<V, E>
         EdgeTopologyFactory<V, E> edgesFactory =
             edgeTopologyFactoryChooser(target, numOfEdges);
         if (!edgesFactory.isNumberOfEdgesValid(target, numOfEdges)) {
-            throw new IllegalArgumentException(
-                "numOfEdges is not valid for the graph type "
-                + "\n-> Invalid number Of Edges=" + numOfEdges + " for:"
-                + " graph type=" + target.getClass()
-                + " ,number Of Vertexes=" + this.numOfVertexes
-                + "\n-> Advice: For the Max value , check the javadoc for"
-                + " org.jgrapht.generate.RandomGraphGenerator.DefaultEdgeTopologyFactory");
+        	 numOfEdges=((DefaultEdgeTopologyFactory<V, E>) edgesFactory).getMaxEdgesForVertexNum(target);
         }
 
         edgesFactory.createEdges(
@@ -160,6 +177,9 @@ public class GWizRandomGraphGenerator<V, E>
             orderToVertexMap,
             this.numOfEdges,
             this.randomizer);
+        
+        return orderToVertexMap;
+        
     }
 
     /**
@@ -249,6 +269,8 @@ public class GWizRandomGraphGenerator<V, E>
         {
             int iterationsCounter = 0;
             int edgesCounter = 0;
+            if (connectedGraph)
+            	edgesCounter = numOfVertexes-1;
             while (edgesCounter < numberOfEdges) {
                 // randomizer.nextInt(int n) return a number between zero
                 // (includsive) and n(exclusive)
@@ -258,15 +280,19 @@ public class GWizRandomGraphGenerator<V, E>
                 VV endVertex =
                     orderToVertexMap.get(
                         Integer.valueOf(randomizer.nextInt(numOfVertexes)));
+                if ((endVertex != startVertex) && !targetGraph.containsEdge(endVertex, startVertex)) {
                 try {
+                	//System.out.println("1");
                     EE resultEdge = targetGraph.addEdge(startVertex, endVertex);
                     if (resultEdge != null) {
-                        edgesCounter++;
+                    	((GWizGraph) targetGraph).setEdgeWeight(((GWizGraph) targetGraph).getEdge((GWizVertex) startVertex, (GWizVertex) endVertex), randomizer.nextInt(maxWeight+minWeight)-minWeight);
+                    	//System.out.println("2");
+                        edgesCounter++;                       
                     }
                 } catch (Exception e) {
                     // do nothing.just ignore the edge
                 }
-
+                }
                 iterationsCounter++;
             }
         }
@@ -359,11 +385,11 @@ public class GWizRandomGraphGenerator<V, E>
         public int getMaxEdgesForVertexNum(Graph<VV, EE> targetGraph)
         {
             int maxAllowedEdges = 0;
-            if (targetGraph instanceof SimpleGraph) {
+            if ((targetGraph instanceof SimpleGraph)||(targetGraph instanceof GWizGraph)) {
                 maxAllowedEdges = numOfVertexes * (numOfVertexes - 1) / 2;
             } else if (targetGraph instanceof SimpleDirectedGraph) {
                 maxAllowedEdges = numOfVertexes * (numOfVertexes - 1);
-            } else if ((targetGraph instanceof DefaultDirectedGraph) || (targetGraph instanceof DirectedGraph)) {
+            } else if (targetGraph instanceof DefaultDirectedGraph) {
                 maxAllowedEdges = numOfVertexes * numOfVertexes;
             } else if (
                 (targetGraph instanceof Multigraph)
@@ -373,7 +399,7 @@ public class GWizRandomGraphGenerator<V, E>
             } else {
                 throw new ClassCastException(
                     "cannot find the appropriate graph type");
-            }
+            }       	
             return maxAllowedEdges;
         }
     }

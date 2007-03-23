@@ -41,6 +41,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -102,13 +103,15 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	
 	private GWizModelAdapter jgAdapter;
 	
-	GWizGraphGeneratorDialog generatorDialog;
+	public HashMap<Integer, GWizVertex> verticeTable = new HashMap<Integer, GWizVertex>();
+	
+	protected GWizGraphGeneratorDialog generatorDialog;
 
 	// Actions which Change State
 	protected Action remove;
 
 	// cell count that gets put in cell label
-	protected int cellCount = 0;
+	public int cellCount = 0;
 
 	// Status Bar
 	protected StatusBarGraphListener statusBar;
@@ -132,14 +135,13 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		graph.setMarqueeHandler(createMarqueeHandler());
 		
         layout = new SpringEmbeddedLayoutAlgorithm();
-		
-        generatorDialog = new GWizGraphGeneratorDialog(this);
         
 		populateContentPane();
 
 		installListeners(graph);
 		
 		graph.setScale(2.0);
+		generatorDialog = new GWizGraphGeneratorDialog(this);
 	}
 
 	// Hook for subclassers
@@ -249,7 +251,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 
 	// Hook for subclassers
 	protected DefaultGraphCell createDefaultGraphCell() {
-		DefaultGraphCell cell = new DefaultGraphCell(new Integer(cellCount++));
+		DefaultGraphCell cell = new DefaultGraphCell(getGwizGraph().vertexSet().size() + cellCount++);
 		// Add one Floating Port
 		cell.addPort();
 		return cell;

@@ -73,7 +73,7 @@ public class Dijkstra extends Algorithm {
 	public void nextStep(){
 		System.out.println("nextStep");
 		if (startingVertex==null){
-			setStartingVertex((GWizVertex) graph.vertexSet().toArray()[0]);
+			setStartingVertex(graph.vertexSet().iterator().next());
 			System.out.println("startingVertex==null");
 		}
 		if (!isEnd()){
@@ -152,7 +152,7 @@ public class Dijkstra extends Algorithm {
 			nextVertex = i.next();
 			if (nextVertex.isFixing()){
 				checkAllSuccessorUpdated(nextVertex);
-				if (nextVertex.isFixed())
+				if (nextVertex.isFixed() || nextVertex.isFixing())
 					return nextVertex;
 			}
 			if (nextVertex.getValuation() <= minValuation && !nextVertex.isFixed()){
@@ -181,7 +181,7 @@ public class Dijkstra extends Algorithm {
 			edge = i.next();
 		   	succ = graph.getEdgeTarget(edge);
 		   	if (!succ.isFixed() && !succ.isUpdated()){
-		   		if (vertex.getValuation() + graph.getEdgeWeight(edge) <= succ.getValuation()){
+		   		if (vertex.getValuation() + graph.getEdgeWeight(edge) < succ.getValuation()){
 		   			succ.setValuation(vertex.getValuation()+graph.getEdgeWeight(edge));
 		   			succ.setPred(vertex);
 		   		}

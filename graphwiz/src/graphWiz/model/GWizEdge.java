@@ -1,6 +1,7 @@
 package graphWiz.model;
 
 import org.jgraph.graph.DefaultEdge;
+import org.jgrapht.EdgeFactory;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 

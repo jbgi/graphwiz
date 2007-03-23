@@ -52,7 +52,7 @@ public class GraphWiz extends JApplet{
 		grapheditor= new GraphEditor();
 		
 		//Création du menu de navigation
-		menu = new Navigation(grapheditor.getGraph());
+		menu = new Navigation(grapheditor);
 		
 		gauche.add(grapheditor);
 		gauche.add(TablValPred);
@@ -67,7 +67,8 @@ public class GraphWiz extends JApplet{
 		// Set Close Operation to Exit
 		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Add an Editor Panel
-		frame.getContentPane().add(new GraphWiz());
+		GraphWiz gw = new GraphWiz();
+		frame.getContentPane().add(gw);
 		// Fetch URL to Icon Resource
 		URL jgraphUrl = GraphWiz.class.getClassLoader().getResource(
 				"graphWiz/resources/logo.png");
@@ -83,5 +84,6 @@ public class GraphWiz extends JApplet{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Show Frame
 		frame.setVisible(true);
+		gw.grapheditor.generatorDialog.defaultGenerator();
 	}
 }

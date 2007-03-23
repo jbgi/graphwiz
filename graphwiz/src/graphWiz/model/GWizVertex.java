@@ -8,7 +8,7 @@ import org.jgrapht.VertexFactory;
 @SuppressWarnings("serial")
 public class GWizVertex implements VertexFactory<GWizVertex> {
 	
-	private int count = 0;
+	private int count = -1;
 
 	private boolean fixed = false;
 	
@@ -38,7 +38,6 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 	public GWizVertex createVertex() {
 		count++;
 		return new GWizVertex(Integer.toString(count));
-		
 	}
 	
 	public void fixeMe() {

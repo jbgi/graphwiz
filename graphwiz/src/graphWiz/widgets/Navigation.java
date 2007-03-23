@@ -1,6 +1,7 @@
 package graphWiz.widgets;
 
 import graphWiz.GWizModelAdapter;
+import graphWiz.GraphEditor;
 import graphWiz.model.Algorithm;
 import graphWiz.model.Dijkstra;
 import graphWiz.visual.GWizEdgeView;
@@ -24,20 +25,22 @@ import org.jgraph.graph.GraphConstants;
 
 public class Navigation extends JPanel{
 	
-	protected ImageIcon begin, back, pause, play, forward;
+	protected ImageIcon begin, back, pause, play, forward,end;
 	protected JToolBar bHor; 
+	private final GraphEditor graphEditor;
 	private final JGraph jgraph;
 	private Algorithm algo;
 	private JList algoText = new JList();
 	private JTextField Commentaires = new JTextField(" Bienvenue sur GraphWiz ... Le simulateur d'algorithmes de graphes ...  ");
 	//private Logo logo = new Logo();
-	public Navigation(JGraph graph){
+	public Navigation(GraphEditor editor){
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setPreferredSize(new Dimension(540,750));
 		bHor = new JToolBar();
-		jgraph = graph;
-		algo = new Dijkstra(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
+		this.graphEditor=editor;
+		jgraph=this.graphEditor.getGraph();
+		algo = new Dijkstra(((GWizModelAdapter) graphEditor.getGraph().getModel()).getGWizGraph());
 		algoText.setListData(algo.getAlgo());
 		algoText.setEnabled(false);
 		algoText.setSelectionBackground(Color.CYAN);
@@ -51,12 +54,16 @@ public class Navigation extends JPanel{
 		"graphWiz/resources/btn_play.gif"));
         forward = new ImageIcon(Navigation.class.getClassLoader().getResource(
 		"graphWiz/resources/btn_ff.gif"));
-        
+        end = new ImageIcon(Navigation.class.getClassLoader().getResource(
+		"graphWiz/resources/btn_end.gif"));
         add(Commentaires);
+        
+        bHor.addSeparator(new Dimension(30,10));
         
         bHor.add(new AbstractAction("",begin){
         	public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub	
+				algo.retoreInitialState();
+				jgraph.repaint();
 			}});
         bHor.addSeparator(new Dimension(30,10));
        
@@ -74,10 +81,18 @@ public class Navigation extends JPanel{
 				// TODO Auto-generated method stub
 				
 			}});
+        
+        bHor.add(new AbstractAction("",play){
+
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+			}}); 
+        
         bHor.addSeparator(new Dimension(30,10));
         
         bHor.add(new AbstractAction("", forward) {
 			public void actionPerformed(ActionEvent e) {
+				algo.setStartingVertex(graphEditor.verticeTable.get(Integer.valueOf(0)));
 				algo.nextStep();
 				algoText.setSelectedIndex(algo.getCurrentStep());
 				//Object[] edges = jgraph.getGraphLayoutCache().getCells(false, false, false, true);
@@ -94,12 +109,15 @@ public class Navigation extends JPanel{
 		});
                 
         bHor.addSeparator(new Dimension(30,10));
-       
-        bHor.add(new AbstractAction("",play){
 
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-			}}); 
+        bHor.add(new AbstractAction("",end){
+        	public void actionPerformed(ActionEvent arg0) {
+        		algo.setStartingVertex(graphEditor.verticeTable.get(Integer.valueOf(0)));
+				while (!algo.isEnd())
+					algo.nextStep();
+				jgraph.repaint();
+			}});
+        bHor.addSeparator(new Dimension(30,10));
         
         add(bHor);
         this.setRequestFocusEnabled(false);

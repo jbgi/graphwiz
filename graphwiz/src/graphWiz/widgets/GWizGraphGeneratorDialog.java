@@ -21,15 +21,15 @@ public class GWizGraphGeneratorDialog extends JDialog {
 	
 	private GWizGraph graph;
 
-	private JTextField jnumVertice = new JTextField("10");
+	private JTextField jnumVertice = new JTextField("5");
 
-	private JTextField jnumEdges = new JTextField("20");
+	private JTextField jnumEdges = new JTextField("7");
 	
 	private JTextField jmaxWeight = new JTextField("5");
 
 	private JTextField jminWeight = new JTextField("0");
 
-	private JCheckBox cycleFree = new JCheckBox("",true);
+	private JCheckBox connected = new JCheckBox("",true);
 
 	private int numEdges;
 
@@ -43,7 +43,7 @@ public class GWizGraphGeneratorDialog extends JDialog {
 		super((Frame) null, "Générer un graphe", true);
 		
 		editor = graphEditor;
-		
+		graph = editor.getGwizGraph();
 		JPanel panel = new JPanel(new GridLayout(6, 2, 4, 4));
 		panel.add(new JLabel("Nombre de noeuds"));
 		panel.add(jnumVertice);
@@ -53,8 +53,8 @@ public class GWizGraphGeneratorDialog extends JDialog {
 		panel.add(jminWeight);
 		panel.add(new JLabel("Poids maximum"));
 		panel.add(jmaxWeight);
-		panel.add(new JLabel("Sans cycles"));
-		panel.add(cycleFree);
+		panel.add(new JLabel("Graph connecté"));
+		panel.add(connected);
 		
 		JPanel panelBorder = new JPanel();
 		panelBorder.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -93,11 +93,22 @@ public class GWizGraphGeneratorDialog extends JDialog {
 	private void applyValues() {
 		setNumVertice(Integer.parseInt(this.jnumVertice.getText()));
 		setNumEdges(Integer.parseInt(this.jnumEdges.getText()));
-		GWizRandomGraphGenerator<GWizVertex, GWizEdge> generator = new GWizRandomGraphGenerator<GWizVertex, GWizEdge>(numVertice, numEdges);
+		GWizRandomGraphGenerator<GWizVertex, GWizEdge> generator = new GWizRandomGraphGenerator<GWizVertex, GWizEdge>(numVertice, numEdges, connected.isSelected(), Integer.parseInt(jminWeight.getText()), Integer.parseInt(jmaxWeight.getText()) );
 		editor.getGraph().getModel().remove(editor.getGraph().getRoots());
 		editor.getGraph().getModel().remove(editor.getGraph().getRoots());
-		generator.generateGraph(graph, new GWizVertex("Vertex Generator"), new HashMap<String, GWizVertex>());
+		editor.verticeTable = generator.generateGraph(graph, new GWizVertex("Vertex Generator"));
 		editor.getGraph().setScale(7.0/Math.sqrt(numVertice));
+		editor.applySpringLayout();
+		editor.getGraph().clearSelection();
+		editor.cellCount = 0;
+	}
+	
+	public void defaultGenerator(){
+		GWizRandomGraphGenerator<GWizVertex, GWizEdge> generator = new GWizRandomGraphGenerator<GWizVertex, GWizEdge>(5, 7, true, 0, 5);
+		//editor.getGraph().getModel().remove(editor.getGraph().getRoots());
+		//editor.getGraph().getModel().remove(editor.getGraph().getRoots());
+		editor.verticeTable = generator.generateGraph(graph, new GWizVertex("Vertex Generator"));
+		editor.getGraph().setScale(7.0/Math.sqrt(5));
 		editor.applySpringLayout();
 		editor.getGraph().clearSelection();
 	}
@@ -158,7 +169,6 @@ public class GWizGraphGeneratorDialog extends JDialog {
 		editor.stopEdition();
 		editor.getGraph().setMoveable(true);
 		editor.getGraph().setEditable(true);
-		graph = editor.getGwizGraph();
 		
 		this.setModal(true);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

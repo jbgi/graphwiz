@@ -1049,7 +1049,7 @@ public class GWizModelAdapter extends DefaultGraphModel {
 		ConnectionSet cs = new ConnectionSet();
 		cs.connect(edgeCell, getVertexPort(jtGraph.getEdgeSource(jtEdge)),
 				getVertexPort(jtGraph.getEdgeTarget(jtEdge)));
-
+		edgeCell.setUserObject(new String(Double.toString(getGWizGraph().getEdgeWeight(jtEdge))));
 		internalInsertCell(edgeCell, createEdgeAttributeMap(edgeCell), cs);
 	}
 
@@ -1066,6 +1066,8 @@ public class GWizModelAdapter extends DefaultGraphModel {
 
 		vertexToCell.put(jtVertex, vertexCell);
 		cellToVertex.put(vertexCell, jtVertex);
+		
+		vertexCell.setUserObject(jtVertex.getName());
 
 		internalInsertCell(vertexCell, createVertexAttributeMap(vertexCell),
 				null);
