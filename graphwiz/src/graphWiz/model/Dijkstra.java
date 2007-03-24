@@ -72,7 +72,7 @@ public class Dijkstra extends Algorithm {
 	}
 	
 	public void nextStep(){
-		if (startingVertex==null)
+		if (startingVertex!=null){
 			setStartingVertex(graph.vertexSet().iterator().next());
 		if (!isEnd()){
 			saveGraph();
@@ -84,6 +84,7 @@ public class Dijkstra extends Algorithm {
 		}
 		else
 			currentStep = 6;
+		}
 	}
 
 	public void previousStep(){

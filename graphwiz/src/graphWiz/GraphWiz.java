@@ -41,11 +41,13 @@ public class GraphWiz extends JApplet{
 		TablValPred = new ValPred();
 		
 		// Création du logiciel de création de Graph et de son panel
-		grapheditor= new GraphEditor();
 		
 		//Création du menu de navigation
-		menu = new Navigation(grapheditor);
 		
+		
+		menu = new Navigation();
+		grapheditor= new GraphEditor(menu);
+		menu.start(grapheditor.getGraph());
 		gauche.add(grapheditor);
 		gauche.add(TablValPred);
 		add(gauche);

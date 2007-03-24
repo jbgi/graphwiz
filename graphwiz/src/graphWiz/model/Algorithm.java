@@ -54,7 +54,8 @@ public abstract class Algorithm {
 		Iterator<GWizEdge> e = graph.edgeSet().iterator();
 		while (e.hasNext())
 			e.next().reset();
-		currentStep = currentStepHistory.firstElement();
+		if (!currentStepHistory.isEmpty())
+			currentStep = currentStepHistory.firstElement();
 		clearHistory();
 		
 	}

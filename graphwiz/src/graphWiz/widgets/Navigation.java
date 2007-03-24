@@ -31,21 +31,22 @@ public class Navigation extends JPanel{
 	
 	protected ImageIcon begin, back, pause, play, forward,end;
 	private String[] algos = {"Selectionner l'algorithme", "DIJKSTRA","BELLMAN","FLOYD"};
-	private final JComboBox choixAlgo;
+	private JComboBox choixAlgo;
 	protected JToolBar bHor; 
-	private final GraphEditor graphEditor;
-	private final JGraph jgraph;
-	private Algorithm algo;
+	private JGraph jgraph;
+	public Algorithm algo;
 	private JList algoText = new JList();
 	private JTextField commentaires = new JTextField(" Bienvenue sur GraphWiz ... Le simulateur d'algorithmes de graphes ...  ");
 	//private Logo logo = new Logo();
-	public Navigation(GraphEditor editor){
+	public Navigation(){
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+	}
+	
+	public void start(JGraph editorGraph){
 		bHor = new JToolBar();
-		this.graphEditor=editor;
-		jgraph=this.graphEditor.getGraph();
-		algo = new Dijkstra(((GWizModelAdapter) graphEditor.getGraph().getModel()).getGWizGraph());
+		this.jgraph=editorGraph;
+		algo = new Dijkstra(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
 		algoText.setListData(algo.getAlgo());
 		algoText.setEnabled(false);
 		algoText.setSelectionBackground(Color.CYAN);
@@ -114,7 +115,6 @@ public class Navigation extends JPanel{
         
         bHor.add(new AbstractAction("", forward) {
 			public void actionPerformed(ActionEvent e) {
-				algo.setStartingVertex(graphEditor.verticeTable.get(Integer.valueOf(0)));
 				algo.nextStep();
 				algoText.setSelectedIndex(algo.getCurrentStep());
 				jgraph.repaint();
@@ -165,6 +165,20 @@ public class Navigation extends JPanel{
 		jpLogo.add(jLogo);
 		add(jpLogo);
 		setRequestFocusEnabled(false);
+		stopExplorer();
 	}
+
+	public void stopExplorer() {
+		for (int i = 0; i< (bHor.getComponentCount()-1);i++)
+			bHor.getComponent(i).setEnabled(false);
+	}
+
+	public void startExplorer() {
+		for (int i = 0; i< (bHor.getComponentCount()-1);i++)
+			bHor.getComponent(i).setEnabled(true);
+		
+	}
+	
+	
 	
 }

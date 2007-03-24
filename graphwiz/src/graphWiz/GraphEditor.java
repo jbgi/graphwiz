@@ -109,7 +109,13 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 
 	// Actions which Change State
 	protected Action remove;
-
+	
+	private AbstractAction modeConstruction;
+	
+	private AbstractAction modeAlgo;
+	
+	private JToolBar toolbar;
+	
 	// cell count that gets put in cell label
 	public int cellCount = 0;
 
@@ -119,7 +125,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	//Mode
 	private JComboBox mode;
 	private String[] modes = {"Mode Dessin", "Mode Algo"};
-	private String[] algos = {"DIJKSTRA","BELLMAN","FLOYD"};
 	private Navigation navigation;
 
 	private GWizGraph gwizGraph;
@@ -128,7 +133,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	//
 
 	// Construct an Editor Panel
-	public GraphEditor() {
+	public GraphEditor(Navigation navigation) {
+		this.navigation = navigation;
 		// Construct the Graph
 		graph = createGraph();
 		// Use a Custom Marquee Handler
@@ -537,7 +543,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	// ToolBar
 	//
 	public JToolBar createToolBar() {
-		JToolBar toolbar = new JToolBar();
+		toolbar = new JToolBar();
 		toolbar.setFloatable(false);
 		
 		//New Random Graph
@@ -549,6 +555,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 				generatorDialog.newRandomGraph();
 			}
 		});
+		
+		toolbar.addSeparator();
 
 		// Insert
 		URL insertUrl = getClass().getClassLoader().getResource(
@@ -566,7 +574,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon connectIcon = new ImageIcon(connectUrl);
 		toolbar.add(new AbstractAction("", connectIcon) {
 			public void actionPerformed(ActionEvent e) {
-				if (graph.isEditable()){
 				graph.setPortsVisible(!graph.isPortsVisible());
 				URL connectUrl;
 				if (graph.isPortsVisible())
@@ -577,7 +584,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 							"graphWiz/resources/connecton.gif");
 				ImageIcon connectIcon = new ImageIcon(connectUrl);
 				putValue(SMALL_ICON, connectIcon);
-				}
 			}
 		});
 
@@ -587,12 +593,10 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon removeIcon = new ImageIcon(removeUrl);
 		remove = new AbstractAction("", removeIcon) {
 			public void actionPerformed(ActionEvent e) {
-				if (graph.isEditable()){
 				if (!graph.isSelectionEmpty()) {
 					Object[] cells = graph.getSelectionCells();
 					cells = graph.getDescendants(cells);
 					graph.getModel().remove(cells);
-				}
 				}
 			}
 		};
@@ -606,9 +610,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon zoomIcon = new ImageIcon(zoomUrl);
 		toolbar.add(new AbstractAction("", zoomIcon) {
 			public void actionPerformed(ActionEvent e) {
-				if (graph.isEditable()){
-				graph.setScale(2.0);
-				}
+				graph.setScale(7.0/Math.sqrt(((GWizModelAdapter) graph.getModel()).getGWizGraph().vertexSet().size()));
 			}
 		});
 		// Zoom In
@@ -617,9 +619,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon zoomInIcon = new ImageIcon(zoomInUrl);
 		toolbar.add(new AbstractAction("", zoomInIcon) {
 			public void actionPerformed(ActionEvent e) {
-				if (graph.isEditable()){
 				graph.setScale(1.5 * graph.getScale());
-				}
 			}
 		});
 		// Zoom Out
@@ -628,9 +628,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon zoomOutIcon = new ImageIcon(zoomOutUrl);
 		toolbar.add(new AbstractAction("", zoomOutIcon) {
 			public void actionPerformed(ActionEvent e) {
-				if (graph.isEditable()){
 				graph.setScale(graph.getScale() / 1.5);
-				}
 			}
 		});
 
@@ -644,24 +642,36 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 				applySpringLayout();
 			}
 		});
+		toolbar.addSeparator();
 		
 		//Mode Algo, Mode Dessin
-		toolbar.addSeparator();
-		mode = new JComboBox(modes);
-		toolbar.add(mode);
-		mode.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
-				if(mode.getSelectedIndex()== 0){
-					startEdition();
-					//navigation.setFocusable(false);
-				}
-				if (mode.getSelectedIndex()==1){
-					stopEdition();
-					JOptionPane.showInputDialog(null, "Quelle algorithme voulez-vous appliquer ?", "Choix de l'algorithme ", JOptionPane.QUESTION_MESSAGE,
-							null, algos, algos[0]);
-					//navigation.setFocusable(true);
-				}
+		modeConstruction = new AbstractAction("Mode Construction") {
+			public void actionPerformed(ActionEvent e) {
+				this.setEnabled(false);
+				modeAlgo.setEnabled(true);
+				startEdition();
+				navigation.stopExplorer();
+				navigation.algo.retoreInitialState();
 			}
-		});
+		};
+		
+		modeConstruction.setEnabled(false);
+		
+		modeAlgo = new AbstractAction("Mode Algorithme") {
+			public void actionPerformed(ActionEvent e) {
+				this.setEnabled(false);
+				modeConstruction.setEnabled(true);
+				stopEdition();
+				navigation.startExplorer();
+				navigation.algo.setStartingVertex(verticeTable.get(Integer.valueOf(0)));
+			}
+		};
+		
+		modeAlgo.setEnabled(true);
+		
+		toolbar.add(modeConstruction);
+		
+		toolbar.add(modeAlgo);
 		
 		toolbar.addSeparator();
 		
@@ -672,14 +682,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(new AbstractAction("", helpIcon) {
 			public void actionPerformed(ActionEvent e) {
 				//à remplir!
-			}
-		});
-		
-		//Crédits
-		toolbar.addSeparator();
-		toolbar.add(new AbstractAction("Crédits"){
-			public void actionPerformed(ActionEvent e){
-				
 			}
 		});
 		
@@ -853,6 +855,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		graph.setEditable(true);
 		graph.setMoveable(true);
 		graph.setSelectionEnabled(true);
+		for (int i = 0; i< (toolbar.getComponentCount()-4);i++)
+			toolbar.getComponent(i).setEnabled(true);
 	}
 
 	public void stopEdition() {
@@ -862,5 +866,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		graph.setEditable(false);
 		graph.setMoveable(false);
 		graph.setSelectionEnabled(false);
+		for (int i = 0; i< (toolbar.getComponentCount()-4);i++)
+			toolbar.getComponent(i).setEnabled(false);
 	}
 }
