@@ -103,8 +103,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	
 	private GWizModelAdapter jgAdapter;
 	
-	public HashMap<Integer, GWizVertex> verticeTable = new HashMap<Integer, GWizVertex>();
-	
 	protected GWizGraphGeneratorDialog generatorDialog;
 
 	// Actions which Change State
@@ -353,6 +351,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 			// If Port Found and in ConnectMode (=Ports Visible)
 			if (port != null && graph.isPortsVisible())
 				return true;
+			if (!graph.isEditable())
+				return true;
 			// Else Call Superclass
 			return super.isForceMarqueeEvent(e);
 		}
@@ -360,7 +360,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		// Display PopupMenu or Remember Start Location and First Port
 		public void mousePressed(final MouseEvent e) {
 			// If Right Mouse Button
-			if (SwingUtilities.isRightMouseButton(e)) {
+			if (SwingUtilities.isRightMouseButton(e) && graph.isEditable()) {
 				// Find Cell in Model Coordinates
 				Object cell = graph.getFirstCellForLocation(e.getX(), e.getY());
 				// Create PopupMenu for the Cell
@@ -368,15 +368,26 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 				// Display PopupMenu
 				menu.show(graph, e.getX(), e.getY());
 				// Else if in ConnectMode and Remembered Port is Valid
-			} else if (port != null && graph.isPortsVisible()) {
+			} else if (port != null && graph.isPortsVisible() && graph.isEditable()) {
 				// Remember Start Location
 				start = graph.toScreen(port.getLocation());
 				// Remember First Port
 				firstPort = port;
-			} else {
+			} else if (!graph.isEditable() && navigation.algo.isEnd()){
+				Object cell = graph.getFirstCellForLocation(e.getX(), e.getY());
+				navigation.algo.setEndVertex(jgAdapter.getCellVertex((DefaultGraphCell) cell));
+				navigation.algoText.setSelectedIndex(navigation.algo.getCurrentStep());
+			} else if (!graph.isEditable() && navigation.algo.isStart()){
+			Object cell = graph.getFirstCellForLocation(e.getX(), e.getY());
+			navigation.algo.setStartingVertex(jgAdapter.getCellVertex((DefaultGraphCell) cell));
+			navigation.algoText.setSelectedIndex(navigation.algo.getCurrentStep());
+			}
+			
+			else {
 				// Call Superclass
 				super.mousePressed(e);
 			}
+			
 		}
 
 		// Find Port under Mouse and Repaint Connector
@@ -663,7 +674,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 				modeConstruction.setEnabled(true);
 				stopEdition();
 				navigation.startExplorer();
-				navigation.algo.setStartingVertex(verticeTable.get(Integer.valueOf(0)));
 			}
 		};
 		

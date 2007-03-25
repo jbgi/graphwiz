@@ -10,35 +10,34 @@ public class Dijkstra extends Algorithm {
 	private GWizVertex startingVertex;
 	private GWizVertex endVertex;
 	
-	public Dijkstra() {
-		super();
+	public Dijkstra(GWizGraph graph) {
+		super(graph);
 		
-		algo = new String[7];
+		algo = new String[8];
 		
-		algo[0] = "<html><I><font size=3><U> Notations:</U><br />"
+		algo[0] = "<html><font size=6>Algorithme de Dijstra<br/></font><br/><I><font size=3><U>Notations:</U><br />"
 			+ "V[x] = valuation du sommet x<br />"
 			+ "W(x,y) = poids de l'arc (x,y)</font><br />"
 			+ "<br /><font size=4><U> Algorithme: </U></font><br /></html>";
+		
+		algo[1] = "<html><br /><font size=4><U>Pré-requis :</U><br />" +
+				"Le graphe est orienté et ses arcs <br />ont des poids négatifs ou nul.<br /></font></html>" +
+				"";
 
-		algo[1] = "<html><br /><font size=4>Initialiser la valuation du sommet de départ à 0 <br/>"
+		algo[2] = "<html><br /><font size=4>Initialiser la valuation du sommet de départ à 0 <br/>"
 			+ "et celle de tous les autres sommets à +&#8734 </font><br /><br /></html>";
 		
-		algo[2] = "<html><font size=4>Tant que tous les sommets ne sont pas fixés<br /></font></html>";
+		algo[3] = "<html><font size=4>Tant que tous les sommets ne sont pas fixés<br /></font></html>";
 
-		algo[3] = "<html><font size=4><blockquote>Sélectionner le sommet x non fixé<br />de plus petite valuation</blockquote></font></html>";
+		algo[4] = "<html><font size=4><blockquote>Sélectionner le sommet x non fixé<br />de plus petite valuation</blockquote></font></html>";
 
-		algo[4] = "<html><font size=4><blockquote>Pour chaque successeur non fixé y de x</blockquote>"
+		algo[5] = "<html><font size=4><blockquote>Pour chaque successeur non fixé y de x</blockquote>"
 			+"<blockquote><blockquote><b>Si</b>  V[x] + W(x,y)"+" &lt "+" v[y] <br /> <b> alors </b> V[y] = V[x] + W(x,y)</blockquote></blockquote></font></html>";
 
-		algo[5] = "<html><font size=4><blockquote>FinPour</blockquote>"
+		algo[6] = "<html><font size=4><blockquote>FinPour</blockquote>"
 			+ "<blockquote>Fixer le sommet x</blockquote></font></html>";
 
-		algo[6] =  "<html><font size=4>Fin Tant Que</html>";
-	}
-	
-	public Dijkstra(GWizGraph graph) {
-		this();
-		this.graph=graph;
+		algo[7] =  "<html><font size=4>Fin Tant Que</html>";
 	}
 	
 	public String checkGraph() {
@@ -64,16 +63,18 @@ public class Dijkstra extends Algorithm {
 		Iterator<GWizVertex> i = graph.vertexSet().iterator();
 		while (i.hasNext() && allFixed)
 			allFixed = allFixed && i.next().isFixed();
+		if (allFixed)
+			currentStep = 7;
 		return allFixed;
 	}
 
 	public boolean isStart() {
-		return !startingVertex.isFixed();
+		return (startingVertex==null || (!startingVertex.isFixed() && !startingVertex.isFixing()));
 	}
 	
 	public void nextStep(){
-		if (startingVertex!=null){
-			setStartingVertex(graph.vertexSet().iterator().next());
+		if (startingVertex!=null && startingVertex.isStart()){
+		//	setStartingVertex(graph.vertexSet().iterator().next());
 		if (!isEnd()){
 			saveGraph();
 			GWizVertex selectedVertex = selectVertex();
@@ -83,18 +84,33 @@ public class Dijkstra extends Algorithm {
 				selectedVertex.setFixing(true);
 		}
 		else
-			currentStep = 6;
+			currentStep = 7;
 		}
 	}
 
-	public void previousStep(){
-		restorePreviousGraph();
-	}
-
-
 	@Override
 	public void setEndVertex(GWizVertex endVertex) {
-		this.endVertex=endVertex;
+		if (endVertex!=null) {
+			if (this.endVertex == null || !this.endVertex.isEnd())
+				saveGraph();
+			else
+				this.endVertex.setEnd(false);
+			this.endVertex=endVertex;
+			endVertex.setEnd(true);
+			Iterator<GWizEdge> e = graph.edgeSet().iterator();
+			while (e.hasNext())
+				e.next().setDescription(Description.EXPLORED);
+			GWizVertex pred = endVertex;
+			while (pred.hasPred()){
+				graph.getEdge(pred.getPred(), pred).setDescription(Description.PATH);
+				pred = pred.getPred();
+			}
+		}
+		else if (this.endVertex != null )
+			if (this.endVertex.isEnd()){
+				restorePreviousGraph();
+				this.endVertex.setEnd(false);
+			}
 	}
 
 	/**
@@ -102,8 +118,17 @@ public class Dijkstra extends Algorithm {
 	 * @uml.property  name="startingVertex"
 	 */
 	public void setStartingVertex (GWizVertex startingVertex) {
-		this.startingVertex = startingVertex;
-		startingVertex.setValuation(0);
+		if (startingVertex!=null){
+			if (this.startingVertex!=null)
+				this.startingVertex.reset();
+			Iterator<GWizVertex> i = graph.vertexSet().iterator();
+			while (i.hasNext())
+				i.next().setValuated(true);
+			this.startingVertex = startingVertex;
+			this.startingVertex.setStart(true);
+			this.startingVertex.setValuation(0);
+			currentStep = 2;
+		}
 	}
 
 	private void checkAllSuccessorUpdated(GWizVertex vertex){
@@ -115,17 +140,20 @@ public class Dijkstra extends Algorithm {
 			allUpdated = (n.isUpdated()||n.isFixed()) && allUpdated;
 			if (graph.getEdgeSource(edge)==graph.getEdgeTarget(edge).getPred()) {
 				Iterator<GWizEdge> i2 = graph.incomingEdgesOf(graph.getEdgeTarget(edge)).iterator();
-				while (i2.hasNext())
-					i2.next().setDescription(Description.REGULAR);
+				while (i2.hasNext()){
+					GWizEdge e = i2.next();
+					if (e.getDescription()==Description.PATH)
+						e.setDescription(Description.EXPLORED);
+				}
 				edge.setDescription(Description.PATH);
 			}
 			else if (graph.getEdgeTarget(edge).isUpdated()||graph.getEdgeTarget(edge).isFixed())
-				edge.setDescription(Description.REGULAR);
+				edge.setDescription(Description.EXPLORED);
 		}
 		if (allUpdated){
-			vertex.fixeMe();
+			vertex.setFixed(true);
 			vertex.setFixing(false);
-			currentStep = 5;
+			currentStep = 6;
 			Iterator<GWizEdge> j = graph.outgoingEdgesOf(vertex).iterator();
 			while (j.hasNext())
 				graph.getEdgeTarget(j.next()).setUpdated(false);
@@ -147,7 +175,7 @@ public class Dijkstra extends Algorithm {
 			if (nextVertex.getValuation() <= minValuation && !nextVertex.isFixed()){
 				selectedVertex = nextVertex;
 				minValuation = selectedVertex.getValuation();
-				currentStep = 3;
+				currentStep = 4;
 			}
 		}
 		if (!selectedVertex.isFixed()){
@@ -177,11 +205,24 @@ public class Dijkstra extends Algorithm {
 		   		succ.setUpdated(true);
 				edge.setDescription(Description.EXPLORER);
 				oneUpdate = true;
-				currentStep = 4;
+				currentStep = 5;
 		   	}
 		   	else if (succ.isUpdated())
 		   		succ.setUpdatedDone(true);
 		}
+	}
+
+	@Override
+	public boolean isRunnable() {
+		return (startingVertex != null && startingVertex.isStart());
+	}
+
+	@Override
+	public void initialize() {
+		Iterator<GWizVertex> i = graph.vertexSet().iterator();
+		while (i.hasNext())
+			i.next().setValuation(Float.POSITIVE_INFINITY);
+		currentStep = 1;
 	}
 
 }

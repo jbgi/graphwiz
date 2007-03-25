@@ -9,28 +9,18 @@ import java.util.Vector;
 import org.jgraph.*;
 import org.jgrapht.*;
 
-public class Bellman extends Algorithm{
+public class Bellman extends Algorithm {
 	
 	private int NbIteration=0;
 	
-	public Bellman() {
-		super();
+	public Bellman(GWizGraph graph) {
+		super(graph);
 	}
 	
 	public String checkGraph() {
 		// TODO Auto-generated method stub
 		// tout graphe est ok!
 		return null;
-	}
-
-	public String[] getAlgo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int getCurrentStep() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	public boolean isEligible() {
@@ -53,7 +43,7 @@ public class Bellman extends Algorithm{
 		if(!isEnd()){
 	            GWizVertex v = selectVertex();
 	            if (v != null){
-	            	v.fixeMe();
+	            	v.setFixed(true);
 	        		}
 	            else{
 	            	NbIteration++;
@@ -95,17 +85,34 @@ public class Bellman extends Algorithm{
         		  v.setValuation(valX + poidsXV);
         		  v.setPred(x);
         		  v.setUpdated(true);
-        		  e.setDescription(Description.EXPLORER);                  
+        		  e.setDescription(Description.EXPLORER);                 
         	  }    
           }		
 		}
-		v.fixeMe();
+		v.setFixed(true);
 	}
 
-	public void previousStep() {
-		if(!isStart()){
-			restorePreviousGraph();
-		}
+	@Override
+	public void setEndVertex(GWizVertex endVertex) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setStartingVertex(GWizVertex startingVertex) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isRunnable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
 		
 	}
 

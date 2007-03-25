@@ -3,12 +3,16 @@ package graphWiz.widgets;
 import graphWiz.GWizModelAdapter;
 import graphWiz.GraphEditor;
 import graphWiz.model.Algorithm;
+import graphWiz.model.Bellman;
 import graphWiz.model.Dijkstra;
+import graphWiz.model.Floyd;
 import graphWiz.visual.GWizEdgeView;
+import graphWiz.visual.GWizVertexValuationView;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
@@ -16,15 +20,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.net.URL;
+import java.util.Timer;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 
 import org.jgraph.JGraph;
-import org.jgraph.graph.CellView;
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.Edge;
-import org.jgraph.graph.GraphConstants;
+import org.jgraph.graph.*;
 
 
 public class Navigation extends JPanel{
@@ -35,8 +38,17 @@ public class Navigation extends JPanel{
 	protected JToolBar bHor; 
 	private JGraph jgraph;
 	public Algorithm algo;
-	private JList algoText = new JList();
+	public JList algoText = new JList();
 	private JTextField commentaires = new JTextField(" Bienvenue sur GraphWiz ... Le simulateur d'algorithmes de graphes ...  ");
+	private Graphics valuations;
+	private Algorithm dijkstra;
+	private Algorithm bellman;
+	private Algorithm floyd;
+	private boolean pauseTimer = true;
+	
+	private Timer timer = new Timer();
+	private TimerTask updateAlgo;
+	
 	//private Logo logo = new Logo();
 	public Navigation(){
 		super();
@@ -44,9 +56,14 @@ public class Navigation extends JPanel{
 	}
 	
 	public void start(JGraph editorGraph){
+		
+		
 		bHor = new JToolBar();
 		this.jgraph=editorGraph;
-		algo = new Dijkstra(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
+		dijkstra = new Dijkstra(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
+		bellman = new Bellman(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
+		floyd = new Floyd(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
+		algo = dijkstra;
 		algoText.setListData(algo.getAlgo());
 		algoText.setEnabled(false);
 		algoText.setSelectionBackground(Color.CYAN);
@@ -66,21 +83,36 @@ public class Navigation extends JPanel{
         choixAlgo = new JComboBox(algos);
         choixAlgo.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
 			if(choixAlgo.getSelectedIndex()== 1){
-				
+				algo.retoreInitialState();
+				algo = dijkstra;
+				algoText.setListData(algo.getAlgo());
+				algo.initialize();
+				algoText.setSelectedIndex(algo.getCurrentStep());
 			}
 			if (choixAlgo.getSelectedIndex()==2){
+				algo.retoreInitialState();
+				algo = bellman;
 				
+				algoText.setListData(algo.getAlgo());
+				algo.initialize();
+				algoText.setSelectedIndex(algo.getCurrentStep());
 			}
 			if (choixAlgo.getSelectedIndex()==3){
-				
+				algo.retoreInitialState();
+				algo = floyd;
+				algoText.setListData(algo.getAlgo());
+				algo.initialize();
+				algoText.setSelectedIndex(algo.getCurrentStep());
 			}
 			}
         });
         
         commentaires.setPreferredSize(new Dimension(430,450));
         commentaires.setMaximumSize(new Dimension(430,500));
+        commentaires.setEditable(false);
+        commentaires.setBackground(Color.WHITE);
         add(commentaires);
-        
+
         bHor.add(new AbstractAction("",begin){
         	public void actionPerformed(ActionEvent arg0) {
 				algo.retoreInitialState();
@@ -101,14 +133,27 @@ public class Navigation extends JPanel{
         bHor.add(new AbstractAction("",pause){
 
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}});
+				if (updateAlgo!=null)
+					updateAlgo.cancel();
+			}
+		});
         
         bHor.add(new AbstractAction("",play){
 
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				if (updateAlgo!=null)
+					updateAlgo.cancel();
+		        updateAlgo = new TimerTask() {
+				    public void run(){
+				    	if (algo.isRunnable()){
+							algo.nextStep();
+							algoText.setSelectedIndex(algo.getCurrentStep());
+							jgraph.repaint();
+				    	}
+				    	
+				    }
+		        };
+				timer.scheduleAtFixedRate(updateAlgo, 1500, 1500);
 			}}); 
         
         bHor.addSeparator();
@@ -125,10 +170,12 @@ public class Navigation extends JPanel{
 
         bHor.add(new AbstractAction("",end){
         	public void actionPerformed(ActionEvent arg0) {
+        		if (algo.isRunnable()){
 				while (!algo.isEnd())
 					algo.nextStep();
-				algoText.setSelectedIndex(algo.getCurrentStep());
 				jgraph.repaint();
+        		}
+        		algoText.setSelectedIndex(algo.getCurrentStep());
 			}});
         bHor.addSeparator();
         
@@ -171,14 +218,21 @@ public class Navigation extends JPanel{
 	public void stopExplorer() {
 		for (int i = 0; i< (bHor.getComponentCount()-1);i++)
 			bHor.getComponent(i).setEnabled(false);
+		jgraph.getGraphLayoutCache().reload();
 	}
 
 	public void startExplorer() {
 		for (int i = 0; i< (bHor.getComponentCount()-1);i++)
 			bHor.getComponent(i).setEnabled(true);
-		
+		Iterator i = algo.getGraph().vertexSet().iterator();
+		while (i.hasNext()){
+			GWizVertexValuationView view = new GWizVertexValuationView(((GWizModelAdapter)jgraph.getModel()).getVertexCell(i.next()),(GWizModelAdapter)jgraph.getModel());
+			jgraph.getGraphLayoutCache().insertViews(new GWizVertexValuationView[] {view});
+			view.translate(0, -9);
+		}
+		algo.initialize();
+		algoText.setSelectedIndex(algo.getCurrentStep());
 	}
-	
-	
+
 	
 }

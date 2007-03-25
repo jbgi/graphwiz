@@ -101,9 +101,11 @@ public class GWizEdgeView extends EdgeView {
 		if (getModel().getDescription()==Description.SELECT)
 			return Color.BLUE;
 		if (getModel().getDescription()==Description.REGULAR )
-			return Color.BLACK;
+			return Color.DARK_GRAY;
 		if (getModel().getDescription()==Description.EXPLORER )
 			return Color.CYAN;
+		if (getModel().getDescription()==Description.EXPLORED )
+			return Color.LIGHT_GRAY;
 		else return Color.BLACK;
 	}
 	

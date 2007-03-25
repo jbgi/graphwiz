@@ -132,7 +132,7 @@ public class GWizRandomGraphGenerator<V, E>
      *
      * @see GraphGenerator#generateGraph(Graph, VertexFactory, Map)
      */
-    public HashMap<Integer, V> generateGraph(
+    public void generateGraph(
         Graph<V, E> target,
         VertexFactory<V> vertexFactory)
     {
@@ -177,8 +177,6 @@ public class GWizRandomGraphGenerator<V, E>
             orderToVertexMap,
             this.numOfEdges,
             this.randomizer);
-        
-        return orderToVertexMap;
         
     }
 

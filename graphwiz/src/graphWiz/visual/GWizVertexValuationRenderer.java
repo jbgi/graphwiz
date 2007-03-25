@@ -17,14 +17,14 @@ import org.jgraph.graph.VertexView;
 
 /**
  */
-public class GWizVertexRenderer extends VertexRenderer {
+public class GWizVertexValuationRenderer extends VertexRenderer {
 
 	/**
 	 * Return a slightly larger preferred size than for a rectangle.
 	 */
 	public Dimension getPreferredSize() {
 		Dimension d = super.getPreferredSize();
-		d.width *= (2);
+		d.width *= (4);
 		d.height *= (1.5);
 		return d;
 	}
@@ -97,32 +97,10 @@ public class GWizVertexRenderer extends VertexRenderer {
 	/**
 	 */
 	public void paint(Graphics g) {
-		int b = borderWidth;
 		Graphics2D g2 = (Graphics2D) g;
-		Dimension d = getSize();
-		boolean tmp = selected;
-		if (super.isOpaque()) {
-			g.setColor(((GWizVertexView) view).getColor());
-			g.fillOval(b - 1, b - 1, (d.width - b), (d.height - b));
-		}
-		try {
-			setBorder(null);
-			setOpaque(false);
-			selected = false;
-			super.paint(g);
-		} finally {
-			selected = tmp;
-		}
-		if (bordercolor != null) {
-			g.setColor(bordercolor);
-			g2.setStroke(new BasicStroke(b));
-			g.drawOval(b - 1, b - 1, (d.width - b), (d.height - b));
-		}
-		if (selected) {
-			g2.setStroke(GraphConstants.SELECTION_STROKE);
-			g.setColor(highlightColor);
-			g.drawOval(b - 1, b - 1, (d.width - b), (d.height - b));
-		}
-		//getParent().getParent().getGraphics().drawString("hello", getX()+15, getY()+15);
+		int l = ((GWizVertexValuationView) view).getValuation().length();
+		g2.scale(0.8, 0.8);
+		g2.setColor(((GWizVertexValuationView) view).getColor());
+		g2.drawString(((GWizVertexValuationView) view).getValuation(), 0, 10);
 	}
 }

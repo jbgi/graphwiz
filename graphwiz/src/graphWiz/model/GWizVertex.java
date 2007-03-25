@@ -18,6 +18,12 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 	
 	private boolean updatedDone = false;
 	
+	private boolean valuated = false;
+	
+	private boolean start;
+	
+	private boolean end;
+	
 	private String name;
 	
 	private GWizVertex pred = null;
@@ -39,10 +45,6 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 		count++;
 		return new GWizVertex(Integer.toString(count));
 	}
-	
-	public void fixeMe() {
-		fixed = true;
-	}
 
 	/**
 	 * @return  the name
@@ -57,10 +59,7 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 	 * @uml.property  name="pred"
 	 */
 	public GWizVertex getPred() {
-		if (hasPred())
-			return pred;
-		else
-			return this;
+		return pred;
 	}
 
 	/**
@@ -116,7 +115,7 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 	}
 
 	public boolean isValuated() {
-		return (valuation != Float.POSITIVE_INFINITY);
+		return valuated;
 	}
 	
 	/**
@@ -155,17 +154,19 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 	 * @param pred  the pred to set
 	 * @uml.property  name="pred"
 	 */
-	public void setPred(GWizVertex pred) {
-		setPreviousPred(pred);
-		this.pred = pred;
-		hasPred = true;
+	protected void setPred(GWizVertex pred) {
+		if (pred!=null){
+			setPreviousPred(this.pred);
+			this.pred = pred;
+			hasPred = true;
+		}
 	}
 
 	/**
 	 * @param previousPred  the previousPred to set
 	 * @uml.property  name="previousPred"
 	 */
-	public void setPreviousPred(GWizVertex previousPred) {
+	protected void setPreviousPred(GWizVertex previousPred) {
 		this.previousPred = previousPred;
 	}
 
@@ -173,7 +174,7 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 	 * @param previousValuation  the previousValuation to set
 	 * @uml.property  name="previousValuation"
 	 */
-	public void setPreviousValuation(double previousValuation) {
+	protected void setPreviousValuation(double previousValuation) {
 		this.previousValuation = previousValuation;
 	}
 
@@ -181,7 +182,7 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 	 * @param updated  the updated to set
 	 * @uml.property  name="updated"
 	 */
-	public void setUpdated(boolean updated) {
+	protected void setUpdated(boolean updated) {
 		this.updated = updated;
 		if (!updated)
 			setUpdatedDone(false);
@@ -191,7 +192,7 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 	 * @param valuation  the valuation to set
 	 * @uml.property  name="valuation"
 	 */
-	public void setValuation(double valuation) {
+	protected void setValuation(double valuation) {
 		setPreviousValuation(this.valuation);
 		this.valuation= valuation;
 	}
@@ -214,10 +215,33 @@ public class GWizVertex implements VertexFactory<GWizVertex> {
 		setFixing(false);
 		setHasPred(false);
 		setUpdated(false);
+		setStart(false);
+		setEnd(false);
+		setValuated(false);
 		pred = null;
 		previousPred = null;
 		previousValuation = Float.POSITIVE_INFINITY;
 		valuation = Float.POSITIVE_INFINITY;
+	}
+
+	public boolean isStart() {
+		return start;
+	}
+
+	protected void setStart(boolean start) {
+		this.start = start;
+	}
+
+	public boolean isEnd() {
+		return end;
+	}
+
+	protected void setEnd(boolean end) {
+		this.end = end;
+	}
+
+	protected void setValuated(boolean valuated) {
+		this.valuated = valuated;
 	}
 
 }

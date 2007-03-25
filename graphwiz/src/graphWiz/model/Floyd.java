@@ -10,11 +10,11 @@ public class Floyd extends Algorithm{
 	public Vector<GWizVertex> predecessors;
 	public Vector<GWizVertex> successors;
 	
-	public Floyd() {
-		super();
+	public Floyd(GWizGraph graph) {
+		super(graph);
 		successors = new Vector<GWizVertex>();
 		predecessors = new Vector<GWizVertex>();
-		CouplesOfCurrentVertex = new boolean[0][0];
+		CouplesOfCurrentVertex = new boolean[1][1];
 		CouplesOfCurrentVertex[0][0]= false;
 	}
 	
@@ -22,16 +22,6 @@ public class Floyd extends Algorithm{
 		// TODO Auto-generated method stub
 		// tout graphe est ok!
 		return null;
-	}
-
-	public String[] getAlgo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int getCurrentStep() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	public boolean isEligible() {
@@ -111,7 +101,7 @@ public class Floyd extends Algorithm{
 		
 		//fixation du sommet s'il n'y a plus de mise à jour possible
 		if(CheckPasMiseAJour(CouplesOfCurrentVertex)){
-			courant.fixeMe();
+			courant.setFixed(true);
 		}
 					
 	}
@@ -148,10 +138,26 @@ public class Floyd extends Algorithm{
 		
 	}
 
-	public void previousStep() {
-		if(!isStart()){
-			restorePreviousGraph();
-		}
+	@Override
+	public void setEndVertex(GWizVertex endVertex) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void setStartingVertex(GWizVertex startingVertex) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isRunnable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
 		
 	}
 

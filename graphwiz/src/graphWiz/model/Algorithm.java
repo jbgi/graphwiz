@@ -24,7 +24,8 @@ public abstract class Algorithm {
 	
 	String[] algo;
 	
-	public Algorithm() {
+	public Algorithm(GWizGraph graph) {
+		this.graph=graph;
 		edgesDescriptionHistory = new Stack<Vector<Description>>();
 		verticesFlagHistory = new Stack<Vector<boolean[]>>();
 		verticesPredHistory = new Stack<Vector<GWizVertex[]>>();
@@ -38,7 +39,7 @@ public abstract class Algorithm {
 	 */
 	public abstract String checkGraph();
 	
-	public void clearHistory(){
+	private void clearHistories(){
 		edgesDescriptionHistory.clear();
 		verticesFlagHistory.clear();
 		verticesPredHistory.clear();
@@ -46,7 +47,7 @@ public abstract class Algorithm {
 		currentStepHistory.clear();
 	}
 	
-	public void retoreInitialState(){
+	public final void retoreInitialState(){
 		Iterator<GWizVertex> v = graph.vertexSet().iterator();
 		while (v.hasNext())
 			v.next().reset();
@@ -56,15 +57,20 @@ public abstract class Algorithm {
 			e.next().reset();
 		if (!currentStepHistory.isEmpty())
 			currentStep = currentStepHistory.firstElement();
-		clearHistory();
-		
+		clearHistories();
 	}
+	
+	public final void previousStep(){
+		restorePreviousGraph();
+	}
+	
+	public abstract void initialize(); 
 
 
 	/**
 	 * @return String table describing the algorithm (notations and steps)
 	 */
-	public String[] getAlgo() {
+	public final String[] getAlgo() {
 		return algo;
 	}
 
@@ -72,11 +78,11 @@ public abstract class Algorithm {
 	 * @return the index of the String describing the current step. (Index in the
 	 * description table of the algorithm returned by getAlgo)
 	 */
-	public int getCurrentStep() {
+	public final int getCurrentStep() {
 		return currentStep;
 	}
 
-	public GWizGraph getGraph() {
+	public final GWizGraph getGraph() {
 		return graph;
 	}
 
@@ -95,26 +101,24 @@ public abstract class Algorithm {
 	
 	public abstract void nextStep();
 	
-	public abstract void previousStep();
-	
 	public abstract void setEndVertex (GWizVertex endVertex);
 	
 	/**
 	 * @param graph  the graph to set
 	 * @uml.property  name="graph"
 	 */
-	public void setGraph(GWizGraph gWizGraph) {
-		currentStepHistory.clear();
+	public final void setGraph(GWizGraph gWizGraph) {
 		graph = gWizGraph;
 		edgesDescriptionHistory.clear();
 		verticesFlagHistory.clear();
 		verticesPredHistory.clear();
 		verticesValuationHistory.clear();
+		currentStepHistory.clear();
 	}
 	
 	public abstract void setStartingVertex (GWizVertex startingVertex);
 	
-	void restorePreviousGraph() {	
+	protected void restorePreviousGraph() {	
 		if (!verticesFlagHistory.isEmpty()){
 			Vector<boolean[]> verticesFlag = verticesFlagHistory.pop();
 			Vector<GWizVertex[]> verticesPred = verticesPredHistory.pop();
@@ -149,7 +153,7 @@ public abstract class Algorithm {
 		}
 	}
 	
-	void saveGraph() {
+	protected void saveGraph() {
 		
 		Vector<boolean[]> verticesFlag = new Vector<boolean[]>();
 		Vector<GWizVertex[]> verticesPred = new Vector<GWizVertex[]>();
@@ -163,7 +167,7 @@ public abstract class Algorithm {
 			boolean[] t1 = new boolean[] {v.isFixed(), v.isFixing(), v.isUpdated(), v.hasPred(), v.isUpdatedDone()};
 			verticesFlag.add(t1);
 			
-			GWizVertex[] t2 = {v.getPred(), v.getPreviousPred()};
+			GWizVertex[] t2 = new GWizVertex[] {v.getPred(), v.getPreviousPred()};
 			verticesPred.add(t2);
 			
 			double[] t3 = new double[] {v.getValuation(), v.getPreviousValuation()};
@@ -182,5 +186,7 @@ public abstract class Algorithm {
 		
 		currentStepHistory.add(Integer.valueOf(currentStep));
 	}
+
+	public abstract boolean isRunnable();
 
 }

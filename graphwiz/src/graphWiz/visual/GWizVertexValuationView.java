@@ -15,23 +15,23 @@ import org.jgraph.graph.VertexView;
  * @author  jbg
  */
 @SuppressWarnings("serial")
-public class GWizVertexView extends VertexView {
+public class GWizVertexValuationView extends VertexView {
 	
 	private GWizModelAdapter jgAdapter;
 
 	/**
 	 */
-	public static transient GWizVertexRenderer renderer = new GWizVertexRenderer();
+	public static transient GWizVertexValuationRenderer renderer = new GWizVertexValuationRenderer();
 
 	/**
 	 */
-	public GWizVertexView() {
+	public GWizVertexValuationView() {
 		super();
 	}
 
 	/**
 	 */
-	public GWizVertexView(Object cell, GWizModelAdapter jgAdapter) {
+	public GWizVertexValuationView(Object cell, GWizModelAdapter jgAdapter) {
 		super(cell);
 		this.jgAdapter = jgAdapter;
 	}
@@ -62,6 +62,18 @@ public class GWizVertexView extends VertexView {
 		if (getModel().isUpdated())
 			return Color.CYAN;
 		else return Color.BLACK;	
+	}
+
+	public String getValuation() {
+		if (getModel().isValuated()){
+			double val = getModel().getValuation();
+			if (val == Double.POSITIVE_INFINITY)
+				return ("+\u221E");
+				if (val == (int) val)
+					return Integer.toString((int) val);
+				else return Double.toString(val);
+		}
+		else return "";
 	}
 
 }

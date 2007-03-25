@@ -588,10 +588,10 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
 //                		+ newPosition);
 
                 // update the location to get the correct
-                newPosition.setFrame(Math.min(Math.max((newPosition.getX() + movementX) * stretchX, 25/scale),
-                		myFrame.getWidth()-newPosition.getWidth() - 25/scale),
-                        Math.min(Math.max((newPosition.getY() + movementY) * stretchY, 25/scale),
-                        		myFrame.getHeight()-newPosition.getHeight() - 25/scale), 
+                newPosition.setFrame(Math.min(Math.max((newPosition.getX() + movementX) * stretchX, 30/scale),
+                		myFrame.getWidth()-newPosition.getWidth() - 30/scale),
+                        Math.min(Math.max((newPosition.getY() + movementY) * stretchY, 40/scale),
+                        		myFrame.getHeight()-newPosition.getHeight() - 30/scale), 
                         newPosition.getWidth(),newPosition.getHeight());
 
                 // update the view

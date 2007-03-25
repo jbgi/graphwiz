@@ -96,7 +96,7 @@ public class GWizGraphGeneratorDialog extends JDialog {
 		GWizRandomGraphGenerator<GWizVertex, GWizEdge> generator = new GWizRandomGraphGenerator<GWizVertex, GWizEdge>(numVertice, numEdges, connected.isSelected(), Integer.parseInt(jminWeight.getText()), Integer.parseInt(jmaxWeight.getText()) );
 		editor.getGraph().getModel().remove(editor.getGraph().getRoots());
 		editor.getGraph().getModel().remove(editor.getGraph().getRoots());
-		editor.verticeTable = generator.generateGraph(graph, new GWizVertex("Vertex Generator"));
+		generator.generateGraph(graph, new GWizVertex("Vertex Generator"));
 		editor.getGraph().setScale(7.0/Math.sqrt(numVertice));
 		editor.applySpringLayout();
 		editor.getGraph().clearSelection();
@@ -107,7 +107,7 @@ public class GWizGraphGeneratorDialog extends JDialog {
 		GWizRandomGraphGenerator<GWizVertex, GWizEdge> generator = new GWizRandomGraphGenerator<GWizVertex, GWizEdge>(5, 7, true, 0, 5);
 		//editor.getGraph().getModel().remove(editor.getGraph().getRoots());
 		//editor.getGraph().getModel().remove(editor.getGraph().getRoots());
-		editor.verticeTable = generator.generateGraph(graph, new GWizVertex("Vertex Generator"));
+		generator.generateGraph(graph, new GWizVertex("Vertex Generator"));
 		editor.getGraph().setScale(7.0/Math.sqrt(5));
 		editor.applySpringLayout();
 		editor.getGraph().clearSelection();
