@@ -10,6 +10,8 @@ public class Dijkstra extends Algorithm {
 	private GWizVertex startingVertex;
 	private GWizVertex endVertex;
 	
+	private String[] algo;
+	
 	public Dijkstra(GWizGraph graph) {
 		super(graph);
 		
@@ -223,6 +225,10 @@ public class Dijkstra extends Algorithm {
 		while (i.hasNext())
 			i.next().setValuation(Float.POSITIVE_INFINITY);
 		currentStep = 1;
+	}
+	
+	public String[] getAlgo() {
+		return algo;
 	}
 
 }

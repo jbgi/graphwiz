@@ -87,8 +87,6 @@ import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 import org.jgraph.graph.PortView;
 
-import com.jgraph.example.JGraphGraphFactory;
-
 public class GraphEditor extends JPanel implements GraphSelectionListener,
 		KeyListener {
 	

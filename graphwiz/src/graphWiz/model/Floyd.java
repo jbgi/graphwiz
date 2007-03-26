@@ -161,4 +161,10 @@ public class Floyd extends Algorithm{
 		
 	}
 
+	@Override
+	public String[] getAlgo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -22,8 +22,6 @@ public abstract class Algorithm {
 	
 	int currentStep = 1;
 	
-	String[] algo;
-	
 	public Algorithm(GWizGraph graph) {
 		this.graph=graph;
 		edgesDescriptionHistory = new Stack<Vector<Description>>();
@@ -70,9 +68,7 @@ public abstract class Algorithm {
 	/**
 	 * @return String table describing the algorithm (notations and steps)
 	 */
-	public final String[] getAlgo() {
-		return algo;
-	}
+	public abstract String[] getAlgo();
 
 	/**
 	 * @return the index of the String describing the current step. (Index in the
