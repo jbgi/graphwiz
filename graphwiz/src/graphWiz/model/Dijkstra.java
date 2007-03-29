@@ -17,27 +17,27 @@ public class Dijkstra extends Algorithm {
 		
 		algo = new String[8];
 		
-		algo[0] = "<html><font size=6>Algorithme de Dijstra<br/></font><br/><I><font size=3><U>Notations:</U><br />"
-			+ "V[x] = valuation du sommet x<br />"
-			+ "W(x,y) = poids de l'arc (x,y)</font><br />"
-			+ "<br /><font size=4><U> Algorithme: </U></font><br /></html>";
+		algo[0] = "<html><font size=6>Algorithme de Dijkstra<br></font><br><I><font size=3><U>Notations:</U><br>"
+			+ "V[x] = valuation du sommet x<br >"
+			+ "W(x,y) = poids de l'arc (x,y)</font><br >"
+			+ "<br ><br><font size=5><U> Algorithme: </U></font><br ></html>";
 		
-		algo[1] = "<html><br /><font size=4><U>Pré-requis :</U><br />" +
-				"Le graphe est orienté et ses arcs <br />ont des poids négatifs ou nul.<br /></font></html>" +
+		algo[1] = "<html><br ><font size=4><U>Pré-requis :</U><br >" +
+				"Le graphe est orienté et ses arcs <br>ont des poids négatifs ou nul.<br></font></html>" +
 				"";
 
-		algo[2] = "<html><br /><font size=4>Initialiser la valuation du sommet de départ à 0 <br/>"
-			+ "et celle de tous les autres sommets à +&#8734 </font><br /><br /></html>";
+		algo[2] = "<html><br><font size=4>Initialiser la valuation du sommet de départ à 0 <br>"
+			+ "et celle de tous les autres sommets à +&#8734 </font><br><br></html>";
 		
-		algo[3] = "<html><font size=4>Tant que tous les sommets ne sont pas fixés<br /></font></html>";
+		algo[3] = "<html><font size=4>Tant que tous les sommets ne sont pas fixés<br></font></html>";
 
-		algo[4] = "<html><font size=4><blockquote>Sélectionner le sommet x non fixé<br />de plus petite valuation</blockquote></font></html>";
+		algo[4] = "<html><blockquote><font size=4>Sélectionner le sommet x non fixé<br>de plus petite valuation</font></blockquote></html>";
 
-		algo[5] = "<html><font size=4><blockquote>Pour chaque successeur non fixé y de x</blockquote>"
-			+"<blockquote><blockquote><b>Si</b>  V[x] + W(x,y)"+" &lt "+" v[y] <br /> <b> alors </b> V[y] = V[x] + W(x,y)</blockquote></blockquote></font></html>";
+		algo[5] = "<html><blockquote><font size=4>Pour chaque successeur non fixé y de x</blockquote>"
+			+"<blockquote><blockquote><font size=4><b>Si</b>  V[x] + W(x,y)"+" &lt "+" v[y] <br> <b> alors </b> V[y] = V[x] + W(x,y)</blockquote></blockquote></font></html>";
 
-		algo[6] = "<html><font size=4><blockquote>FinPour</blockquote>"
-			+ "<blockquote>Fixer le sommet x</blockquote></font></html>";
+		algo[6] = "<html><blockquote><font size=4>FinPour</blockquote>"
+			+ "<blockquote><font size=4>Fixer le sommet x</font></blockquote></html>";
 
 		algo[7] =  "<html><font size=4>Fin Tant Que</html>";
 	}
