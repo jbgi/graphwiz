@@ -120,7 +120,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 
 	//Mode
 	private JComboBox mode;
-	private String[] modes = {"Mode Dessin", "Mode Algo"};
 	private Navigation navigation;
 
 	private GWizGraph gwizGraph;
@@ -561,7 +560,12 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon randomIcon = new ImageIcon(randomUrl);
 		toolbar.add(new AbstractAction("Insert Random Graph", randomIcon) {
 			public void actionPerformed(ActionEvent e) {
+				navigation.commentaires.setText("Entrez les paramètres du graphe");
+				navigation.commentaires.setBackground(Color.red);
 				generatorDialog.newRandomGraph();
+				navigation.commentaires.setText("Mode Edition. Pour démarrer un algorithme, cliquez sur Mode Algorithme");
+				navigation.commentaires.setBackground(Color.white);
+				startEdition();
 			}
 		});
 		
@@ -574,6 +578,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(new AbstractAction("", insertIcon) {
 			public void actionPerformed(ActionEvent e) {
 				insert(new Point(10, 10));
+				navigation.commentaires.setText("Vous pouvez déplacer le sommet en maintenant le click sur une extrémité");
+				navigation.commentaires.setBackground(Color.white);
 			}
 		});
 
@@ -584,6 +590,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(new AbstractAction("", connectIcon) {
 			public void actionPerformed(ActionEvent e) {
 				graph.setPortsVisible(!graph.isPortsVisible());
+				navigation.commentaires.setText("Pour connecter 2 sommets, cliquez aux centres des cercles");
+				navigation.commentaires.setBackground(Color.blue);
 				URL connectUrl;
 				if (graph.isPortsVisible())
 					connectUrl = getClass().getClassLoader().getResource(
@@ -592,6 +600,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 					connectUrl = getClass().getClassLoader().getResource(
 							"graphWiz/resources/connecton.gif");
 				ImageIcon connectIcon = new ImageIcon(connectUrl);
+				navigation.commentaires.setText("Pour donner un poids à l'arc, double-cliquez sur celui-ci");
+				navigation.commentaires.setBackground(Color.blue);
 				putValue(SMALL_ICON, connectIcon);
 			}
 		});
@@ -656,6 +666,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		//Mode Algo, Mode Dessin
 		modeConstruction = new AbstractAction("Mode Construction") {
 			public void actionPerformed(ActionEvent e) {
+				navigation.commentaires.setText("Vous pouvez modifier votre graphe ou en créer un nouveau");
+				navigation.commentaires.setBackground(Color.green);
 				this.setEnabled(false);
 				modeAlgo.setEnabled(true);
 				startEdition();
@@ -672,6 +684,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 				modeConstruction.setEnabled(true);
 				stopEdition();
 				navigation.startExplorer();
+				navigation.commentaires.setText("Sélectionnez un algorithme (Dijkstra par défaut)");
+				navigation.commentaires.setBackground(Color.yellow);
 			}
 		};
 		

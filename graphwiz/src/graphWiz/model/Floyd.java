@@ -9,6 +9,8 @@ public class Floyd extends Algorithm{
 	public boolean[][] CouplesOfCurrentVertex; 
 	public Vector<GWizVertex> predecessors;
 	public Vector<GWizVertex> successors;
+	private String[] algo;
+	public Vector<Vector> Val = new Vector<Vector>();
 	
 	public Floyd(GWizGraph graph) {
 		super(graph);
@@ -16,6 +18,24 @@ public class Floyd extends Algorithm{
 		predecessors = new Vector<GWizVertex>();
 		CouplesOfCurrentVertex = new boolean[1][1];
 		CouplesOfCurrentVertex[0][0]= false;
+		algo = new String[13];
+		algo[0] = "<html><font size=5>Algorithme de Floyd</font><br><br><I><font size=3><U> Notations:</U>"+
+				"<br><font size=2>V[x,y] = valuation du plus court chemin pour aller de x à y </br>"+"<br> par les sommets intermédiaires {1,2,..,k} </br>" +
+				"<br><font size=2>W(x,y) = poids de l'arc (x,y) (infini s'il n'existe pas)</br>" +
+				"<br></font></I></html>";
+		algo[1] =  "<html><font size=4><br><U> Algorithme:</U></br></font></html>";
+		algo[2] =  "<html><font size= 3 color=#408080> <I> // Initialisation de la matrice V<sup>0</sup> : </I></font>"+"<br> Pour tout sommet i de 0 à N, </br>"+
+				"<br><blockquote>Pour tout sommet j de 0 à N </blockquote>"+"<blockquote><blockquote> V<sup>0</sup>[i,j]=W(i,j)</blockquote></blockquote>"+"<blockquote>Fin Pour</blockquote>"+"Fin Pour"+"<br></html>";
+		algo[3] = "<html><font size=3 color=#408080><I> //Calcul des matrices successives V<sup>k</sup></font></html>";
+		algo[4] = "<html>Pour chaque sommet k de 1 à N </html>";
+		algo[5] = "<html><blockquote>Pour chaque sommet i de 0 à N-1</blockquote></html>";
+		algo[6] = "<html><blockquote><blockquote>Pour chaque sommet j de 0 à N-1</blockquote></blockquote></html>";
+		algo[7] = "<html><blockquote><blockquote><blockquote>Si V<sup>k-1</sup>[i,k]+V<sup>k-1</sup>[k,j] &lt V<sup>k-1</sup>[i,j]"+"<br>alors V<sup>k</sup>[i,j] = V<sup>k-1</sup>[i,k]+V<sup>k-1</sup>[k,j]"+"</blockquote></html>";
+		algo[8] = "<html><blockquote><blockquote><blockquote>Fin Si</blockquote></blockquote></blockquote></html>";
+		algo[9] = "<html><blockquote><blockquote>Fin Pour</blockquote></blockquote></html>";
+		algo[10] = "<html><blockquote>Fin Pour </blockquote></html>";
+		algo[11]= "<html>Fin Pour </html>";
+		algo[12]= "<html>Fin de l'algorithme </html>";
 	}
 	
 	public String checkGraph() {
@@ -157,14 +177,32 @@ public class Floyd extends Algorithm{
 
 	@Override
 	public void initialize() {
-		// TODO Auto-generated method stub
+		Iterator<GWizVertex> i = graph.vertexSet().iterator();
+		GWizVertex a = null;
+		
+		while (i.hasNext()){
+			a = i.next();
+			a.setValuated(true);
+			a.setValuation(Float.POSITIVE_INFINITY);
+			
+			a.setHasPred(true);
+			predecessors.addElement(a);
+			successors.add(a);
+			}
+		for(int k=0;k<predecessors.size();k++){
+			Val.add(new Vector());
+			for(int j=0;j<successors.size();j++){
+				Val.get(k).add(this.graph.getEdgeWeight(this.graph.getEdge(predecessors.get(k), successors.get(j))));
+			}
+		}
+		currentStep = 0;
 		
 	}
 
 	@Override
 	public String[] getAlgo() {
 		// TODO Auto-generated method stub
-		return null;
+		return algo;
 	}
 
 }

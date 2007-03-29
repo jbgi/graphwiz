@@ -39,7 +39,7 @@ public class Navigation extends JPanel{
 	private JGraph jgraph;
 	public Algorithm algo;
 	public JList algoText = new JList();
-	private JTextField commentaires = new JTextField(" Bienvenue sur GraphWiz ... Le simulateur d'algorithmes de graphes ...  ");
+	public JTextField commentaires = new JTextField(" Bienvenue sur GraphWiz ... Le simulateur d'algorithmes de graphes ...  ");
 	private Graphics valuations;
 	private Algorithm dijkstra;
 	private Algorithm bellman;
@@ -82,7 +82,8 @@ public class Navigation extends JPanel{
         
         choixAlgo = new JComboBox(algos);
         choixAlgo.addActionListener(new ActionListener(){ public void actionPerformed(ActionEvent e){
-			if(choixAlgo.getSelectedIndex()== 1){
+			
+        	if(choixAlgo.getSelectedIndex()== 1){
 				algo.retoreInitialState();
 				algo = dijkstra;
 				algoText.setListData(algo.getAlgo());
