@@ -16,6 +16,7 @@ public class Bellman extends Algorithm {
 	private String[] algo;
 	private Vector<GWizVertex> graphe = new Vector<GWizVertex>();
 	private Vector<GWizVertex> pred = new Vector<GWizVertex>();
+	private boolean temoin = false;
 	
 	public Bellman(GWizGraph graph) {
 		super(graph);
@@ -64,8 +65,8 @@ public class Bellman extends Algorithm {
 	}
 
 	public void nextStep() {
-		boolean temoin = false;
-		if(!temoin && currentStep!=3 && isStart() ){
+		
+		if(!temoin && NbSommetExplore ==0 && currentStep!=3 && isStart() ){
 			currentStep=2;
 			temoin = true;
 		}
@@ -98,7 +99,6 @@ public class Bellman extends Algorithm {
 					
 					Iterator<GWizEdge> j = graph.incomingEdgesOf(v).iterator();
 	    	   	 	GWizEdge e;
-	    	   	 	GWizVertex x;
 	    	   	 	while (j.hasNext()){          	  	
 	    	   	 		e = j.next();
 	    	   	 		if(this.graph.getEdge(graph.getEdgeSource(e),v).getDescription()!= Description.EXPLORER)
