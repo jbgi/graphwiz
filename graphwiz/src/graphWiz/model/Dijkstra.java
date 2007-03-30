@@ -20,7 +20,7 @@ public class Dijkstra extends Algorithm {
 		algo[0] = "<html><font size=6>Algorithme de Dijkstra<br></font><br><I><font size=3><U>Notations:</U><br>"
 			+ "V[x] = valuation du sommet x<br >"
 			+ "W(x,y) = poids de l'arc (x,y)</font><br >"
-			+ "<br ><br><font size=5><U> Algorithme: </U></font><br ></html>";
+			+ "<br ><br><font size=5><U>Algorithme: </U></font><br ></html>";
 		
 		algo[1] = "<html><br ><font size=4><U>Pré-requis :</U><br >" +
 				"Le graphe est orienté et ses arcs <br>ont des poids négatifs ou nul.<br></font></html>" +
