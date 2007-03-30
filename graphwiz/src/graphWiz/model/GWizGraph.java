@@ -31,6 +31,10 @@ public class GWizGraph extends ListenableDirectedWeightedGraph<GWizVertex, GWizE
 		this.info = info;
 	}
 	
+	public int nbVertex(){
+		return this.vertexSet().size();
+	}
+	
 	public void clear() {
 		if (vertexSet().size()!=0){
 			Object[] v = vertexSet().toArray();

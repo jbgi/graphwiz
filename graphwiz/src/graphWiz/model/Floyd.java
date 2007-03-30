@@ -24,8 +24,8 @@ public class Floyd extends Algorithm{
 				"<br><font size=2>W(x,y) = poids de l'arc (x,y) (infini s'il n'existe pas)</br>" +
 				"<br></font></I></html>";
 		algo[1] =  "<html><font size=4><br><U> Algorithme:</U></br></font></html>";
-		algo[2] =  "<html><font size= 3 color=#408080> <I> // Initialisation de la matrice V<sup>0</sup> : </I></font>"+"<br> Pour tout sommet i de 0 à N, </br>"+
-				"<br><blockquote>Pour tout sommet j de 0 à N </blockquote>"+"<blockquote><blockquote> V<sup>0</sup>[i,j]=W(i,j)</blockquote></blockquote>"+"<blockquote>Fin Pour</blockquote>"+"Fin Pour"+"<br></html>";
+		algo[2] =  "<html><font size= 3 color=#408080> <I> // Initialisation de la matrice V<sup>0</sup> : </I></font>"+"<br> Pour tout sommet i de 0 à N-1, </br>"+
+				"<br><blockquote>Pour tout sommet j de 0 à N-1 </blockquote>"+"<blockquote><blockquote> V<sup>0</sup>[i,j]=W(i,j)</blockquote></blockquote>"+"<blockquote>Fin Pour</blockquote>"+"Fin Pour"+"<br></html>";
 		algo[3] = "<html><font size=3 color=#408080><I> //Calcul des matrices successives V<sup>k</sup></font></html>";
 		algo[4] = "<html>Pour chaque sommet k de 1 à N </html>";
 		algo[5] = "<html><blockquote>Pour chaque sommet i de 0 à N-1</blockquote></html>";
