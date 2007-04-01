@@ -1,24 +1,28 @@
 package graphWiz.model;
 
+import graphWiz.model.GWizEdge.Description;
+
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 public class Floyd extends Algorithm{
 	
 	private int NbIteration=0;
-	public boolean[][] CouplesOfCurrentVertex; 
-	public Vector<GWizVertex> predecessors;
-	public Vector<GWizVertex> successors;
+	private boolean[][] CouplesOfCurrentVertex; 
+	public Vector<GWizVertex> succ= new Vector<GWizVertex>();
 	private String[] algo;
-	public Vector<Vector> Val = new Vector<Vector>();
+	private Vector<GWizVertex> graphe = new Vector<GWizVertex>();
+	private Vector<GWizVertex> pred = new Vector<GWizVertex>();
+	public double[][] Val;
+	
 	
 	public Floyd(GWizGraph graph) {
 		super(graph);
-		successors = new Vector<GWizVertex>();
-		predecessors = new Vector<GWizVertex>();
+		Val = new double[this.graph.vertexSet().size()][this.graph.vertexSet().size()];
 		CouplesOfCurrentVertex = new boolean[1][1];
 		CouplesOfCurrentVertex[0][0]= false;
-		algo = new String[13];
+		algo = new String[12];
 		algo[0] = "<html><font size=5>Algorithme de Floyd</font><br><br><I><font size=3><U> Notations:</U>"+
 				"<br><font size=2>V[x,y] = valuation du plus court chemin pour aller de x à y </br>"+"<br> par les sommets intermédiaires {1,2,..,k} </br>" +
 				"<br><font size=2>W(x,y) = poids de l'arc (x,y) (infini s'il n'existe pas)</br>" +
@@ -35,7 +39,6 @@ public class Floyd extends Algorithm{
 		algo[9] = "<html><blockquote><blockquote>Fin Pour</blockquote></blockquote></html>";
 		algo[10] = "<html><blockquote>Fin Pour </blockquote></html>";
 		algo[11]= "<html>Fin Pour </html>";
-		algo[12]= "<html>Fin de l'algorithme </html>";
 	}
 	
 	public String checkGraph() {
@@ -46,115 +49,154 @@ public class Floyd extends Algorithm{
 
 	public boolean isEligible() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isEnd() {
-		return NbIteration == this.verticesValuationHistory.capacity();
+		return NbIteration == graphe.size();
 		
 	}
 
 	public boolean isStart() {
-		return NbIteration == 0;
+		boolean isStart = true;
+		for(int i=0;i<this.graphe.size();i++){
+			if(graphe.get(i).isFixing() || graphe.get(i).isFixed())
+				isStart = false;
+		}
+		if (NbIteration == 0) isStart = false;
+		return isStart;
 	}
 
 	public void nextStep() {
+		System.out.println("nextStep()");
 		if(!isEnd()){
 			GWizVertex courant = selectVertex();
-			if(courant.isFixing()){
-				UpdateOneCouple(courant);
+			if(PlusDeCouple()){
+				currentStep=4;
+				pred.clear();
+				succ.clear();
+				System.out.println("Fin de l'iteration "+NbIteration);
+				NbIteration++;
 			}
-			else{
-			NbIteration++;
+			else if(!PlusDeCouple()){
 			UpdateOneCouple(courant);
 			}
-			saveGraph();
+			afficherVal();
+			//saveGraph();
 		}
+		else currentStep=11;
 	}
 	
 	
 	private void UpdateOneCouple(GWizVertex courant) {
-		if(!courant.isFixing()){
-			//création des vecteurs de prédécesseurs x et successeurs y, ainsi que le tableau donnant
-			//l'existence de V(x,y) :
-			Iterator<GWizEdge> entrants = this.graph.incomingEdgesOf(courant).iterator();
-			Iterator<GWizEdge> sortants = this.graph.outgoingEdgesOf(courant).iterator();
-			while(entrants.hasNext()){
-				predecessors.add(this.graph.getEdgeSource(entrants.next()));
-			}
-			while(sortants.hasNext()){
-				successors.add(this.graph.getEdgeTarget(sortants.next()));
-			}
-			
-			CouplesOfCurrentVertex = new boolean[predecessors.capacity()][successors.capacity()];
-			for(int pred=0;pred<CouplesOfCurrentVertex.length;pred++){
-				for(int succ=0;succ<CouplesOfCurrentVertex[0].length;succ++){
-					if(this.graph.containsEdge(predecessors.get(pred),successors.get(succ))){
-						CouplesOfCurrentVertex[pred][succ]= true;
+		System.out.println("UpdateOneCouple");
+		currentStep = 7;
+		if(!PlusDeCouple()){
+		int[] couple = selectCouple(courant);	
+		int j=couple[1],i=couple[0];
+		System.out.println("couple selectionne : ("+pred.get(i).getName()+","+succ.get(j).getName()+")...");
+		
+		double Vx = this.graph.getEdgeWeight(this.graph.getEdge(pred.get(i),courant));
+		double Vy = this.graph.getEdgeWeight(this.graph.getEdge(courant, succ.get(j)));
+		
+		this.graph.getEdge(pred.get(i),courant).setDescription(Description.EXPLORER);
+		this.graph.getEdge(courant, succ.get(j)).setDescription(Description.EXPLORER);
+		
+		miseAjour(courant,Vx,Vy,Integer.parseInt(pred.get(i).getName()),Integer.parseInt(succ.get(j).getName()),i,j);
+		
+		this.graph.getEdge(pred.get(i),courant).setDescription(Description.REGULAR);
+		this.graph.getEdge(courant, succ.get(j)).setDescription(Description.REGULAR);
+		CouplesOfCurrentVertex[i][j]=false;
+		}
+		else courant.isFixed();
+	}
+
+	private void miseAjour(GWizVertex courant,double vx, double vy, int i, int j,int a, int b) {
+		if(vx+vy<Val[i][j]){
+			Val[i][j]=vx+vy;
+			courant.setPred(pred.get(a));
+			succ.get(b).setPred(courant);
+			this.graph.getEdge(pred.get(a),succ.get(b)).setDescription(Description.PATH);
+			System.out.println("Couple Ameliore : ("+Integer.parseInt(pred.get(a).getName())+","+Integer.parseInt(succ.get(b).getName())+")...");
+		}
+		
+	}
+
+	private int[] selectCouple(GWizVertex courant) {
+		System.out.println("SelectCouple");
+		int[] couple = new int[2];
+		boolean trouve = false;
+		if(!PlusDeCouple()){
+			for(int a=0;a<CouplesOfCurrentVertex.length;a++){
+				for(int b=0;b<CouplesOfCurrentVertex[0].length;b++){
+					if(CouplesOfCurrentVertex[a][b]){
+						if(!trouve){
+							couple[0]=a;couple[1]=b;
+							trouve = true;
+						}
 					}
-					else CouplesOfCurrentVertex[pred][succ]= false;
 				}
 			}
-			
-			courant.setFixing(true);
 		}
-		
-		int pred = 0, succ = 0,p=0,s=0;
-		//recherche du couple
-		while(!CouplesOfCurrentVertex[pred][succ] || p<CouplesOfCurrentVertex.length){
-			while(!CouplesOfCurrentVertex[pred][succ] || s<CouplesOfCurrentVertex[0].length){
-				s++;
-			}
-			pred = p;
-			succ = s;
-			p++;
-			s=0;
-		}
-		double PoidsPred = this.graph.getEdgeWeight(this.graph.getEdge(predecessors.get(pred), courant));
-		double PoidsSucc = this.graph.getEdgeWeight(this.graph.getEdge(courant,successors.get(succ)));
-		double PoidsV = this.graph.getEdgeWeight(this.graph.getEdge(predecessors.get(pred), successors.get(succ)));
-		if(PoidsPred+PoidsSucc<PoidsV){
-			this.graph.setEdgeWeight(this.graph.getEdge(predecessors.get(pred), successors.get(succ)), PoidsSucc+PoidsPred);
-		}
-		//suppression du couple
-		CouplesOfCurrentVertex[pred][succ]=false;
-		
-		//fixation du sommet s'il n'y a plus de mise à jour possible
-		if(CheckPasMiseAJour(CouplesOfCurrentVertex)){
-			courant.setFixed(true);
-		}
-					
+		System.out.println("couple selectionne");
+		return couple;
 	}
 
-	private static boolean CheckPasMiseAJour(boolean[][] u) {
-		boolean check = true;
-		
-		for(int pred=0;pred<u.length;pred++){
-			for(int succ=0;succ<u[0].length;succ++){
-				if(u[pred][succ]) check=false;
-			}	
-		}
-		return check;
-	}
-
-	//faux: à corriger
 	private GWizVertex selectVertex() {
-		Iterator<GWizVertex> i =this.graph.vertexSet().iterator();
-		GWizVertex current = new GWizVertex(null);
-		while(i.hasNext() || !current.isFixing()){
-			current =i.next();
+		System.out.println("selectVertex");
+		GWizVertex selectedVertex = graphe.get(NbIteration);
+		if(!selectedVertex.isFixing()){
+			UpdatepredsuccOf(selectedVertex);	
 		}
-		if(!current.isFixing()){
-			Iterator<GWizVertex> j =this.graph.vertexSet().iterator();
-			while(j.hasNext() || current.isFixed()){
-				current =j.next();
-			}
-		}
-		return current;
+		selectedVertex.setFixing(true);
+		return selectedVertex;
 	}
 	
 	
-	public void UpdatePredecessorsOf(GWizVertex v){
+	public void UpdatepredsuccOf(GWizVertex v){
+		pred.clear();
+		succ.clear();
+		System.out.println("UpdatepredsuccOf");
+		//on remplit pred et succ
+		Iterator<GWizEdge> incoming = this.graph.incomingEdgesOf(v).iterator();
+		Iterator<GWizEdge> outgoing = this.graph.outgoingEdgesOf(v).iterator();
+		GWizEdge courant = new GWizEdge();
+		System.out.println("pred de "+v.getName());
+		while(incoming.hasNext()){
+			courant = incoming.next();
+			pred.addElement(this.graph.getEdgeSource(courant));
+			System.out.print(this.graph.getEdgeSource(courant).getName()+" - ");
+		}
+		System.out.println("");
+		System.out.println("il y a"+pred.size()+"predecesseurs");
+		System.out.println("succ de "+v.getName());
+		while(outgoing.hasNext()){
+			courant = outgoing.next();
+			succ.addElement(this.graph.getEdgeTarget(courant));
+			System.out.print(this.graph.getEdgeTarget(courant).getName()+" - ");
+		}
+		CouplesOfCurrentVertex = new boolean[pred.size()][succ.size()];
+		System.out.println("");
+		System.out.println("il y a"+succ.size()+"successeurs");
+		//on ne garde que les couples susceptibles d'être mis à jour
+		TrierPredSuccOf(v);
+		
+	}
+
+	private void TrierPredSuccOf(GWizVertex v) {
+		//CouplesOfCurrentVertex = new boolean[pred.size()][succ.size()];
+		System.out.println("");
+		for(int i=0; i<pred.size();i++){
+			for(int j=0; j<succ.size();j++){
+				if(this.graph.containsEdge(pred.get(i), succ.get(j))){
+					CouplesOfCurrentVertex[i][j]= true;
+					//this.graph.getEdge(pred.get(i),succ.get(j)).setDescription(Description.EXPLORER);
+				}
+				else CouplesOfCurrentVertex[i][j]= false;
+				System.out.print(CouplesOfCurrentVertex[i][j]);
+			}	
+			System.out.println("");
+		}
 		
 	}
 
@@ -172,30 +214,40 @@ public class Floyd extends Algorithm{
 	@Override
 	public boolean isRunnable() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public void initialize() {
 		Iterator<GWizVertex> i = graph.vertexSet().iterator();
 		GWizVertex a = null;
-		
 		while (i.hasNext()){
 			a = i.next();
-			a.setValuated(true);
-			a.setValuation(Float.POSITIVE_INFINITY);
-			
+			a.setValuated(false);
 			a.setHasPred(true);
-			predecessors.addElement(a);
-			successors.add(a);
+			graphe.addElement(a);
 			}
-		for(int k=0;k<predecessors.size();k++){
-			Val.add(new Vector());
-			for(int j=0;j<successors.size();j++){
-				Val.get(k).add(this.graph.getEdgeWeight(this.graph.getEdge(predecessors.get(k), successors.get(j))));
+		Val = new double[graphe.size()][graphe.size()];
+		for(int j=0;j<graphe.size();j++){
+			for(int k=0;k<graphe.size();k++){
+				if(this.graph.containsEdge(this.graphe.get(j),	this.graphe.get(k)))
+					Val[j][k] = this.graph.getEdgeWeight(this.graph.getEdge(this.graphe.get(j), this.graphe.get(k)));
+				else Val[j][k] = Double.POSITIVE_INFINITY;
 			}
 		}
+		afficherVal();
 		currentStep = 0;
+		System.out.println("Fin de l'initialisation");
+	}
+
+	private void afficherVal() {
+		for(int i=0;i<Val.length;i++){
+			System.out.print(" |");
+			for(int j=0;j<Val[0].length;j++){
+				System.out.print(" "+Val[i][j]+" ");
+			}
+			System.out.println("|");
+		}
 		
 	}
 
@@ -203,6 +255,18 @@ public class Floyd extends Algorithm{
 	public String[] getAlgo() {
 		// TODO Auto-generated method stub
 		return algo;
+	}
+	
+	private boolean PlusDeCouple(){
+		boolean plus = true;
+		for(int i =0; i<this.CouplesOfCurrentVertex.length;i++){
+			for(int j=0; j<this.CouplesOfCurrentVertex[0].length;j++){
+				if(this.CouplesOfCurrentVertex[i][j])
+					plus = false;
+			}
+		}
+		System.out.println("Il n'y a plus de couples : "+plus);
+		return plus;
 	}
 
 }
