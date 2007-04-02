@@ -15,6 +15,8 @@ public class Floyd extends Algorithm{
 	private Vector<GWizVertex> graphe = new Vector<GWizVertex>();
 	private Vector<GWizVertex> pred = new Vector<GWizVertex>();
 	public double[][] Val;
+	private GWizVertex endVertex;
+	private GWizVertex startingVertex;
 	
 	
 	public Floyd(GWizGraph graph) {
@@ -68,7 +70,7 @@ public class Floyd extends Algorithm{
 	}
 
 	public void nextStep() {
-		System.out.println("nextStep()");
+		saveGraph();
 		if(!isEnd()){
 			GWizVertex courant = selectVertex();
 			if(PlusDeCouple()){
@@ -82,7 +84,7 @@ public class Floyd extends Algorithm{
 			UpdateOneCouple(courant);
 			}
 			afficherVal();
-			//saveGraph();
+			
 		}
 		else currentStep=11;
 	}
@@ -202,14 +204,44 @@ public class Floyd extends Algorithm{
 
 	@Override
 	public void setEndVertex(GWizVertex endVertex) {
-		// TODO Auto-generated method stub
+		if (endVertex!=null) {
+			if (this.endVertex == null || !this.endVertex.isEnd())
+				saveGraph();
+			else
+				this.endVertex.setEnd(false);
+			this.endVertex=endVertex;
+			endVertex.setEnd(true);
+			Iterator<GWizEdge> e = graph.edgeSet().iterator();
+			while (e.hasNext())
+				e.next().setDescription(Description.EXPLORED);
+			GWizVertex pred = endVertex;
+			while (pred.hasPred()){
+				graph.getEdge(pred.getPred(), pred).setDescription(Description.PATH);
+				pred = pred.getPred();
+			}
+		}
+		else if (this.endVertex != null )
+			if (this.endVertex.isEnd()){
+				restorePreviousGraph();
+				this.endVertex.setEnd(false);
+			}
 	}
 
 	@Override
-	public void setStartingVertex(GWizVertex startingVertex) {
-		// TODO Auto-generated method stub
-		
+	public void setStartingVertex (GWizVertex startingVertex) {
+		if (startingVertex!=null){
+			if (this.startingVertex!=null)
+				this.startingVertex.reset();
+			Iterator<GWizVertex> i = graph.vertexSet().iterator();
+			while (i.hasNext())
+				i.next().setValuated(true);
+			this.startingVertex = startingVertex;
+			this.startingVertex.setStart(true);
+			this.startingVertex.setValuation(0);
+			currentStep = 2;
+		}
 	}
+
 
 	@Override
 	public boolean isRunnable() {
