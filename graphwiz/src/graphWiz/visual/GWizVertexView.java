@@ -48,20 +48,20 @@ public class GWizVertexView extends VertexView {
 	}
 	
 	Color getColor(){
-		if (getModel()==null) return Color.BLACK;
+		if (getModel()==null) return Color.BLUE.darker();
 		if (getModel().isStart())
 			return Color.ORANGE;
 		if (getModel().isEnd())
 			return Color.MAGENTA;
 		if (getModel().isFixed())
-			return Color.DARK_GRAY;
+			return Color.LIGHT_GRAY;
 		if (getModel().isFixing())
 			return Color.BLUE;
 		if (getModel().isUpdatedDone())
 			return Color.LIGHT_GRAY;
 		if (getModel().isUpdated())
 			return Color.CYAN;
-		else return Color.BLACK;	
+		else return Color.BLUE.darker();
 	}
 
 }

@@ -147,7 +147,7 @@ public class Dijkstra extends Algorithm {
 					if (e.getDescription()==Description.PATH)
 						e.setDescription(Description.EXPLORED);
 				}
-				edge.setDescription(Description.PATH);
+				//edge.setDescription(Description.PATH);
 			}
 			else if (graph.getEdgeTarget(edge).isUpdated()||graph.getEdgeTarget(edge).isFixed())
 				edge.setDescription(Description.EXPLORED);
@@ -180,14 +180,14 @@ public class Dijkstra extends Algorithm {
 				currentStep = 4;
 			}
 		}
-		if (!selectedVertex.isFixed()){
-			Iterator<GWizEdge> e = graph.outgoingEdgesOf(selectedVertex).iterator();
-			while (e.hasNext()){
-				GWizEdge edge = e.next();
-				if (!graph.getEdgeTarget(edge).isFixed() && !graph.getEdgeTarget(edge).isUpdated())
-					edge.setDescription(Description.SELECT);
-			}
-		}
+		//if (!selectedVertex.isFixed()){
+		//	Iterator<GWizEdge> e = graph.outgoingEdgesOf(selectedVertex).iterator();
+		//	while (e.hasNext()){
+		//		GWizEdge edge = e.next();
+		//		if (!graph.getEdgeTarget(edge).isFixed() && !graph.getEdgeTarget(edge).isUpdated())
+		//			edge.setDescription(Description.SELECT);
+		//	}
+		//}
 		return selectedVertex;
 	}
 

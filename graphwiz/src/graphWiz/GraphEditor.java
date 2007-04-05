@@ -600,7 +600,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		//Save graph
 		URL saveUrl = getClass().getClassLoader().getResource(
 		"graphWiz/resources/save.gif");
-		ImageIcon saveIcon = new ImageIcon(openUrl);
+		ImageIcon saveIcon = new ImageIcon(saveUrl);
 		toolbar.add(new AbstractAction("Save graph", saveIcon) {
 			public void actionPerformed(ActionEvent e) {
 				serializeGraph();
@@ -984,7 +984,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 				// And reinstalls the listener
 				installListeners(graph);
 			}
-			navigation.start(graph);
 		}
 	}
 
@@ -1021,6 +1020,9 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 				JOptionPane.showMessageDialog(graph, e.getMessage(), "Error",
 						JOptionPane.ERROR_MESSAGE);
 			}
+			navigation.restart(graph);
+			jgAdapter = (GWizModelAdapter) graph.getModel();
+			gwizGraph = jgAdapter.getGWizGraph();
 		}
 	}
 
@@ -1041,9 +1043,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 						return false;
 					if (f.getName() == null)
 						return false;
-					if (f.getName().endsWith(".xml"))
-						return true;
-					if (f.getName().endsWith(".ser"))
+					if (f.getName().endsWith(".gwz"))
 						return true;
 					if (f.isDirectory())
 						return true;
@@ -1055,7 +1055,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 				 * @see javax.swing.filechooser.FileFilter#getDescription()
 				 */
 				public String getDescription() {
-					return "GraphEd file (.xml, .ser)";
+					return "Fichier GraphWiz (.gwz)";
 				}
 			};
 			fileChooser.setFileFilter(fileFilter);

@@ -59,7 +59,7 @@ public class Navigation extends JPanel{
 		
 		
 		bHor = new JToolBar();
-		this.jgraph=editorGraph;
+		jgraph=editorGraph;
 		dijkstra = new Dijkstra(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
 		bellman = new Bellman(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
 		floyd = new Floyd(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
@@ -214,6 +214,15 @@ public class Navigation extends JPanel{
 		add(jpLogo);
 		setRequestFocusEnabled(false);
 		stopExplorer();
+	}
+	
+	public void restart(JGraph editorGraph){
+		jgraph=editorGraph;
+		dijkstra = new Dijkstra(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
+		bellman = new Bellman(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
+		floyd = new Floyd(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
+		algo = dijkstra;
+		algoText.setListData(algo.getAlgo());
 	}
 
 	public void stopExplorer() {
