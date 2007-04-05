@@ -12,8 +12,8 @@ public class Bellman extends Algorithm {
 	private String[] algo;
 	private Vector<GWizVertex> graphe = new Vector<GWizVertex>();
 	private Vector<GWizVertex> pred = new Vector<GWizVertex>();
-	private boolean temoin = false;
-	boolean memeIteration = false;
+	private boolean temoin = false, fin = false;
+	boolean memeIteration = true;
 	private int[] predecesseurs;
 	private GWizVertex endVertex;
 	
@@ -48,14 +48,15 @@ public class Bellman extends Algorithm {
 	}
 
 	public boolean isEnd() {
-		boolean isEnd = memeIteration || NbIteration == this.graphe.size()-1;
+		boolean isEnd = fin || NbIteration == this.graphe.size()-1;
 		if (isEnd) currentStep=7;
+		else currentStep=3;
 		System.out.println(NbIteration);
 		return  isEnd;		
 	}
 
 	public boolean isStart() {
-	
+		//this.comm.setCommentaires("On démarre l'algorithme");
 		boolean isStart = NbIteration == 0 && NbSommetExplore == 0;
 		if (isStart) currentStep=2;
 		return isStart;
@@ -64,22 +65,27 @@ public class Bellman extends Algorithm {
 	public void nextStep() {
 		saveGraph(); 
 		if(!temoin && NbSommetExplore ==0 && currentStep!=3 && isStart() ){
-			currentStep=3;
+			//this.comm.setCommentaires("le sommet 0 est selectionné");
+			currentStep=4;
 			temoin = true;
 		}
 		else{
 		if(!isEnd()){
 			if(NbSommetExplore<graphe.size()){
-				currentStep=4;
+				currentStep=3;
 				GWizVertex v = selectVertex();
+				//this.comm.setCommentaires("le sommet "+v.getName()+" est selectionné");
+				v.setFixing(true);
 				//si v n'a pas encore été mis à jour
 				if(!v.isFixed()){
 					currentStep=4;
+					v.isFixing();
 					Iterator<GWizEdge> j = graph.incomingEdgesOf(v).iterator();
 	    	   	 	GWizEdge e;
 	    	   	 	while (j.hasNext()){          	  	
 	    	   	 		e = j.next();
-	    	   	 		e.setDescription(Description.EXPLORED);
+	    	   	 		if(e.getDescription() != Description.SELECT)
+	    	   	 			e.setDescription(Description.EXPLORED);
 	    	   	 		pred.addElement(graph.getEdgeSource(e));
 	    	   	 	}
 	    	   	 	this.UpdatePredecessorsOf(v);
@@ -87,7 +93,7 @@ public class Bellman extends Algorithm {
 	    	   	 	
 				else{
 					NbSommetExplore++;
-	    	   	 	
+	    	   	 	//comm.setCommentaires("On sélectionne le sommet suivant"+NbSommetExplore);
 	    	   	 	System.out.println("NbSommet"+NbSommetExplore);
 				}
    	   	 	}        
@@ -95,17 +101,12 @@ public class Bellman extends Algorithm {
 			//si on a exploré tous les sommets, l'itération est terminée
 			else{
 				currentStep=6;
+				if(memeIteration)
+					fin=true;
 				memeIteration = true;
-				for(int i=0;i<this.graphe.size();i++){
-					for(int j =0;j<this.graphe.size();j++){
-					if(this.graph.containsEdge(this.graphe.get(i),this.graphe.get(j))){
-							if(this.graph.getEdge(this.graphe.get(i),this.graphe.get(j)).getDescription()==Description.PATH){
-								System.out.println("il y a un changement");
-								memeIteration=false;}}
-					}
-				}
 				clearGraphe();
 				NbIteration++;
+				//this.comm.setCommentaires("NbIter = "+NbIteration);
 				NbSommetExplore=0;
 				System.out.println("NbIter"+NbIteration);
 				
@@ -133,7 +134,8 @@ public class Bellman extends Algorithm {
 		GWizEdge b = null;
 		while(j.hasNext()){
 			b = j.next();
-			b.setDescription(Description.REGULAR);
+			if(b.getDescription()!=Description.SELECT)
+				b.setDescription(Description.REGULAR);
 		}
 		
 	}
@@ -148,9 +150,6 @@ public class Bellman extends Algorithm {
 		GWizVertex x =new GWizVertex(null);
 		currentStep = 5;
 		if(this.graph.containsVertex(v) && !pred.isEmpty()){
-			for(int i=0;i<pred.size();i++){
-				this.graph.getEdge(pred.get(i),v).setDescription(Description.EXPLORER);
-			}
 			while(!pred.isEmpty()){
 				x=pred.firstElement();
 				x.setUpdated(true);
@@ -168,9 +167,18 @@ public class Bellman extends Algorithm {
 		if(this.graph.containsEdge(this.graph.getEdge(x,v))){
 			double valX = x.getValuation();
 			double poidsXV = graph.getEdgeWeight(this.graph.getEdge(x, v));
-    	
 			if (valX + poidsXV < v.getValuation() ) {
-				this.graph.getEdge(x,v).setDescription(Description.PATH);
+				Iterator<GWizEdge> j = graph.incomingEdgesOf(v).iterator();
+    	   	 	GWizEdge e;
+    	   	 	while (j.hasNext()){          	  	
+    	   	 		e = j.next();
+    	   	 		if(e.getDescription()==Description.SELECT || e.getDescription()==Description.REGULAR)
+    	   	 			e.setDescription(Description.EXPLORED);
+    	   	 		
+    	   	 		pred.addElement(graph.getEdgeSource(e));
+    	   	 	}
+    	   	 	this.graph.getEdge(x,v).setDescription(Description.SELECT);
+    	   	 	memeIteration=false;
 				v.setPreviousValuation(v.getValuation());
 				v.setValuated(true);
   		  		v.setValuation(valX + poidsXV);
@@ -185,7 +193,8 @@ public class Bellman extends Algorithm {
 	   	 		while (j.hasNext()){          	  	
 	   	 			e = j.next();
 	   	 			if(this.graph.getEdge(graph.getEdgeSource(e),v).getDescription()== Description.EXPLORER)
-	   	 				this.graph.getEdge(graph.getEdgeSource(e),v).setDescription(Description.REGULAR);
+	   	 				this.graph.getEdge(graph.getEdgeSource(e),v).setDescription(Description.EXPLORED);
+	   	 			
 	   	 			}
     		   	}
 			}
