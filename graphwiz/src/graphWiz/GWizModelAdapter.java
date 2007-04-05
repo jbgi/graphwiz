@@ -82,7 +82,8 @@ import org.jgrapht.event.*;
  * todo and fixme marks in the code indicate where the possible improvements
  * could be made to realize that.
  */
-public class GWizModelAdapter extends DefaultGraphModel {
+public class GWizModelAdapter extends DefaultGraphModel implements Serializable{
+	
 	
 	/**
 	 * Creates the JGraph cells that reflect the respective JGraphT elements.
@@ -369,7 +370,9 @@ public class GWizModelAdapter extends DefaultGraphModel {
 	/**
 	 * A wrapper around a JGraphT graph that ensures a few atomic operations.
 	 */
-	private class ShieldedGraph {
+	private class ShieldedGraph implements Serializable{
+
+		private static final long serialVersionUID = 1L;
 		private final Graph<GWizVertex, GWizEdge> graph;
 
 		ShieldedGraph(Graph<GWizVertex, GWizEdge> graph) {

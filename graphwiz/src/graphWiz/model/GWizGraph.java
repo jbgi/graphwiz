@@ -6,9 +6,9 @@ import org.jgrapht.graph.ListenableDirectedWeightedGraph;
 /**
  * @author  jbg
  */
-@SuppressWarnings("serial")
 public class GWizGraph extends ListenableDirectedWeightedGraph<GWizVertex, GWizEdge> {
 	
+	private static final long serialVersionUID = 1L;
 	private String info;
 
 	public GWizGraph() {

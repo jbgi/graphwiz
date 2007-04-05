@@ -1,12 +1,15 @@
 package graphWiz.model;
 
+import java.io.Serializable;
+
 import org.jgrapht.VertexFactory;
 
 /**
  * @author  jbg
  */
-@SuppressWarnings("serial")
-public class GWizVertex implements VertexFactory<GWizVertex> {
+public class GWizVertex implements VertexFactory<GWizVertex>,Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private int count = -1;
 

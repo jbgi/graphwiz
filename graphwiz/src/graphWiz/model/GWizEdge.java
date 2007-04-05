@@ -1,5 +1,7 @@
 package graphWiz.model;
 
+import java.io.Serializable;
+
 import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.WeightedGraph;
@@ -9,7 +11,9 @@ import org.jgrapht.graph.DefaultWeightedEdge;
  * @author  jbg
  */
 @SuppressWarnings("serial")
-public class GWizEdge extends DefaultWeightedEdge {
+public class GWizEdge extends DefaultWeightedEdge implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private GWizGraph gWizGraph;
 	

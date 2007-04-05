@@ -28,6 +28,7 @@ import graphWiz.widgets.Navigation;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -40,10 +41,27 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.DefaultPersistenceDelegate;
+import java.beans.Encoder;
+import java.beans.ExceptionListener;
+import java.beans.Expression;
+import java.beans.PersistenceDelegate;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,6 +72,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -61,14 +80,18 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.event.UndoableEditEvent;
+import javax.swing.filechooser.FileFilter;
 
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphModelEvent;
 import org.jgraph.event.GraphModelListener;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
+import org.jgraph.example.GraphEd.MyGraph;
+import org.jgraph.graph.AbstractCellView;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.BasicMarqueeHandler;
 import org.jgraph.graph.CellHandle;
@@ -77,6 +100,7 @@ import org.jgraph.graph.DefaultCellViewFactory;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.DefaultGraphModel;
+import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.Edge;
 import org.jgraph.graph.EdgeView;
 import org.jgraph.graph.GraphConstants;
@@ -86,6 +110,9 @@ import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 import org.jgraph.graph.PortView;
+
+import com.jgraph.example.JGraphShadowBorder;
+import com.jgraph.example.GraphEdX.MyGraphModel;
 
 public class GraphEditor extends JPanel implements GraphSelectionListener,
 		KeyListener {
@@ -102,6 +129,12 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	private GWizModelAdapter jgAdapter;
 	
 	protected GWizGraphGeneratorDialog generatorDialog;
+	
+	/**
+	 * File chooser for loading and saving graphs. Note that it is lazily
+	 * instaniated, always call initFileChooser before use.
+	 */
+	protected JFileChooser fileChooser = null;
 
 	// Actions which Change State
 	protected Action remove;
@@ -554,6 +587,26 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar = new JToolBar();
 		toolbar.setFloatable(false);
 		
+		//Open file
+		URL openUrl = getClass().getClassLoader().getResource(
+		"graphWiz/resources/open.gif");
+		ImageIcon openIcon = new ImageIcon(openUrl);
+		toolbar.add(new AbstractAction("Open graph file", openIcon) {
+			public void actionPerformed(ActionEvent e) {
+				deserializeGraph();
+			}
+		});
+		
+		//Save graph
+		URL saveUrl = getClass().getClassLoader().getResource(
+		"graphWiz/resources/save.gif");
+		ImageIcon saveIcon = new ImageIcon(openUrl);
+		toolbar.add(new AbstractAction("Save graph", saveIcon) {
+			public void actionPerformed(ActionEvent e) {
+				serializeGraph();
+			}
+		});
+		
 		//New Random Graph
 		URL randomUrl = getClass().getClassLoader().getResource(
 		"graphWiz/resources/tree.gif");
@@ -891,4 +944,122 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		for (int i = 0; i< (toolbar.getComponentCount()-4);i++)
 			toolbar.getComponent(i).setEnabled(false);
 	}
+	
+	public void serializeGraph() {
+		int returnValue = JFileChooser.CANCEL_OPTION;
+		initFileChooser();
+		returnValue = fileChooser.showSaveDialog(graph);
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			Container parent = graph.getParent();
+			BasicMarqueeHandler marquee = graph.getMarqueeHandler();
+			graph.setMarqueeHandler(null);
+			try {
+				// Serializes the graph by removing it from the component
+				// hierarchy and removing all listeners from it. The marquee
+				// handler, begin an inner class of GraphEd, is not marked
+				// serializable and will therefore not be stored. This must
+				// be taken into account when deserializing a graph.
+				uninstallListeners(graph);
+				parent.remove(graph);
+				ObjectOutputStream out = new ObjectOutputStream(
+						new BufferedOutputStream(new FileOutputStream(
+								fileChooser.getSelectedFile())));
+				out.writeObject(graph);
+				out.flush();
+				out.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(graph, e.getMessage(), "Error",
+						JOptionPane.ERROR_MESSAGE);
+			} finally {
+				// Adds the component back into the component hierarchy
+				graph.setMarqueeHandler(marquee);
+				if (parent instanceof JViewport) {
+					JViewport viewPort = (JViewport) parent;
+					viewPort.setView(graph);
+				} else {
+					// Best effort...
+					parent.add(graph);
+				}
+				// And reinstalls the listener
+				installListeners(graph);
+			}
+			navigation.start(graph);
+		}
+	}
+
+	public void deserializeGraph() {
+		int returnValue = JFileChooser.CANCEL_OPTION;
+		initFileChooser();
+		returnValue = fileChooser.showOpenDialog(graph);
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			Container parent = graph.getParent();
+			BasicMarqueeHandler marqueeHandler = graph.getMarqueeHandler();
+			try {
+				uninstallListeners(graph);
+				parent.remove(graph);
+				ObjectInputStream in = new ObjectInputStream(
+						new BufferedInputStream(new FileInputStream(fileChooser
+								.getSelectedFile())));
+				graph = (JGraph) in.readObject();
+				// Take the marquee handler from the original graph and
+				// use it in the new graph as well.
+				graph.setMarqueeHandler(marqueeHandler);
+				// Adds the component back into the component hierarchy
+				if (parent instanceof JViewport) {
+					JViewport viewPort = (JViewport) parent;
+					viewPort.setView(graph);
+				} else {
+					// Best effort...
+					parent.add(graph);
+				}
+				// graph.setMarqueeHandler(previousHandler);
+				// And reinstalls the listener
+				installListeners(graph);
+			} catch (Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(graph, e.getMessage(), "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	/**
+	 * Utility method that ensures the file chooser is created. Start-up time
+	 * is improved by lazily instaniating choosers.
+	 *
+	 */
+	protected void initFileChooser() {
+		if (fileChooser == null) {
+			fileChooser = new JFileChooser();
+			FileFilter fileFilter = new FileFilter() {
+				/**
+				 * @see javax.swing.filechooser.FileFilter#accept(File)
+				 */
+				public boolean accept(File f) {
+					if (f == null)
+						return false;
+					if (f.getName() == null)
+						return false;
+					if (f.getName().endsWith(".xml"))
+						return true;
+					if (f.getName().endsWith(".ser"))
+						return true;
+					if (f.isDirectory())
+						return true;
+
+					return false;
+				}
+
+				/**
+				 * @see javax.swing.filechooser.FileFilter#getDescription()
+				 */
+				public String getDescription() {
+					return "GraphEd file (.xml, .ser)";
+				}
+			};
+			fileChooser.setFileFilter(fileFilter);
+		}
+	}
+	
 }
