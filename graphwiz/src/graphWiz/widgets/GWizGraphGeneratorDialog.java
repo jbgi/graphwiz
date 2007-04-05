@@ -47,14 +47,15 @@ public class GWizGraphGeneratorDialog extends JDialog {
 		JPanel panel = new JPanel(new GridLayout(6, 2, 4, 4));
 		panel.add(new JLabel("Nombre de noeuds"));
 		panel.add(jnumVertice);
-		panel.add(new JLabel("Nombre d'arc"));
+		panel.add(new JLabel("Nombre d'arcs"));
 		panel.add(jnumEdges);
 		panel.add(new JLabel("Poids minimum"));
 		panel.add(jminWeight);
 		panel.add(new JLabel("Poids maximum"));
 		panel.add(jmaxWeight);
-		panel.add(new JLabel("Graph connecté"));
+		panel.add(new JLabel(""));
 		panel.add(connected);
+		connected.setVisible(false);
 		
 		JPanel panelBorder = new JPanel();
 		panelBorder.setBorder(new EmptyBorder(10, 10, 10, 10));
