@@ -16,9 +16,11 @@ public class Bellman extends Algorithm {
 	boolean memeIteration = true;
 	private int[] predecesseurs;
 	private GWizVertex endVertex;
+	private GWizVertex startingVertex;
 	
 	public Bellman(GWizGraph graph) {
 		super(graph);
+		
 		predecesseurs=new int[0];
 		algo = new String[8];
 		algo[0] = "<html><font size=6>Algorithme de Bellman</font><br><br><I><font size=3><U> Notations:</U>"+
@@ -214,7 +216,7 @@ public class Bellman extends Algorithm {
 				e.next().setDescription(Description.EXPLORED);
 			GWizVertex pred = endVertex;
 			while (pred.hasPred()){
-				graph.getEdge(pred.getPred(), pred).setDescription(Description.PATH);
+				graph.getEdge(pred.getPred(),pred).setDescription(Description.PATH);
 				pred = pred.getPred();
 			}
 		}
@@ -250,10 +252,12 @@ public class Bellman extends Algorithm {
 			graphe.addElement(a);
 			}
 		graphe.get(0).setValuation(0);
-		graphe.get(0).setPred(graphe.get(0));
+		graphe.get(0).isStart();
+		startingVertex = graphe.get(0);
 		currentStep = 2;
 		predecesseurs = new int[graphe.size()];
 		predecesseurs[0]=0;
+		
 	}
 
 	@Override

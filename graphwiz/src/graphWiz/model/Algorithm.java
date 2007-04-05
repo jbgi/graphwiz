@@ -1,7 +1,6 @@
 package graphWiz.model;
 
 import graphWiz.model.GWizEdge.Description;
-
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;
@@ -20,9 +19,12 @@ public abstract class Algorithm {
 	
 	Stack<Integer> currentStepHistory;
 	
+	//public Commentaires comm = new Commentaires();
+	
 	int currentStep = 1;
 	
 	public Algorithm(GWizGraph graph) {
+		
 		this.graph=graph;
 		edgesDescriptionHistory = new Stack<Vector<Description>>();
 		verticesFlagHistory = new Stack<Vector<boolean[]>>();
