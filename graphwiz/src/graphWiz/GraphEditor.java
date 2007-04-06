@@ -22,8 +22,7 @@ package graphWiz;
 
 import graphWiz.model.*;
 import graphWiz.visual.*;
-import graphWiz.widgets.GWizGraphGeneratorDialog;
-import graphWiz.widgets.Navigation;
+import graphWiz.widgets.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -75,6 +74,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -90,7 +90,7 @@ import org.jgraph.event.GraphModelEvent;
 import org.jgraph.event.GraphModelListener;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
-import org.jgraph.example.GraphEd.MyGraph;
+//import org.jgraph.example.GraphEd.MyGraph;
 import org.jgraph.graph.AbstractCellView;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.BasicMarqueeHandler;
@@ -111,8 +111,8 @@ import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 import org.jgraph.graph.PortView;
 
-import com.jgraph.example.JGraphShadowBorder;
-import com.jgraph.example.GraphEdX.MyGraphModel;
+//import com.jgraph.example.JGraphShadowBorder;
+//import com.jgraph.example.GraphEdX.MyGraphModel;
 
 public class GraphEditor extends JPanel implements GraphSelectionListener,
 		KeyListener {
@@ -756,7 +756,35 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon helpIcon = new ImageIcon(helpUrl);
 		toolbar.add(new AbstractAction("", helpIcon) {
 			public void actionPerformed(ActionEvent e) {
-				//à remplir!
+				JFrame frame = new JFrame("fichier d'aide");
+				JPanel panel = new JPanel();
+				Object[] liste = new Object[15];
+				
+				liste[0]="Begin: Recomence la simulation";
+				liste[1]="Back Forward: Simulation précèdent  ";
+				liste[2]="Fast Forward: Simulation postérieur ";
+				liste[3]="Pause: Arrête le simulateur momentanément ";
+				liste[4]="Play: Commencer la simulation ";
+				liste[5]="Connect On: Permet de connecter les sommets en ajoutant des flèches entre elles. ";
+				liste[6]="Connect Off: Quand on clic sur le bouton « connect on » deux fois, on obtient le bouton « connect off » , comme ca on peut bouger les sommets sans ajouter des flèches.";
+				liste[7]="Delete: ce bouton sert pour effacer des sommets en cliquant le sommet et après ce bouton « delete ». ";
+				liste[8]="Help: Ce bouton permet de nous montrer la définition de chaque élément du logiciel pour mieux le comprendre et éviter d’avoir des problèmes.";
+				liste[9]="Expand All: Avec « Expand All » on peut afficher notre graph à la même taille que l’écran et en plus il le réarrange pour avoir un graph plus bien organise.";
+				liste[10]="Insert: Permet d’introduire des nouveaux sommets en cliquant sur le bouton insert et après dans la fenêtre centrale du logiciel.";
+				liste[11]="Zoom: Permet d’afficher notre graphe a la taille de l’écran. ";
+				liste[12]="Zoom In: Permet de faire zoom au graph pour incrémenter la taille.";
+				liste[13]="Zoom Out: Faire zoom out permet de réduire la taille du graph pour quand on a des graphs plus grandes qui prendre plus d’espace de que qui est affiche originalement. ";
+				liste[14]="En cliquant deux fois sur les flèches on peut donner la valuation du chemin et c’est aussi possible de changer ces valeurs en cliquant une autre fois. ";
+
+				JList J= new JList();
+				J.setListData(liste);
+				J.setEnabled(false);
+				J.setSelectionBackground(Color.CYAN);
+		        J.setPreferredSize(new Dimension(1050,500));
+		        panel.add(J);
+		        frame.add(panel);
+				frame.setSize(1050, 500);
+				frame.setVisible(true);
 			}
 		});
 		
