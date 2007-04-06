@@ -154,6 +154,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	//Mode
 	private JComboBox mode;
 	private Navigation navigation;
+	private ValPred TablValPred;
 
 	private GWizGraph gwizGraph;
 	//
@@ -161,7 +162,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	//
 
 	// Construct an Editor Panel
-	public GraphEditor(Navigation navigation) {
+	public GraphEditor(Navigation navigation, ValPred TablValPred) {
+		this.TablValPred=TablValPred;
 		this.navigation = navigation;
 		// Construct the Graph
 		graph = createGraph();
@@ -187,7 +189,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		// Add the Graph as Center Component
 		add(new JScrollPane(graph), BorderLayout.CENTER);
 		statusBar = createStatusBar();
-		add(statusBar, BorderLayout.SOUTH);
+		add(TablValPred, BorderLayout.SOUTH);
 	}
 
 	// Hook for subclassers

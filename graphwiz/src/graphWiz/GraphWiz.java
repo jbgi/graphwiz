@@ -46,10 +46,9 @@ public class GraphWiz extends JApplet{
 		
 		
 		menu = new Navigation();
-		grapheditor= new GraphEditor(menu);
-		menu.start(grapheditor.getGraph());
+		grapheditor= new GraphEditor(menu,TablValPred);
+		menu.start(grapheditor.getGraph(), TablValPred);
 		gauche.add(grapheditor);
-		gauche.add(TablValPred);
 		add(gauche);
 		add(menu);
 		

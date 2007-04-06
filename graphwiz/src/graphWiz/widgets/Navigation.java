@@ -49,15 +49,17 @@ public class Navigation extends JPanel{
 	private Timer timer = new Timer();
 	private TimerTask updateAlgo;
 	
+	private ValPred valPred;
+	
 	//private Logo logo = new Logo();
 	public Navigation(){
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 	
-	public void start(JGraph editorGraph){
+	public void start(JGraph editorGraph, ValPred valpred){
 		
-		
+		valPred=valpred;
 		bHor = new JToolBar();
 		jgraph=editorGraph;
 		dijkstra = new Dijkstra(((GWizModelAdapter) jgraph.getModel()).getGWizGraph());
@@ -163,6 +165,7 @@ public class Navigation extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				algo.nextStep();
 				algoText.setSelectedIndex(algo.getCurrentStep());
+				valPred.update(algo.getGraph());
 				jgraph.repaint();
 			}
 		});

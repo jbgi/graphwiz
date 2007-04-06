@@ -76,7 +76,6 @@ public class Dijkstra extends Algorithm {
 	
 	public void nextStep(){
 		if (startingVertex!=null && startingVertex.isStart()){
-		//	setStartingVertex(graph.vertexSet().iterator().next());
 		if (!isEnd()){
 			saveGraph();
 			GWizVertex selectedVertex = selectVertex();
@@ -140,16 +139,7 @@ public class Dijkstra extends Algorithm {
 			GWizEdge edge = i.next();
 			GWizVertex n = graph.getEdgeTarget(edge);
 			allUpdated = (n.isUpdated()||n.isFixed()) && allUpdated;
-			if (graph.getEdgeSource(edge)==graph.getEdgeTarget(edge).getPred()) {
-				Iterator<GWizEdge> i2 = graph.incomingEdgesOf(graph.getEdgeTarget(edge)).iterator();
-				while (i2.hasNext()){
-					GWizEdge e = i2.next();
-					if (e.getDescription()==Description.PATH)
-						e.setDescription(Description.EXPLORED);
-				}
-				//edge.setDescription(Description.PATH);
-			}
-			else if (graph.getEdgeTarget(edge).isUpdated()||graph.getEdgeTarget(edge).isFixed())
+			if (graph.getEdgeTarget(edge).isUpdated()||graph.getEdgeTarget(edge).isFixed())
 				edge.setDescription(Description.EXPLORED);
 		}
 		if (allUpdated){
@@ -180,14 +170,6 @@ public class Dijkstra extends Algorithm {
 				currentStep = 4;
 			}
 		}
-		//if (!selectedVertex.isFixed()){
-		//	Iterator<GWizEdge> e = graph.outgoingEdgesOf(selectedVertex).iterator();
-		//	while (e.hasNext()){
-		//		GWizEdge edge = e.next();
-		//		if (!graph.getEdgeTarget(edge).isFixed() && !graph.getEdgeTarget(edge).isUpdated())
-		//			edge.setDescription(Description.SELECT);
-		//	}
-		//}
 		return selectedVertex;
 	}
 
