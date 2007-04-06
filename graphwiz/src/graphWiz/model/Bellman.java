@@ -230,8 +230,24 @@ public class Bellman extends Algorithm {
 
 	@Override
 	public void setStartingVertex(GWizVertex startingVertex) {
-		// TODO Auto-generated method stub
-		
+		this.startingVertex = startingVertex;
+		Iterator<GWizVertex> i = graph.vertexSet().iterator();
+		GWizVertex a;
+		graphe.clear();
+		graphe.add(startingVertex);
+		while (i.hasNext()){
+			a = i.next();
+			a.setValuated(true);
+			a.setStart(false);
+			a.setValuation(Float.POSITIVE_INFINITY);
+			if (startingVertex!=a)
+				graphe.addElement(a);
+			}
+		startingVertex.setValuation(0);
+		startingVertex.setStart(true);
+		currentStep = 2;
+		predecesseurs = new int[graphe.size()];
+		predecesseurs[0]=0;
 	}
 
 	@Override
@@ -241,23 +257,6 @@ public class Bellman extends Algorithm {
 
 	@Override
 	public void initialize() {
-		Iterator<GWizVertex> i = graph.vertexSet().iterator();
-		GWizVertex a = null;
-		while (i.hasNext()){
-			a = i.next();
-			a.setValuated(true);
-			a.setValuation(Float.POSITIVE_INFINITY);
-			
-			a.setHasPred(true);
-			graphe.addElement(a);
-			}
-		graphe.get(0).setValuation(0);
-		graphe.get(0).isStart();
-		startingVertex = graphe.get(0);
-		currentStep = 2;
-		predecesseurs = new int[graphe.size()];
-		predecesseurs[0]=0;
-		
 	}
 
 	@Override

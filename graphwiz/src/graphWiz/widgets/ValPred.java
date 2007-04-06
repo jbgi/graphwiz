@@ -33,6 +33,7 @@ public class ValPred extends JPanel{
 	public ValPred(){
 		
 		panneau = Box.createHorizontalBox();
+		panneau.setMaximumSize(new Dimension(600, 50 ));
 		//création des vecteurs
 		//String[] columnNames = {"1","2", "3", "4","5"}; 
         //Object[][] val = {{"<html><font size=5> 0 </font></html>","<html><font size=5> &#8734 </font></html>","<html><font size=5> &#8734 </font></html>","<html><font size=5> &#8734 </font></html>","<html><font size=5> &#8734 </font></html>"}};
@@ -53,18 +54,21 @@ public class ValPred extends JPanel{
         //mise en valeur des vecteurs
         tableVal.setBackground(Color.orange);
         tablePred.setBackground(Color.yellow);
+        
         tableVal.setFocusable(false);
         tablePred.setFocusable(false);
+        tablePred.setRowHeight(25);
+        tableVal.setRowHeight(25);
         
         JScrollPane valPan = new JScrollPane(tableVal);
-        valPan.setMaximumSize(new Dimension(400,40));
-        valPan.setMinimumSize(new Dimension(100,40));
-        valPan.setPreferredSize(new Dimension(250,40));
+        valPan.setMaximumSize(new Dimension(400,45));
+        valPan.setMinimumSize(new Dimension(100,45));
+        valPan.setPreferredSize(new Dimension(250,45));
         JScrollPane predPan = new JScrollPane(tablePred);
         predPan.setAutoscrolls(true);
-        predPan.setMaximumSize(new Dimension(400,40));
-        predPan.setMinimumSize(new Dimension(100,40));
-        predPan.setPreferredSize(new Dimension(250,40));
+        predPan.setMaximumSize(new Dimension(400,45));
+        predPan.setMinimumSize(new Dimension(100,45));
+        predPan.setPreferredSize(new Dimension(250,45));
         
         panneau.add(new JLabel("<html><blockquote><font size=5>  VAL : </font></blockquote></html>"));
         panneau.add(valPan);
@@ -83,18 +87,20 @@ public class ValPred extends JPanel{
         pred=new Object[1][NbSommet];
         valData.setColumnCount(NbSommet);
         valData.setRowCount(1);
+        predData.setColumnCount(NbSommet);
+        predData.setRowCount(1);
         int b=0;
 		Iterator<GWizVertex> i = graph.vertexSet().iterator();
 		while (i.hasNext()){
 			GWizVertex v = i.next();
-			val[0][b] =((int)(v.getValuation()));
-			tableVal.getModel().setValueAt(v.getValuation(), 0, b);
-			if (v.hasPred())
-				pred[0][b] = v.getPred().getName();
+			tableVal.getModel().setValueAt("<html><font size=6>" + v.getValuation()+"</font></html>", 0, b);
+			if (v.hasPred() && v.getPred()!=null)
+				tablePred.getModel().setValueAt("<html><font size=6>" +v.getPred().getName()+ "</font></html>", 0, b);
 			columnNames[b]= v.getName();
 			b++;
 		}
 		valData.setColumnIdentifiers(columnNames);
+		predData.setColumnIdentifiers(columnNames);
 	}
 	
 }

@@ -126,9 +126,9 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	// JGraph instance
 	protected JGraph graph;
 	
-	private GWizModelAdapter jgAdapter;
-	
 	protected GWizGraphGeneratorDialog generatorDialog;
+
+	private GWizModelAdapter jgAdapter;
 	
 	/**
 	 * File chooser for loading and saving graphs. Note that it is lazily
@@ -187,8 +187,9 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		// Add a ToolBar
 		add(createToolBar(), BorderLayout.NORTH);
 		// Add the Graph as Center Component
-		add(new JScrollPane(graph), BorderLayout.CENTER);
-		statusBar = createStatusBar();
+		JScrollPane jSgraph = new JScrollPane(graph);
+		jSgraph.setPreferredSize(new Dimension (2048,2048));
+		add(jSgraph, BorderLayout.CENTER);
 		add(TablValPred, BorderLayout.SOUTH);
 	}
 
@@ -287,7 +288,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 
 	// Hook for subclassers
 	protected DefaultGraphCell createDefaultGraphCell() {
-		DefaultGraphCell cell = new DefaultGraphCell(getCellCount(graph) + cellCount++);
+		DefaultGraphCell cell = new DefaultGraphCell(cellCount++);
 		// Add one Floating Port
 		cell.addPort();
 		return cell;
@@ -840,13 +841,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	}
 
 	/**
-	 * Create a status bar
-	 */
-	protected StatusBarGraphListener createStatusBar() {
-		return new EdStatusBar();
-	}
-
-	/**
 	 * 
 	 * @return a String representing the version of this application
 	 */
@@ -865,74 +859,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 
 		protected void updateStatusBar(){
 			
-		}
-	}
-
-	public class EdStatusBar extends StatusBarGraphListener {
-		/**
-		 * 
-		 */
-		protected JLabel leftSideStatus;
-
-		/**
-		 * contains the scale for the current graph
-		 */
-		protected JLabel rightSideStatus;
-
-		/**
-		 * Constructor for GPStatusBar.
-		 * 
-		 */
-		public EdStatusBar() {
-			super();
-			// Add this as graph model change listener
-			setLayout(new BorderLayout());
-			leftSideStatus = new JLabel(getVersion());
-			rightSideStatus = new JLabel("0/0Mb");
-			leftSideStatus.setBorder(BorderFactory.createLoweredBevelBorder());
-			rightSideStatus.setBorder(BorderFactory.createLoweredBevelBorder());
-			add(leftSideStatus, BorderLayout.CENTER);
-			add(rightSideStatus, BorderLayout.EAST);
-		}
-
-		protected void updateStatusBar() {
-			Runtime runtime = Runtime.getRuntime();
-			int freeMemory = (int) (runtime.freeMemory() / 1024);
-			int totalMemory = (int) (runtime.totalMemory() / 1024);
-			int usedMemory = (totalMemory - freeMemory);
-			String str = (usedMemory / 1024) + "/" + (totalMemory / 1024)
-					+ "Mb";
-			rightSideStatus.setText(str);
-		}
-
-		/**
-		 * @return Returns the leftSideStatus.
-		 */
-		public JLabel getLeftSideStatus() {
-			return leftSideStatus;
-		}
-
-		/**
-		 * @param leftSideStatus
-		 *            The leftSideStatus to set.
-		 */
-		public void setLeftSideStatus(JLabel leftSideStatus) {
-			this.leftSideStatus = leftSideStatus;
-		}
-
-		/**
-		 * @return Returns the rightSideStatus.
-		 */
-		public JLabel getRightSideStatus() {
-			return rightSideStatus;
-		}
-
-		/**
-		 * @param rightSideStatus
-		 *            The rightSideStatus to set.
-		 */
-		public void setRightSideStatus(JLabel rightSideStatus) {
-			this.rightSideStatus = rightSideStatus;
 		}
 	}
 
