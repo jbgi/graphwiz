@@ -210,7 +210,22 @@ public class Navigation extends JPanel{
 		JButton jLogo = new JButton(logo);
 		jLogo.setAction(new AbstractAction("", logo) {
 			public void actionPerformed(ActionEvent e) {
-				
+				JFrame frame = new JFrame("fichier d'aide");
+				JPanel panel = new JPanel();
+				//panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+				Object[][] tableau = {{"Tuteurs","JUSSIEN Christelle"},
+									  {" ","JUSSIEN Narendra"},
+									  {"Chef de projet","RAJESSON Fanja"},
+									  {"Responsable technique","GIRAUDEAU Jean-Baptiste"},
+									  {"Membres de l'équipe","OLIVIER Luc"},
+									  {" ","CANTU Paulina"},
+									  {" ","REYES Felix"}};
+				String[] Colonnes={"1","2"};
+				JTable table = new JTable(tableau,Colonnes);
+				panel.add(table);
+		        frame.add(panel);
+				frame.setSize(982, 625);
+				frame.setVisible(true);
 			}
 		});
 		JPanel jpLogo = new JPanel();
