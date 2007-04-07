@@ -25,6 +25,7 @@ import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.*;
@@ -208,23 +209,27 @@ public class Navigation extends JPanel{
 		"graphWiz/resources/logo.png");
 		ImageIcon logo = new ImageIcon(logoUrl);
 		JButton jLogo = new JButton(logo);
+		jLogo.setToolTipText("Crédits");
 		jLogo.setAction(new AbstractAction("", logo) {
 			public void actionPerformed(ActionEvent e) {
-				JFrame frame = new JFrame("fichier d'aide");
+				JFrame frame = new JFrame("Crédits");
 				JPanel panel = new JPanel();
-				//panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-				Object[][] tableau = {{"Tuteurs","JUSSIEN Christelle"},
+				Object[][] tableau = {{"<html><b>Version du logiciel</b></html>","<html><b>1.0.1</b></html>"},
+									{"<html><b>Tuteurs</b></html>","JUSSIEN Christelle"},
 									  {" ","JUSSIEN Narendra"},
-									  {"Chef de projet","RAJESSON Fanja"},
-									  {"Responsable technique","GIRAUDEAU Jean-Baptiste"},
-									  {"Membres de l'équipe","OLIVIER Luc"},
-									  {" ","CANTU Paulina"},
+									  {"<html><b>Chef de projet</b></html>","RAJESSON Fanja"},
+									  {"<html><b>Responsable technique</b></html>","GIRAUDEAU Jean-Baptiste"},
+									  {"<html><b>Autres Membres de </b></html>","OLIVIER Luc"},
+									  {"<html><b> l'équipe projet</b></html>","CANTU Paulina"},
 									  {" ","REYES Felix"}};
 				String[] Colonnes={"1","2"};
 				JTable table = new JTable(tableau,Colonnes);
+				table.getColumnModel().getColumn(0).setPreferredWidth(180);
+				table.getColumnModel().getColumn(1).setPreferredWidth(180);
+				table.setRowHeight(15);
 				panel.add(table);
 		        frame.add(panel);
-				frame.setSize(982, 625);
+				frame.setSize(450,170);
 				frame.setVisible(true);
 			}
 		});
