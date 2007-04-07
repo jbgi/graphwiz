@@ -90,6 +90,7 @@ public class Navigation extends JPanel{
 				algo = dijkstra;
 				algoText.setListData(algo.getAlgo());
 				algo.initialize();
+				valPred.update(algo.getGraph(),algo);
 				algoText.setSelectedIndex(algo.getCurrentStep());
 			}
 			if (choixAlgo.getSelectedIndex()==2){
@@ -98,6 +99,7 @@ public class Navigation extends JPanel{
 				
 				algoText.setListData(algo.getAlgo());
 				algo.initialize();
+				valPred.update(algo.getGraph(),algo);
 				algoText.setSelectedIndex(algo.getCurrentStep());
 			}
 			if (choixAlgo.getSelectedIndex()==3){
@@ -105,6 +107,7 @@ public class Navigation extends JPanel{
 				algo = floyd;
 				algoText.setListData(algo.getAlgo());
 				algo.initialize();
+				valPred.update(algo.getGraph(),algo);
 				algoText.setSelectedIndex(algo.getCurrentStep());
 			}
 			}
@@ -150,6 +153,7 @@ public class Navigation extends JPanel{
 				    public void run(){
 				    	if (algo.isRunnable()){
 							algo.nextStep();
+							valPred.update(algo.getGraph(),algo);
 							algoText.setSelectedIndex(algo.getCurrentStep());
 							jgraph.repaint();
 				    	}
@@ -165,7 +169,7 @@ public class Navigation extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				algo.nextStep();
 				algoText.setSelectedIndex(algo.getCurrentStep());
-				valPred.update(algo.getGraph());
+				valPred.update(algo.getGraph(),algo);
 				jgraph.repaint();
 			}
 		});
@@ -178,6 +182,7 @@ public class Navigation extends JPanel{
 				while (!algo.isEnd())
 					algo.nextStep();
 				jgraph.repaint();
+				valPred.update(algo.getGraph(),algo);
         		}
         		algoText.setSelectedIndex(algo.getCurrentStep());
 			}});
@@ -244,6 +249,7 @@ public class Navigation extends JPanel{
 			view.translate(0, -9);
 		}
 		algo.initialize();
+		valPred.update(algo.getGraph(),algo);
 		algoText.setSelectedIndex(algo.getCurrentStep());
 	}
 

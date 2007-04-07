@@ -12,6 +12,7 @@ public class Floyd extends Algorithm{
 	private String[] algo;
 	private Vector<GWizVertex> graphe = new Vector<GWizVertex>();
 	public double[][] Val, PreviousVal;
+	public String[][] Pred;
 	private GWizVertex endVertex;
 	private GWizVertex startingVertex;
 	
@@ -20,6 +21,7 @@ public class Floyd extends Algorithm{
 		super(graph);
 		Val = new double[this.graph.vertexSet().size()][this.graph.vertexSet().size()];
 		PreviousVal = new double[this.graph.vertexSet().size()][this.graph.vertexSet().size()];
+		Pred = new String[this.graph.vertexSet().size()][this.graph.vertexSet().size()];
 		algo = new String[11];
 		algo[0] = "<html><font size=5>Algorithme de Floyd</font><br><br><I><font size=3><U> Notations:</U>"+
 				"<br><font size=2>V[x,y] = valuation du plus court chemin pour aller de x à y </br>"+"<br> par les sommets intermédiaires {1,2,..,k} </br>" +
@@ -60,15 +62,20 @@ public class Floyd extends Algorithm{
 
 	public void nextStep() {
 		saveGraph();
-		this.graphe.get(NbIteration).setUpdated(true);
+		if(NbIteration < this.graph.nbVertex())
+			this.graphe.get(NbIteration).setUpdated(true);
 		currentStep=4;
 		if(!isEnd()){
 			if(SommetDepart<this.graph.nbVertex()){
-				if(this.graphe.get(SommetDepart).isFixing()){
+				
 					currentStep=5;
 						if(SommetArrivee<this.graph.nbVertex()){
 							if(!this.graphe.get(SommetArrivee).isFixing()){
+								this.graphe.get(SommetDepart).setFixing(true);
 								this.graphe.get(SommetArrivee).setFixing(true);
+								if (this.graph.containsEdge(this.graphe.get(SommetDepart),this.graphe.get(SommetArrivee)))
+									this.graph.getEdge(this.graphe.get(SommetDepart),this.graphe.get(SommetArrivee)).setDescription(Description.REGULAR);	
+							
 								currentStep = 6;
 							}
 							else{
@@ -78,7 +85,7 @@ public class Floyd extends Algorithm{
 								this.graphe.get(i).setFixing(false);
 							SommetArrivee++;
 							System.out.println("Val pour k = "+NbIteration+" ; i = "+SommetDepart+" ; j = "+SommetArrivee+" : ");
-							afficherVal();
+							afficherValPred();
 							System.out.println();
 							}
 						}
@@ -89,18 +96,14 @@ public class Floyd extends Algorithm{
 							for(int i=0;i<graphe.size();i++)
 								this.graphe.get(i).setFixing(false);
 						}
-				}
-				else{
-					this.graphe.get(SommetDepart).setFixing(true);
-					currentStep = 5;
-				}
+				
 				
 			}
 			else{
 				currentStep = 9;
 				SommetDepart=0;
 				System.out.println("A l'issue de la "+NbIteration+"ème itération, on obtient Val : ");
-				afficherVal();
+				afficherValPred();
 				PreviousVal = Val;
 				this.graphe.get(NbIteration).setUpdated(false);
 				NbIteration++;
@@ -132,15 +135,12 @@ public class Floyd extends Algorithm{
 	
 
 	private void update(int i, int x, int j) {
-		System.out.println("PreviousVal[i][x]+PreviousVal[x][j]="+(PreviousVal[i][x]+PreviousVal[x][j])+"    et   Val[i][j] = "+Val[i][j]);
 		if(PreviousVal[i][x]+PreviousVal[x][j]<Val[i][j]){
 			Val[i][j]=PreviousVal[i][x]+PreviousVal[x][j];
-			System.out.println("couple modifié....");
-			this.graph.getEdge(this.graphe.get(i),this.graphe.get(j)).setDescription(Description.EXPLORED);
-			
-		}
-		else System.out.println("Couple non améliorable ...");
-		//currentStep=7;
+			Pred[i][j]=""+x;
+			//if (this.graph.containsEdge(this.graphe.get(i),this.graphe.get(j)))
+				//this.graph.getEdge(this.graphe.get(i),this.graphe.get(j)).setDescription(Description.EXPLORED);	
+		}	
 	}
 
 	@Override
@@ -200,27 +200,32 @@ public class Floyd extends Algorithm{
 			graphe.addElement(a);
 			}
 		Val = new double[graphe.size()][graphe.size()];
-		
+		Pred = new String[graphe.size()][graphe.size()];
 		for(int j=0;j<graphe.size();j++){
 			for(int k=0;k<graphe.size();k++){
-				
-				if(this.graph.containsEdge(this.graphe.get(j),	this.graphe.get(k))){
+				if(this.graph.containsEdge(this.graphe.get(j),this.graphe.get(k))){
 					Val[j][k] = this.graph.getEdgeWeight(this.graph.getEdge(this.graphe.get(j), this.graphe.get(k)));
 					this.graphe.get(k).setPred(this.graphe.get(j));
+					Pred[j][k]=""+j;
 				}
-				else if(k!=j)
+				else if(k!=j){
+					Pred[j][k]=""+0;
 					Val[j][k] = Double.POSITIVE_INFINITY;
-				else Val[j][k]=0;
+				}
+				else {
+					Pred[j][k]=" -";
+					Val[j][k]=0;
+				}
 			}
 		}
 		PreviousVal = Val;
-		afficherVal();
-		currentStep = 0;
+		afficherValPred();
+		currentStep = 2;
 		graphe.get(0).setFixing(true);
 		System.out.println("Fin de l'initialisation");
 	}
 
-	private void afficherVal() {
+	private void afficherValPred() {
 		for(int i=0;i<Val.length;i++){
 			System.out.print(" |");
 			for(int j=0;j<Val[0].length;j++){
@@ -229,8 +234,33 @@ public class Floyd extends Algorithm{
 			System.out.println("|");
 		}
 		
+		for(int i=0;i<Pred.length;i++){
+			System.out.print(" |");
+			for(int j=0;j<Pred[0].length;j++){
+				System.out.print(" "+Pred[i][j]+" ");
+			}
+			System.out.println("|");
+		}
 	}
 
+	public double[][] getVal(){
+		return PreviousVal;
+	}
+	
+	public String[][] getPred(){
+		return Pred;
+	}
+	
+	public int getIteration(){
+		return NbIteration;
+	}
+	public int getDepart(){
+		return this.SommetDepart;
+	}
+	
+	public int getArrivee(){
+		return this.SommetArrivee;
+	}
 	@Override
 	public String[] getAlgo() {
 		// TODO Auto-generated method stub
