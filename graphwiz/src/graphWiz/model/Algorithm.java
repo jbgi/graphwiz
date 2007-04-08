@@ -23,9 +23,12 @@ public abstract class Algorithm {
 	
 	int currentStep = 1;
 	
+	String commentaires = "";
+	
 	public Algorithm(GWizGraph graph) {
 		
 		this.graph=graph;
+		commentaires = "essai";
 		edgesDescriptionHistory = new Stack<Vector<Description>>();
 		verticesFlagHistory = new Stack<Vector<boolean[]>>();
 		verticesPredHistory = new Stack<Vector<GWizVertex[]>>();
@@ -186,5 +189,9 @@ public abstract class Algorithm {
 	}
 
 	public abstract boolean isRunnable();
+	
+	public String getCommentaires(){
+		return commentaires;
+	}
 
 }

@@ -19,6 +19,7 @@ public class Floyd extends Algorithm{
 	
 	public Floyd(GWizGraph graph) {
 		super(graph);
+		commentaires="Vous avez choisi l'algorithme de Floyd";
 		Val = new double[this.graph.vertexSet().size()][this.graph.vertexSet().size()];
 		PreviousVal = new double[this.graph.vertexSet().size()][this.graph.vertexSet().size()];
 		Pred = new String[this.graph.vertexSet().size()][this.graph.vertexSet().size()];
@@ -64,12 +65,12 @@ public class Floyd extends Algorithm{
 		saveGraph();
 		if(NbIteration < this.graph.nbVertex())
 			this.graphe.get(NbIteration).setUpdated(true);
+		commentaires="NbIter = "+NbIteration;
 		currentStep=4;
 		if(!isEnd()){
 			if(SommetDepart<this.graph.nbVertex()){
-				
 					currentStep=5;
-						if(SommetArrivee<this.graph.nbVertex()){
+						if(SommetArrivee<this.graph.nbVertex() && SommetDepart!=NbIteration){
 							if(!this.graphe.get(SommetArrivee).isFixing()){
 								this.graphe.get(SommetDepart).setFixing(true);
 								this.graphe.get(SommetArrivee).setFixing(true);
@@ -80,13 +81,14 @@ public class Floyd extends Algorithm{
 							}
 							else{
 							currentStep=7;
-							update(SommetDepart, NbIteration, SommetArrivee);
-							for(int i=0;i<graphe.size();i++)
-								this.graphe.get(i).setFixing(false);
-							SommetArrivee++;
-							System.out.println("Val pour k = "+NbIteration+" ; i = "+SommetDepart+" ; j = "+SommetArrivee+" : ");
-							afficherValPred();
-							System.out.println();
+							if(SommetArrivee != SommetDepart && SommetArrivee!=NbIteration){
+								commentaires="On cherche un chemin entre "+SommetDepart+" et"+SommetArrivee+" passant par "+NbIteration;
+								update(SommetDepart, NbIteration, SommetArrivee);
+								for(int i=0;i<graphe.size();i++)
+									this.graphe.get(i).setFixing(false);
+								SommetArrivee++;
+								afficherValPred();
+								}
 							}
 						}
 						else{
@@ -100,9 +102,9 @@ public class Floyd extends Algorithm{
 				
 			}
 			else{
+				commentaires="On a exploré toutes les paires de sommets";
 				currentStep = 9;
 				SommetDepart=0;
-				System.out.println("A l'issue de la "+NbIteration+"ème itération, on obtient Val : ");
 				afficherValPred();
 				PreviousVal = Val;
 				this.graphe.get(NbIteration).setUpdated(false);
@@ -138,9 +140,10 @@ public class Floyd extends Algorithm{
 		if(PreviousVal[i][x]+PreviousVal[x][j]<Val[i][j]){
 			Val[i][j]=PreviousVal[i][x]+PreviousVal[x][j];
 			Pred[i][j]=""+x;
-			//if (this.graph.containsEdge(this.graphe.get(i),this.graphe.get(j)))
-				//this.graph.getEdge(this.graphe.get(i),this.graphe.get(j)).setDescription(Description.EXPLORED);	
-		}	
+			commentaires="Le chemin passant par "+NbIteration+" est plus court que le chemin courant...";
+		}
+		else
+			commentaires="Le chemin passant par"+NbIteration+" n'est pas plus court que le chemin courant...";
 	}
 
 	@Override
@@ -192,6 +195,7 @@ public class Floyd extends Algorithm{
 
 	@Override
 	public void initialize() {
+		commentaires="On initialise les matrices VAL et PRED";
 		Iterator<GWizVertex> i = graph.vertexSet().iterator();
 		GWizVertex a = null;
 		while (i.hasNext()){

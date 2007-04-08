@@ -19,6 +19,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 public class ValPred extends JPanel{
 
@@ -35,7 +36,7 @@ public class ValPred extends JPanel{
 	public ValPred(){
 		
 		panneau = Box.createHorizontalBox();
-		panneau.setMaximumSize(new Dimension(400, 600 ));
+		panneau.setMaximumSize(new Dimension(500, 500 ));
 		
         valData = new DefaultTableModel();
         predData = new DefaultTableModel();
@@ -48,25 +49,30 @@ public class ValPred extends JPanel{
         
         tableVal.setFocusable(false);
         tablePred.setFocusable(false);
+        tablePred.setSize(250, 100);
         tablePred.setRowHeight(20);
+        tablePred.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tableVal.setRowHeight(20);
+        tableVal.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         
         valPan = new JScrollPane(tableVal);
+        
         valPan.setMaximumSize(new Dimension(200,450));
         valPan.setMinimumSize(new Dimension(100,45));
-        valPan.setPreferredSize(new Dimension(200,100));
+        valPan.setPreferredSize(new Dimension(275,100));
         valPan.setAutoscrolls(true);
         
         predPan = new JScrollPane(tablePred);
         predPan.setAutoscrolls(true);
+        predPan.createHorizontalScrollBar();
         predPan.setMaximumSize(new Dimension(200,450));
         predPan.setMinimumSize(new Dimension(100,45));
-        predPan.setPreferredSize(new Dimension(150,100));
+        predPan.setPreferredSize(new Dimension(250,100));
         predPan.setAutoscrolls(true);
         
-        panneau.add(new JLabel("<html><blockquote><font size=5>  VAL : </font></blockquote></html>"));
+        panneau.add(new JLabel("<html><font size=5>  VAL : </font></html>"));
         panneau.add(valPan);
-        panneau.add(new JLabel("<html><blockquote><font size=5> PRED : </font></blockquote></html>"));
+        panneau.add(new JLabel("<html><font size=5> PRED : </font></html>"));
         panneau.add(predPan);
         
         
@@ -76,7 +82,12 @@ public class ValPred extends JPanel{
 	
 	public void update(GWizGraph graph, Algorithm algo){
 		int NbSommet=graph.vertexSet().size();
-        columnNames= new String[NbSommet];
+        int TailleColumn = 5;
+        if(NbSommet>6)
+        	TailleColumn=4;
+        if(NbSommet>=15)
+        	TailleColumn = 2;
+		columnNames= new String[NbSommet];
         String floyd = "<html><font size=5>Algorithme de Floyd</font><br><br><I><font size=3><U> Notations:</U>"+
 		"<br><font size=2>V[x,y] = valuation du plus court chemin pour aller de x à y </br>"+"<br> par les sommets intermédiaires {1,2,..,k} </br>" +
 		"<br><font size=2>W(x,y) = poids de l'arc (x,y) (infini s'il n'existe pas)</br>" +
@@ -84,20 +95,19 @@ public class ValPred extends JPanel{
         if(algo.getAlgo()[0]!= floyd){        	
         	valData.setColumnCount(NbSommet);
         	valData.setRowCount(1);
-        	valPan.setSize(new Dimension((NbSommet)*30,50));
         	predData.setColumnCount(NbSommet);
         	predData.setRowCount(1);
-        	predPan.setSize(new Dimension((NbSommet)*30,50));
         	int b=0;
         	Iterator<GWizVertex> i = graph.vertexSet().iterator();
+        	
         	while (i.hasNext()){
         		GWizVertex v = i.next();
         		if(v.getValuation() == Double.POSITIVE_INFINITY)
-        			tableVal.getModel().setValueAt("<html><font size=5>&#8734</font></html>", 0, b);
+        			tableVal.getModel().setValueAt("<html><font size="+TailleColumn+">&#8734</font></html>", 0, b);
         		else
-        			tableVal.getModel().setValueAt("<html><font size=5>" + v.getValuation()+"</font></html>", 0, b);
+        			tableVal.getModel().setValueAt("<html><font size="+TailleColumn+">" + v.getValuation()+"</font></html>", 0, b);
         		if (v.hasPred() && v.getPred()!=null)
-        			tablePred.getModel().setValueAt("<html><font size=5>" +v.getPred().getName()+ "</font></html>", 0, b);
+        			tablePred.getModel().setValueAt("<html><font size="+TailleColumn+">" +v.getPred().getName()+ "</font></html>", 0, b);
         		columnNames[b]= v.getName();
         		b++;
         	}
@@ -110,6 +120,11 @@ public class ValPred extends JPanel{
 	public void update2(GWizGraph graph, Floyd algo){
 		System.out.println("updateFloyd");
 		int NbSommet=graph.vertexSet().size();
+		 int TailleColumn = 5;
+	        if(NbSommet>7)
+	        	TailleColumn=3;
+	        if(NbSommet>=10)
+	        	TailleColumn = 2;
 		columnNames= new String[NbSommet+1];
 		String[] columnNamesPred = new String[NbSommet+1];
         System.out.println("il y a "+NbSommet+" sommets");
@@ -125,10 +140,10 @@ public class ValPred extends JPanel{
         	tablePred.getModel().setValueAt(""+a, a, 0);
         	for(int b=1;b<NbSommet+1;b++){
         		if(algo.getVal()[a][b-1] == Double.POSITIVE_INFINITY)
-        			tableVal.getModel().setValueAt("<html><font size=5>&#8734</font></html>", a, b);
+        			tableVal.getModel().setValueAt("<html><font size="+TailleColumn+">&#8734</font></html>", a, b);
         		else
-        			tableVal.getModel().setValueAt("<html><font size=5>" + algo.getVal()[a][b-1]+"</font></html>", a, b);
-        		tablePred.getModel().setValueAt("<html><font size=5>" +algo.getPred()[a][b-1]+ "</font></html>", a, b);
+        			tableVal.getModel().setValueAt("<html><font size="+TailleColumn+">" + algo.getVal()[a][b-1]+"</font></html>", a, b);
+        		tablePred.getModel().setValueAt("<html><font size="+TailleColumn+">" +algo.getPred()[a][b-1]+ "</font></html>", a, b);
         	}
         	if(a>0){
         		columnNames[a]=""+i;

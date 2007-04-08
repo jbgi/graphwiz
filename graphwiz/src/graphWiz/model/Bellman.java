@@ -20,7 +20,7 @@ public class Bellman extends Algorithm {
 	
 	public Bellman(GWizGraph graph) {
 		super(graph);
-		
+		commentaires = "vous avez choisi l'algorithme de Bellman, SELECTIONNEZ 0 AVANT DE COMMENCER";
 		predecesseurs=new int[0];
 		algo = new String[8];
 		algo[0] = "<html><font size=6>Algorithme de Bellman</font><br><br><I><font size=3><U> Notations:</U>"+
@@ -70,13 +70,14 @@ public class Bellman extends Algorithm {
 			//this.comm.setCommentaires("le sommet 0 est selectionné");
 			currentStep=4;
 			temoin = true;
+			commentaires = "On démarre l'algorithme";
 		}
 		else{
 		if(!isEnd()){
 			if(NbSommetExplore<graphe.size()){
 				currentStep=3;
 				GWizVertex v = selectVertex();
-				//this.comm.setCommentaires("le sommet "+v.getName()+" est selectionné");
+				commentaires = "le sommet "+v.getName()+" est sélectionné";
 				v.setFixing(true);
 				//si v n'a pas encore été mis à jour
 				if(!v.isFixed()){
@@ -84,6 +85,7 @@ public class Bellman extends Algorithm {
 					v.isFixing();
 					Iterator<GWizEdge> j = graph.incomingEdgesOf(v).iterator();
 	    	   	 	GWizEdge e;
+	    	   	 	commentaires = "On sélectionne les prédecesseurs de "+v.getName();
 	    	   	 	while (j.hasNext()){          	  	
 	    	   	 		e = j.next();
 	    	   	 		if(e.getDescription() != Description.SELECT)
@@ -95,8 +97,8 @@ public class Bellman extends Algorithm {
 	    	   	 	
 				else{
 					NbSommetExplore++;
-	    	   	 	//comm.setCommentaires("On sélectionne le sommet suivant"+NbSommetExplore);
-	    	   	 	System.out.println("NbSommet"+NbSommetExplore);
+	    	   	 	commentaires="On sélectionne le sommet suivant      "+NbSommetExplore;
+	    	   	 	
 				}
    	   	 	}        
 			
@@ -108,14 +110,15 @@ public class Bellman extends Algorithm {
 				memeIteration = true;
 				clearGraphe();
 				NbIteration++;
-				//this.comm.setCommentaires("NbIter = "+NbIteration);
+				commentaires="On a NbIter = "+NbIteration;
 				NbSommetExplore=0;
-				System.out.println("NbIter"+NbIteration);
 				
 			}
 		}
-		else
+		else{
 			currentStep = 7;
+			commentaires="La simulation est terminée,"+"\n"+" vous pouvez sélectionner un sommet pour connaitre le chemin optimal";
+		}
 		}
            	
 	}
@@ -154,6 +157,7 @@ public class Bellman extends Algorithm {
 		if(this.graph.containsVertex(v) && !pred.isEmpty()){
 			while(!pred.isEmpty()){
 				x=pred.firstElement();
+				commentaires = "on sélectionne le sommet "+x.getName();
 				x.setUpdated(true);
 				updatePred(x,v);
 				pred.removeElement(x);
@@ -170,6 +174,7 @@ public class Bellman extends Algorithm {
 			double valX = x.getValuation();
 			double poidsXV = graph.getEdgeWeight(this.graph.getEdge(x, v));
 			if (valX + poidsXV < v.getValuation() ) {
+				commentaires="On a : "+valX +"+"+ poidsXV +"<"+ v.getValuation();
 				Iterator<GWizEdge> j = graph.incomingEdgesOf(v).iterator();
     	   	 	GWizEdge e;
     	   	 	while (j.hasNext()){          	  	
@@ -191,7 +196,8 @@ public class Bellman extends Algorithm {
 			}
 			else{
 				Iterator<GWizEdge> j = graph.incomingEdgesOf(v).iterator();
-	   	 		GWizEdge e;
+	   	 		
+				GWizEdge e;
 	   	 		while (j.hasNext()){          	  	
 	   	 			e = j.next();
 	   	 			if(this.graph.getEdge(graph.getEdgeSource(e),v).getDescription()== Description.EXPLORER)
@@ -248,6 +254,7 @@ public class Bellman extends Algorithm {
 		currentStep = 2;
 		predecesseurs = new int[graphe.size()];
 		predecesseurs[0]=0;
+		commentaires = "Vous pouvez démarrer la simulation";
 	}
 
 	@Override
@@ -257,6 +264,7 @@ public class Bellman extends Algorithm {
 
 	@Override
 	public void initialize() {
+		commentaires="Initialisation : Cliquez sur le sommet 0";
 	}
 
 	@Override

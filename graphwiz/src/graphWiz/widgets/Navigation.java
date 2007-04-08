@@ -40,7 +40,7 @@ public class Navigation extends JPanel{
 	private JGraph jgraph;
 	public Algorithm algo;
 	public JList algoText = new JList();
-	public JTextField commentaires = new JTextField(" Bienvenue sur GraphWiz ... Le simulateur d'algorithmes de graphes ...  ");
+	public JTextArea commentaires = new JTextArea(" Bienvenue sur GraphWiz ... Le simulateur d'algorithmes de graphes ...  ");
 	private Graphics valuations;
 	private Algorithm dijkstra;
 	private Algorithm bellman;
@@ -92,6 +92,7 @@ public class Navigation extends JPanel{
 				algoText.setListData(algo.getAlgo());
 				algo.initialize();
 				valPred.update(algo.getGraph(),algo);
+				commentaires.setText(algo.getCommentaires());
 				algoText.setSelectedIndex(algo.getCurrentStep());
 			}
 			if (choixAlgo.getSelectedIndex()==2){
@@ -101,6 +102,7 @@ public class Navigation extends JPanel{
 				algoText.setListData(algo.getAlgo());
 				algo.initialize();
 				valPred.update(algo.getGraph(),algo);
+				commentaires.setText(algo.getCommentaires());
 				algoText.setSelectedIndex(algo.getCurrentStep());
 			}
 			if (choixAlgo.getSelectedIndex()==3){
@@ -109,6 +111,7 @@ public class Navigation extends JPanel{
 				algoText.setListData(algo.getAlgo());
 				algo.initialize();
 				valPred.update(algo.getGraph(),algo);
+				commentaires.setText(algo.getCommentaires());
 				algoText.setSelectedIndex(algo.getCurrentStep());
 			}
 			}
@@ -116,7 +119,7 @@ public class Navigation extends JPanel{
         
         commentaires.setPreferredSize(new Dimension(430,450));
         commentaires.setMaximumSize(new Dimension(430,500));
-        commentaires.setEditable(false);
+        
         commentaires.setBackground(Color.WHITE);
         add(commentaires);
 
@@ -124,6 +127,7 @@ public class Navigation extends JPanel{
         	public void actionPerformed(ActionEvent arg0) {
 				algo.retoreInitialState();
 				algoText.setSelectedIndex(algo.getCurrentStep());
+				commentaires = new JTextArea("Retour au graphe initial");
 				jgraph.repaint();
 			}});
         bHor.addSeparator();
@@ -132,6 +136,7 @@ public class Navigation extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				algo.previousStep();
 				algoText.setSelectedIndex(algo.getCurrentStep());
+				commentaires = new JTextArea("étape précédente");
 				jgraph.repaint();
 			}
         });	
@@ -142,6 +147,7 @@ public class Navigation extends JPanel{
 			public void actionPerformed(ActionEvent arg0) {
 				if (updateAlgo!=null)
 					updateAlgo.cancel();
+				commentaires = new JTextArea("Cliquez sur play pour continuer");
 			}
 		});
         
@@ -156,6 +162,7 @@ public class Navigation extends JPanel{
 							algo.nextStep();
 							valPred.update(algo.getGraph(),algo);
 							algoText.setSelectedIndex(algo.getCurrentStep());
+							commentaires.setText(algo.getCommentaires());
 							jgraph.repaint();
 				    	}
 				    	
@@ -170,6 +177,7 @@ public class Navigation extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				algo.nextStep();
 				algoText.setSelectedIndex(algo.getCurrentStep());
+				commentaires.setText(algo.getCommentaires());
 				valPred.update(algo.getGraph(),algo);
 				jgraph.repaint();
 			}
@@ -183,6 +191,7 @@ public class Navigation extends JPanel{
 				while (!algo.isEnd())
 					algo.nextStep();
 				jgraph.repaint();
+				commentaires.setText(algo.getCommentaires());
 				valPred.update(algo.getGraph(),algo);
         		}
         		algoText.setSelectedIndex(algo.getCurrentStep());
@@ -269,6 +278,7 @@ public class Navigation extends JPanel{
 			view.translate(0, -9);
 		}
 		algo.initialize();
+		commentaires.setText(algo.getCommentaires());
 		valPred.update(algo.getGraph(),algo);
 		algoText.setSelectedIndex(algo.getCurrentStep());
 	}
