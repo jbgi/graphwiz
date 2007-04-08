@@ -236,6 +236,7 @@ public class Bellman extends Algorithm {
 
 	@Override
 	public void setStartingVertex(GWizVertex startingVertex) {
+		
 		this.startingVertex = startingVertex;
 		Iterator<GWizVertex> i = graph.vertexSet().iterator();
 		GWizVertex a;
@@ -264,8 +265,9 @@ public class Bellman extends Algorithm {
 
 	@Override
 	public void initialize() {
-		commentaires="Initialisation : Cliquez sur le sommet 0";
-	}
+		commentaires="Initialisation : Cliquez sur le sommet 0 \n puis lancez la simulation!";
+		currentStep=1;
+		}
 
 	@Override
 	public String[] getAlgo() {

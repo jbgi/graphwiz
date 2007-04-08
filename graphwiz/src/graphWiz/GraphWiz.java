@@ -48,6 +48,7 @@ public class GraphWiz extends JApplet{
 		menu = new Navigation();
 		grapheditor= new GraphEditor(menu,TablValPred);
 		menu.start(grapheditor.getGraph(), TablValPred);
+		this.menu.inhiberChoixAlgo();
 		gauche.add(grapheditor);
 		add(gauche);
 		add(menu);
@@ -57,7 +58,7 @@ public class GraphWiz extends JApplet{
 	public static void main(String[] args) {
 		
 		// Construct Frame
-		JFrame frame = new JFrame("Graph Wiiiiiizz aller aller aller");
+		JFrame frame = new JFrame("GRAPHWIZ : Simulateur d'Algorithmes de Graphes - Projet OSE FI3 2007");
 		// Set Close Operation to Exit
 		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// Add an Editor Panel

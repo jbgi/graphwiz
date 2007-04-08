@@ -137,6 +137,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	public GraphEditor(Navigation navigation, ValPred TablValPred) {
 		this.TablValPred=TablValPred;
 		this.navigation = navigation;
+		
 		// Construct the Graph
 		graph = createGraph();
 		// Use a Custom Marquee Handler
@@ -533,6 +534,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 			menu.add(new AbstractAction("Edit") {
 				public void actionPerformed(ActionEvent e) {
 					graph.startEditingAtCell(cell);
+					
 				}
 			});
 		}
@@ -541,6 +543,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 			menu.addSeparator();
 			menu.add(new AbstractAction("Remove") {
 				public void actionPerformed(ActionEvent e) {
+					navigation.commentaires.setText("Cliquez sur un sommet pour le supprimer \n vous supprimerez aussi les arcs associés");
 					remove.actionPerformed(e);
 				}
 			});
@@ -550,6 +553,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		menu.add(new AbstractAction("Insert") {
 			public void actionPerformed(ActionEvent ev) {
 				insert(pt);
+				navigation.commentaires.setText("Vous venez d'ajouter un sommet \n double-cliquez sur lui pour changer son nom");
+				
 			}
 		});
 		return menu;
@@ -569,6 +574,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(new AbstractAction("Open graph file", openIcon) {
 			public void actionPerformed(ActionEvent e) {
 				deserializeGraph();
+				navigation.commentaires.setText("Sélectionner le graphe à éditer");
+				
 			}
 		});
 		
@@ -579,6 +586,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(new AbstractAction("Save graph", saveIcon) {
 			public void actionPerformed(ActionEvent e) {
 				serializeGraph();
+				navigation.commentaires.setText("Entrez le nom du graphe courant à enregistrer");
+				
 			}
 		});
 		
@@ -589,7 +598,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(new AbstractAction("Insert Random Graph", randomIcon) {
 			public void actionPerformed(ActionEvent e) {
 				navigation.commentaires.setText("Entrez les paramètres du graphe");
-				navigation.commentaires.setBackground(Color.red);
 				generatorDialog.newRandomGraph();
 				navigation.commentaires.setText("Mode Edition. Pour démarrer un algorithme, cliquez sur Mode Algorithme");
 				navigation.commentaires.setBackground(Color.white);
@@ -619,7 +627,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 			public void actionPerformed(ActionEvent e) {
 				graph.setPortsVisible(!graph.isPortsVisible());
 				navigation.commentaires.setText("Pour connecter 2 sommets, cliquez aux centres des cercles");
-				navigation.commentaires.setBackground(Color.blue);
 				URL connectUrl;
 				if (graph.isPortsVisible())
 					connectUrl = getClass().getClassLoader().getResource(
@@ -629,7 +636,6 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 							"graphWiz/resources/connecton.gif");
 				ImageIcon connectIcon = new ImageIcon(connectUrl);
 				navigation.commentaires.setText("Pour donner un poids à l'arc, double-cliquez sur celui-ci");
-				navigation.commentaires.setBackground(Color.blue);
 				putValue(SMALL_ICON, connectIcon);
 			}
 		});
@@ -644,6 +650,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 					Object[] cells = graph.getSelectionCells();
 					cells = graph.getDescendants(cells);
 					graph.getModel().remove(cells);
+					navigation.commentaires.setText("Cliquez sur un sommet pour le supprimer");
+					
 				}
 			}
 		};
@@ -657,6 +665,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		ImageIcon zoomIcon = new ImageIcon(zoomUrl);
 		toolbar.add(new AbstractAction("", zoomIcon) {
 			public void actionPerformed(ActionEvent e) {
+				navigation.commentaires.setText("Le graphe est zoomé à la tailler de la fenêtre");
+				
 				graph.setScale(7.0/Math.sqrt(((GWizModelAdapter) graph.getModel()).getGWizGraph().vertexSet().size()));
 			}
 		});
@@ -667,6 +677,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(new AbstractAction("", zoomInIcon) {
 			public void actionPerformed(ActionEvent e) {
 				graph.setScale(1.5 * graph.getScale());
+				navigation.commentaires.setText("Zoom avant du graphe");
+				
 			}
 		});
 		// Zoom Out
@@ -676,6 +688,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(new AbstractAction("", zoomOutIcon) {
 			public void actionPerformed(ActionEvent e) {
 				graph.setScale(graph.getScale() / 1.5);
+				navigation.commentaires.setText("Zoom arrière du graphe");
+				
 			}
 		});
 
@@ -687,6 +701,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(new AbstractAction("", layoutIcon) {
 			public void actionPerformed(ActionEvent e) {
 				applySpringLayout();
+				navigation.commentaires.setText("Arrangement de la disposition de votre graphe");
+				
 			}
 		});
 		toolbar.addSeparator();
@@ -700,6 +716,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 				modeAlgo.setEnabled(true);
 				startEdition();
 				navigation.stopExplorer();
+				navigation.inhiberChoixAlgo();
 				navigation.algo.retoreInitialState();
 			}
 		};
@@ -712,7 +729,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 				modeConstruction.setEnabled(true);
 				stopEdition();
 				navigation.startExplorer();
-				navigation.commentaires.setText("Sélectionnez un algorithme (Dijkstra par défaut)");
+				navigation.activerChoixAlgo();
+				navigation.commentaires.setText("SELECTIONNEZ UN ALGORITHME");
 				navigation.commentaires.setBackground(Color.yellow);
 			}
 		};
@@ -804,6 +822,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		        frame.add(panel);
 				frame.setSize(800,690);
 				frame.setVisible(true);
+				navigation.commentaires.setText("Nous espérons que la rubrique vous aura été utile");
+				
 			}
 		});
 		

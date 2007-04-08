@@ -283,5 +283,13 @@ public class Navigation extends JPanel{
 		algoText.setSelectedIndex(algo.getCurrentStep());
 	}
 
+	public void inhiberChoixAlgo(){
+		this.choixAlgo.setEnabled(false);
+		this.choixAlgo.setOpaque(true);
+	}
 	
+	public void activerChoixAlgo(){
+		this.choixAlgo.setEnabled(true);
+		this.choixAlgo.setOpaque(false);
+	}
 }
