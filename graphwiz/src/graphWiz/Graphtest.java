@@ -1,19 +1,25 @@
 package graphWiz;
 
 
-import graphWiz.model.*;
+import graphWiz.model.GWizGraph;
+import graphWiz.model.GWizVertex;
 import graphWiz.model.GWizEdge.Description;
 import graphWiz.visual.GWizCellViewFactory;
 import graphWiz.visual.SpringEmbeddedLayoutAlgorithm;
-import java.awt.*;
-import java.awt.geom.*;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Vector;
-import javax.swing.*;
-import org.jgraph.*;
-import org.jgraph.graph.*;
-import org.jgrapht.*;
-import org.jgrapht.ext.*;
-import org.jgrapht.graph.*;
+
+import javax.swing.JApplet;
+import javax.swing.JFrame;
+
+import org.jgraph.JGraph;
+import org.jgraph.graph.DefaultGraphCell;
+import org.jgraph.graph.GraphConstants;
+import org.jgraph.graph.GraphLayoutCache;
 
 /**
  * A demo applet that shows how to use JGraph to visualize JGraphT graphs.

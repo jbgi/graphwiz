@@ -1,6 +1,7 @@
 package graphWiz.model;
 
 import graphWiz.model.GWizEdge.Description;
+
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.Vector;

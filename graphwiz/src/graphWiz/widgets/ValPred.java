@@ -1,29 +1,27 @@
 package graphWiz.widgets;
-import graphWiz.model.*;
+import graphWiz.model.Algorithm;
+import graphWiz.model.Floyd;
+import graphWiz.model.GWizGraph;
+import graphWiz.model.GWizVertex;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Iterator;
-import java.util.Vector;
 
-import javax.swing.Box;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
 public class ValPred extends JPanel{
 
-	Box panneau;
+	JScrollPane panneau;
 	String[] columnNames;
 	
 	JTable tableVal;
@@ -32,11 +30,47 @@ public class ValPred extends JPanel{
     DefaultTableModel predData;
     JScrollPane valPan;
     JScrollPane predPan;
-	
+    DecimalFormat decFormatter;
+    DefaultTableCellRenderer rN;
+    DefaultTableCellRenderer rT;
 	public ValPred(){
+
+		this.setLayout(new BorderLayout());
 		
-		panneau = Box.createHorizontalBox();
-		panneau.setMaximumSize(new Dimension(500, 500 ));
+		NumberFormat numberFormatter = NumberFormat.getInstance();
+		decFormatter = (DecimalFormat)numberFormatter;
+		
+		rN = new DefaultTableCellRenderer() {
+			  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			    Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			    // Create and put formatted double in cell
+			    setText(decFormatter.format((Double)value));
+			    // Reset right justify again as it gets lost
+			    setHorizontalAlignment(JLabel.CENTER);
+			    return renderer;
+			  }
+			};
+		
+		rT = new DefaultTableCellRenderer() {
+			  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				    Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				    // Create and put formatted double in cell
+				    if (value!=null)
+				    	setText(value.toString());
+				    // Reset right justify again as it gets lost
+				    setHorizontalAlignment(JLabel.CENTER);
+				    return renderer;
+				  }
+				};
+			
+		
+		JPanel panList = new JPanel();
+		
+		panList.setLayout(new GridLayout(1,2));
+		
+		JPanel panLabel = new JPanel();
+		
+		panLabel.setLayout(new GridLayout(1,2));
 		
         valData = new DefaultTableModel();
         predData = new DefaultTableModel();
@@ -49,34 +83,19 @@ public class ValPred extends JPanel{
         
         tableVal.setFocusable(false);
         tablePred.setFocusable(false);
-        tablePred.setSize(250, 100);
-        tablePred.setRowHeight(20);
-        tablePred.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        tableVal.setRowHeight(20);
-        tableVal.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         
         valPan = new JScrollPane(tableVal);
-        
-        valPan.setMaximumSize(new Dimension(200,450));
-        valPan.setMinimumSize(new Dimension(100,45));
-        valPan.setPreferredSize(new Dimension(275,100));
         valPan.setAutoscrolls(true);
         
         predPan = new JScrollPane(tablePred);
         predPan.setAutoscrolls(true);
-        predPan.createHorizontalScrollBar();
-        predPan.setMaximumSize(new Dimension(200,450));
-        predPan.setMinimumSize(new Dimension(100,45));
-        predPan.setPreferredSize(new Dimension(250,100));
-        predPan.setAutoscrolls(true);
         
-        panneau.add(new JLabel("<html><font size=5>  VAL : </font></html>"));
-        panneau.add(valPan);
-        panneau.add(new JLabel("<html><font size=5> PRED : </font></html>"));
-        panneau.add(predPan);
-        
-        
-        add(panneau);
+        panLabel.add(new JLabel("<html><font size=5>Valuations :</font></html>"));
+        panLabel.add(new JLabel("<html><font size=5> Pr&eacute;decesseurs : </font></html>"));
+        panList.add(valPan);
+        panList.add(predPan);
+        add(panLabel, BorderLayout.NORTH);
+        add(panList, BorderLayout.CENTER);
         
 	}
 	
@@ -88,43 +107,42 @@ public class ValPred extends JPanel{
         if(NbSommet>=15)
         	TailleColumn = 2;
 		columnNames= new String[NbSommet];
-        String floyd = "<html><font size=5>Algorithme de Floyd</font><br><br><I><font size=3><U> Notations:</U>"+
-		"<br><font size=2>V[x,y] = valuation du plus court chemin pour aller de x à y </br>"+"<br> par les sommets intermédiaires {1,2,..,k} </br>" +
-		"<br><font size=2>W(x,y) = poids de l'arc (x,y) (infini s'il n'existe pas)</br>" +
-		"<br></font></I></html>";
-        if(algo.getAlgo()[0]!= floyd){        	
-        	valData.setColumnCount(NbSommet);
+    	predData.setColumnCount(NbSommet);
+    	valData.setColumnCount(NbSommet);
+    	
+        if (!(algo instanceof Floyd)){        	
         	valData.setRowCount(1);
-        	predData.setColumnCount(NbSommet);
         	predData.setRowCount(1);
         	int b=0;
         	Iterator<GWizVertex> i = graph.vertexSet().iterator();
         	
         	while (i.hasNext()){
         		GWizVertex v = i.next();
-        		if(v.getValuation() == Double.POSITIVE_INFINITY)
-        			tableVal.getModel().setValueAt("<html><font size="+TailleColumn+">&#8734</font></html>", 0, b);
-        		else
-        			tableVal.getModel().setValueAt("<html><font size="+TailleColumn+">" + v.getValuation()+"</font></html>", 0, b);
+        		tableVal.getModel().setValueAt(v.getValuation(), 0, b);
         		if (v.hasPred() && v.getPred()!=null)
-        			tablePred.getModel().setValueAt("<html><font size="+TailleColumn+">" +v.getPred().getName()+ "</font></html>", 0, b);
-        		columnNames[b]= v.getName();
+        			tablePred.getModel().setValueAt(v.getPred().getName(), 0, b);
+        		columnNames[b]= "<html><font size="+Math.max(4, 7-NbSommet/3)+">"+v.getName()+"</font></html>";
         		b++;
         	}
         	valData.setColumnIdentifiers(columnNames);
         	predData.setColumnIdentifiers(columnNames);
+            for (int j = 0; j<NbSommet;j++){
+            	tableVal.setFont(tableVal.getFont().deriveFont((float) Math.max(10, 25-NbSommet)));
+            	tablePred.setFont(tablePred.getFont().deriveFont((float) Math.max(10, 25-NbSommet)));
+            	tableVal.getColumn(valData.getColumnName(j)).setCellRenderer(rN);
+                tablePred.getColumn(predData.getColumnName(j)).setCellRenderer(rT);
+            }
         }
         else update2(graph,(Floyd) algo);
+        
+        tablePred.setRowHeight(Math.max(10, 25-NbSommet)+1);
+        tableVal.setRowHeight(Math.max(10, 25-NbSommet)+1);
+
 	}
 	
 	public void update2(GWizGraph graph, Floyd algo){
 		System.out.println("updateFloyd");
 		int NbSommet=graph.vertexSet().size();
-		 int TailleColumn = 5;
-	        if(NbSommet>7)
-	        	TailleColumn=3;
-	        if(NbSommet>=10)
-	        	TailleColumn = 2;
 		columnNames= new String[NbSommet+1];
 		String[] columnNamesPred = new String[NbSommet+1];
         System.out.println("il y a "+NbSommet+" sommets");
@@ -133,31 +151,35 @@ public class ValPred extends JPanel{
         predData.setColumnCount(NbSommet+1);
         predData.setRowCount(NbSommet);
         int i=0;
-        columnNames[0]="<html>V<sup>"+Integer.toString(algo.getIteration())+"</sup></html>";
+        columnNames[0]="<html><font size="+Math.max(3, 6-NbSommet/3)+">V<sup>"+Integer.toString(algo.getIteration())+"</sup></font></html>";
         columnNamesPred[0]="";
         for(int a=0;a<NbSommet;a++){
-        	tableVal.getModel().setValueAt(""+a, a, 0);
-        	tablePred.getModel().setValueAt(""+a, a, 0);
+        	tableVal.getModel().setValueAt("<html><font size="+Math.max(4, 7-NbSommet/3)+">"+a+"</font></html>", a, 0);
+        	tablePred.getModel().setValueAt("<html><font size="+Math.max(4, 7-NbSommet/3)+">"+a+"</font></html>", a, 0);
         	for(int b=1;b<NbSommet+1;b++){
-        		if(algo.getVal()[a][b-1] == Double.POSITIVE_INFINITY)
-        			tableVal.getModel().setValueAt("<html><font size="+TailleColumn+">&#8734</font></html>", a, b);
-        		else
-        			tableVal.getModel().setValueAt("<html><font size="+TailleColumn+">" + algo.getVal()[a][b-1]+"</font></html>", a, b);
-        		tablePred.getModel().setValueAt("<html><font size="+TailleColumn+">" +algo.getPred()[a][b-1]+ "</font></html>", a, b);
+        		tableVal.getModel().setValueAt(algo.getVal()[a][b-1], a, b);
+        		tablePred.getModel().setValueAt(algo.getPred()[a][b-1], a, b);
         	}
         	if(a>0){
-        		columnNames[a]=""+i;
-        		columnNamesPred[a]=""+i;
+        		columnNames[a]="<html><font size="+Math.max(4, 7-NbSommet/3)+">"+i+"</font></html>";
         		i++;
         	}
 				
         }
         if(algo.getArrivee()<NbSommet && algo.getDepart()<NbSommet)
-        	tableVal.getModel().setValueAt("<html><font size=4 color=#FF0000>"+algo.getVal()[algo.getDepart()][algo.getArrivee()]+"</font></html>", algo.getDepart(), algo.getArrivee()+1);
-        columnNames[NbSommet]= ""+(NbSommet-1);
-        columnNamesPred[NbSommet]=""+(NbSommet-1);
+        	tableVal.getModel().setValueAt(algo.getVal()[algo.getDepart()][algo.getArrivee()], algo.getDepart(), algo.getArrivee()+1);
+        columnNames[NbSommet]= "<html><font size="+Math.max(4, 7-NbSommet/3)+">"+(NbSommet-1)+"</font></html>";
         valData.setColumnIdentifiers(columnNames);
-        predData.setColumnIdentifiers(columnNamesPred);
+        columnNames[0]="";
+        predData.setColumnIdentifiers(columnNames);
+        for (int j = 1; j<=NbSommet;j++){
+        	tableVal.setFont(tableVal.getFont().deriveFont((float) Math.max(10, 25-NbSommet)));
+        	tablePred.setFont(tablePred.getFont().deriveFont((float) Math.max(10, 25-NbSommet)));
+        	tableVal.getColumn(valData.getColumnName(j)).setCellRenderer(rN);
+            tablePred.getColumn(predData.getColumnName(j)).setCellRenderer(rT);
+        }
+        
 	}
+	
 }
 

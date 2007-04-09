@@ -53,8 +53,8 @@ import graphWiz.model.GWizEdge.Description;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.geom.*;
-import java.io.*;
+import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -63,12 +63,31 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.*;
-import org.jgraph.event.*;
-import org.jgraph.event.GraphModelEvent.*;
-import org.jgraph.graph.*;
-import org.jgrapht.*;
-import org.jgrapht.event.*;
+
+import javax.swing.BorderFactory;
+
+import org.jgraph.event.GraphModelEvent;
+import org.jgraph.event.GraphModelListener;
+import org.jgraph.event.GraphModelEvent.GraphModelChange;
+import org.jgraph.graph.AttributeMap;
+import org.jgraph.graph.ConnectionSet;
+import org.jgraph.graph.DefaultEdge;
+import org.jgraph.graph.DefaultGraphCell;
+import org.jgraph.graph.DefaultGraphModel;
+import org.jgraph.graph.DefaultPort;
+import org.jgraph.graph.Edge;
+import org.jgraph.graph.GraphCell;
+import org.jgraph.graph.GraphConstants;
+import org.jgraph.graph.Port;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.EdgeFactory;
+import org.jgrapht.Graph;
+import org.jgrapht.ListenableGraph;
+import org.jgrapht.event.GraphEdgeChangeEvent;
+import org.jgrapht.event.GraphListener;
+import org.jgrapht.event.GraphVertexChangeEvent;
+import org.jgrapht.event.VertexSetListener;
+import org.jgrapht.ext.JGraphModelAdapter;
 
 /**
  * An adapter that reflects a JGraphT graph as a JGraph graph. This adapter is useful when using JGraph in order to visualize JGraphT graphs. For more about JGraph see <a href="http://jgraph.sourceforge.net"> http://jgraph.sourceforge.net</a> <p> Modifications made to the underlying JGraphT graph are reflected to this JGraph model if and only if the underlying JGraphT graph is a  {@link org.jgrapht.ListenableGraph} . If the underlying JGraphT graph is <i>not</i> ListenableGraph, then this JGraph model represent a snapshot if the graph at the time of its creation. </p> <p> Changes made to this JGraph model are also reflected back to the underlying JGraphT graph. To avoid confusion, variables are prefixed according to the JGraph/JGraphT object(s) they are referring to. </p> <p> <b>KNOWN BUGS:</b> There is a small issue to be aware of. JGraph allows 'dangling edges' incident with just one vertex; JGraphT doesn't. Such a configuration can arise when adding an edge or removing a vertex. The code handles this by removing the newly-added dangling edge or removing all edges incident with the vertex before actually removing the vertex, respectively. This works very well, only it doesn't play all that nicely with the undo-manager in the JGraph: for the second situation where you remove a vertex incident with some edges, if you undo the removal, the vertex is 'unremoved' but the edges aren't. </p>

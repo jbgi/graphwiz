@@ -31,7 +31,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -64,6 +63,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
@@ -95,6 +95,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
     
     private SpringEmbeddedLayoutAlgorithm layout;
 	
+    private JScrollPane jSgraph;
 	// JGraph instance
 	protected JGraph graph;
 	
@@ -159,11 +160,14 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		setLayout(new BorderLayout());
 		// Add a ToolBar
 		add(createToolBar(), BorderLayout.NORTH);
-		// Add the Graph as Center Component
-		JScrollPane jSgraph = new JScrollPane(graph);
-		jSgraph.setPreferredSize(new Dimension (2048,2048));
-		add(jSgraph, BorderLayout.CENTER);
-		add(TablValPred, BorderLayout.SOUTH);
+		jSgraph = new JScrollPane(graph);
+		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,jSgraph, TablValPred);
+		add( pane ,BorderLayout.CENTER); 	
+	    double weight = 1D;
+	    pane.setResizeWeight(weight);
+	    // Split the space evenly
+	    weight = .85D;
+	    pane.setResizeWeight(weight);
 	}
 
 	// Hook for subclassers
@@ -832,8 +836,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 	
 	public void applySpringLayout(){
 		if (graph.isEditable()){
-	        layout.setFrame(new Rectangle((int) (getComponent(1).getBounds().getWidth()/graph.getScale()),
-	        		(int) (getComponent(1).getBounds().getHeight()/graph.getScale())));
+	        layout.setFrame(new Rectangle((int) (jSgraph.getWidth()/graph.getScale()),
+	        		(int) (jSgraph.getHeight()/graph.getScale())));
 	        layout.setScale(graph.getScale());
 	        double i = graph.getScale();
 	        graph.setScale(1);

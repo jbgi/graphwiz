@@ -1,6 +1,4 @@
 package graphWiz.model;
-import java.util.Iterator;
-
 import org.jgrapht.graph.ListenableDirectedWeightedGraph;
 
 /**

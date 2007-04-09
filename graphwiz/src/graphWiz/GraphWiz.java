@@ -1,26 +1,16 @@
 package graphWiz;
 
-import graphWiz.model.Dijkstra;
-import graphWiz.widgets.*;
+import graphWiz.widgets.Navigation;
+import graphWiz.widgets.ValPred;
 
-import javax.swing.*;
-import java.applet.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.RandomAccessFile;
-import java.awt.GridLayout;
-import java.io.IOException;
+import java.awt.Dimension;
 import java.net.URL;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import javax.swing.JApplet;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class GraphWiz extends JApplet{
 

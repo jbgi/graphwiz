@@ -1,8 +1,9 @@
 package graphWiz.visual;
 import graphWiz.GWizModelAdapter;
 
-import org.jgraph.JGraph;
-import org.jgraph.graph.*;
+import org.jgraph.graph.DefaultCellViewFactory;
+import org.jgraph.graph.EdgeView;
+import org.jgraph.graph.VertexView;
 /**
  * @author  jbg
  */

@@ -1,21 +1,29 @@
 package graphWiz.widgets;
 
-import graphWiz.GWizModelAdapter;
 import graphWiz.GraphEditor;
-import graphWiz.model.*;
+import graphWiz.model.GWizEdge;
+import graphWiz.model.GWizGraph;
+import graphWiz.model.GWizRandomGraphGenerator;
+import graphWiz.model.GWizVertex;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 
-import org.jgraph.*;
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.generate.RandomGraphGenerator;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class GWizGraphGeneratorDialog extends JDialog {
 	

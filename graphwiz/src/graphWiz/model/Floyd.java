@@ -3,7 +3,6 @@ package graphWiz.model;
 import graphWiz.model.GWizEdge.Description;
 
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
 
 public class Floyd extends Algorithm{

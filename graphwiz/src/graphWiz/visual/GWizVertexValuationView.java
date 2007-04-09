@@ -1,13 +1,11 @@
 package graphWiz.visual;
 
-import java.awt.Color;
-
 import graphWiz.GWizModelAdapter;
-import graphWiz.model.GWizEdge;
 import graphWiz.model.GWizVertex;
 
+import java.awt.Color;
+
 import org.jgraph.graph.CellViewRenderer;
-import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.VertexView;
 

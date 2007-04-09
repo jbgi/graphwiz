@@ -7,44 +7,17 @@
  */
 package graphWiz.visual;
 
-import graphWiz.GWizModelAdapter;
-import graphWiz.model.GWizEdge;
-import graphWiz.model.GWizEdge.Description;
-import graphWiz.model.GWizGraph;
 import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.Serializable;
-import java.lang.ref.WeakReference;
-import java.util.Map;
-import javax.swing.JComponent;
-import javax.swing.UIManager;
+
 import org.jgraph.JGraph;
-import org.jgraph.graph.CellView;
-import org.jgraph.graph.CellViewRenderer;
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.Edge;
 import org.jgraph.graph.EdgeRenderer;
 import org.jgraph.graph.GraphConstants;
-import org.jgraph.util.Bezier;
-import org.jgraph.util.Spline2D;
-import org.jgrapht.ext.JGraphModelAdapter;
 
 /**
  * This renderer displays entries that implement the CellView interface.
