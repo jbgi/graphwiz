@@ -52,8 +52,7 @@ public class Floyd extends Algorithm{
 	}
 
 	public boolean isEnd() {
-		return NbIteration == graphe.size();
-		
+		return NbIteration == graphe.size() && SommetArrivee==graphe.size()-1 && SommetDepart==graphe.size()-1;
 	}
 
 	public boolean isStart() {
@@ -83,11 +82,11 @@ public class Floyd extends Algorithm{
 							if(SommetArrivee != SommetDepart && SommetArrivee!=NbIteration){
 								commentaires="On cherche un chemin entre "+SommetDepart+" et"+SommetArrivee+" passant par "+NbIteration;
 								update(SommetDepart, NbIteration, SommetArrivee);
-								for(int i=0;i<graphe.size();i++)
-									this.graphe.get(i).setFixing(false);
-								SommetArrivee++;
-								afficherValPred();
 								}
+							for(int i=0;i<graphe.size();i++)
+								this.graphe.get(i).setFixing(false);
+							SommetArrivee++;
+							afficherValPred();
 							}
 						}
 						else{

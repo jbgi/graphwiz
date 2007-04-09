@@ -121,6 +121,7 @@ public class ValPred extends JPanel{
         		tableVal.getModel().setValueAt(v.getValuation(), 0, b);
         		if (v.hasPred() && v.getPred()!=null)
         			tablePred.getModel().setValueAt(v.getPred().getName(), 0, b);
+        		else tablePred.getModel().setValueAt(v.getName(), 0, b);
         		columnNames[b]= "<html><font size="+Math.max(4, 7-NbSommet/3)+">"+v.getName()+"</font></html>";
         		b++;
         	}
@@ -134,9 +135,8 @@ public class ValPred extends JPanel{
             }
         }
         else update2(graph,(Floyd) algo);
-        
-        tablePred.setRowHeight(Math.max(10, 25-NbSommet)+1);
-        tableVal.setRowHeight(Math.max(10, 25-NbSommet)+1);
+        tablePred.setRowHeight(Math.max(12, 25-NbSommet)+2);
+        tableVal.setRowHeight(Math.max(12, 25-NbSommet)+2);
 
 	}
 	
@@ -166,8 +166,11 @@ public class ValPred extends JPanel{
         	}
 				
         }
-        if(algo.getArrivee()<NbSommet && algo.getDepart()<NbSommet)
+        if(algo.getArrivee()<NbSommet && algo.getDepart()<NbSommet){
+        	tableVal.clearSelection();
+        	tableVal.changeSelection(1, 1, true, true);
         	tableVal.getModel().setValueAt(algo.getVal()[algo.getDepart()][algo.getArrivee()], algo.getDepart(), algo.getArrivee()+1);
+        }
         columnNames[NbSommet]= "<html><font size="+Math.max(4, 7-NbSommet/3)+">"+(NbSommet-1)+"</font></html>";
         valData.setColumnIdentifiers(columnNames);
         columnNames[0]="";

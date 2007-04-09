@@ -31,6 +31,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -161,12 +162,13 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		// Add a ToolBar
 		add(createToolBar(), BorderLayout.NORTH);
 		jSgraph = new JScrollPane(graph);
+		jSgraph.setPreferredSize(new Dimension(2048,2048));
 		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,jSgraph, TablValPred);
-		add( pane ,BorderLayout.CENTER); 	
+		add(pane ,BorderLayout.CENTER); 	
 	    double weight = 1D;
 	    pane.setResizeWeight(weight);
 	    // Split the space evenly
-	    weight = .85D;
+	    weight = 0.95D;
 	    pane.setResizeWeight(weight);
 	}
 
