@@ -127,8 +127,9 @@ public class Navigation extends JPanel{
         bHor.add(new AbstractAction("",begin){
         	public void actionPerformed(ActionEvent arg0) {
 				algo.retoreInitialState();
+				valPred.update(algo.getGraph(),algo);
 				algoText.setSelectedIndex(algo.getCurrentStep());
-				commentaires = new JTextArea("Retour au graphe initial");
+				commentaires.setText("Retour au graphe initial");
 				jgraph.repaint();
 			}});
         bHor.addSeparator();
@@ -136,8 +137,9 @@ public class Navigation extends JPanel{
         bHor.add(new AbstractAction("", back) {
 			public void actionPerformed(ActionEvent e) {
 				algo.previousStep();
+				valPred.update(algo.getGraph(),algo);
 				algoText.setSelectedIndex(algo.getCurrentStep());
-				commentaires = new JTextArea("étape précédente");
+				commentaires.setText("étape précédente");
 				jgraph.repaint();
 			}
         });	
