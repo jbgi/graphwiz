@@ -3,6 +3,7 @@ package graphWiz.model;
 import graphWiz.model.GWizEdge.Description;
 
 import java.util.Iterator;
+import java.util.Stack;
 import java.util.Vector;
 
 public class Floyd extends Algorithm{
@@ -11,13 +12,19 @@ public class Floyd extends Algorithm{
 	private String[] algo;
 	private Vector<GWizVertex> graphe = new Vector<GWizVertex>();
 	public double[][] Val, PreviousVal;
+	private boolean isStart = true, step5=true;
 	public String[][] Pred;
 	private GWizVertex endVertex;
 	private GWizVertex startingVertex;
+	private Stack<double[][]> tabloVal,tabloPreviousVal;
+	private Stack<String[][]> tabloPred;
 	
 	
 	public Floyd(GWizGraph graph) {
 		super(graph);
+		tabloVal = new Stack<double[][]>();
+		tabloPred = new Stack<String[][]>();
+		tabloPreviousVal = new Stack<double[][]>();
 		commentaires="Vous avez choisi l'algorithme de Floyd";
 		Val = new double[this.graph.vertexSet().size()][this.graph.vertexSet().size()];
 		PreviousVal = new double[this.graph.vertexSet().size()][this.graph.vertexSet().size()];
@@ -31,7 +38,7 @@ public class Floyd extends Algorithm{
 		algo[2] =  "<html><font size= 3 color=#408080> <I> // Initialisation de la matrice V<sup>0</sup> : </I></font>"+"<br> Pour tout sommet i de 0 à N-1, </br>"+
 				"<br><blockquote>Pour tout sommet j de 0 à N-1 </blockquote>"+"<blockquote><blockquote> V<sup>0</sup>[i,j]=W(i,j)</blockquote></blockquote>"+"<blockquote>Fin Pour</blockquote>"+"Fin Pour"+"<br></html>";
 		algo[3] = "<html><font size=3 color=#408080><I> //Calcul des matrices successives V<sup>k</sup></font></html>";
-		algo[4] = "<html>Pour chaque itération k de 1 à N </html>";
+		algo[4] = "<html>Pour chaque itération k de 0 à N-1 </html>";
 		algo[5] = "<html><blockquote>Pour chaque sommet i de 0 à N-1</blockquote></html>";
 		algo[6] = "<html><blockquote><blockquote>Pour chaque sommet j de 0 à N-1</blockquote></blockquote></html>";
 		algo[7] = "<html><blockquote><blockquote><blockquote>Si V<sup>k-1</sup>[i,k]+V<sup>k-1</sup>[k,j] &lt V<sup>k-1</sup>[i,j]"+"<br>alors V<sup>k</sup>[i,j] = V<sup>k-1</sup>[i,k]+V<sup>k-1</sup>[k,j]"+"</blockquote></html>";
@@ -52,7 +59,8 @@ public class Floyd extends Algorithm{
 	}
 
 	public boolean isEnd() {
-		return NbIteration == graphe.size() && SommetArrivee==graphe.size()-1 && SommetDepart==graphe.size()-1;
+		return NbIteration == graphe.size()-1 && SommetDepart==graphe.size()-1 && SommetArrivee==graphe.size()-1;
+		
 	}
 
 	public boolean isStart() {
@@ -60,57 +68,70 @@ public class Floyd extends Algorithm{
 	}
 
 	public void nextStep() {
-		saveGraph();
-		if(NbIteration < this.graph.nbVertex())
+		saveGraph2();
+		if(isStart() && isStart){
 			this.graphe.get(NbIteration).setUpdated(true);
-		commentaires="NbIter = "+NbIteration;
-		currentStep=4;
-		if(!isEnd()){
-			if(SommetDepart<this.graph.nbVertex()){
-					currentStep=5;
-						if(SommetArrivee<this.graph.nbVertex() && SommetDepart!=NbIteration){
-							if(!this.graphe.get(SommetArrivee).isFixing()){
-								this.graphe.get(SommetDepart).setFixing(true);
+			commentaires="NbIter = "+NbIteration;
+			currentStep=4;
+			isStart=false;
+		}
+		else{
+			if(!isEnd()){
+				if(SommetDepart<this.graph.nbVertex()){
+					if(SommetArrivee==0 && !this.graphe.get(SommetArrivee).isFixing() && step5){
+						currentStep=5;
+						this.graphe.get(SommetDepart).setFixing(true);
+						step5=false;
+					}
+					else{
+						if(SommetArrivee<this.graph.nbVertex()){
+							if(!this.graphe.get(SommetArrivee).isFixing() && SommetDepart!=SommetArrivee){
+								commentaires="On cherche un chemin entre "+SommetDepart+" et"+SommetArrivee+" passant par "+NbIteration;
 								this.graphe.get(SommetArrivee).setFixing(true);
-								if (this.graph.containsEdge(this.graphe.get(SommetDepart),this.graphe.get(SommetArrivee)))
-									this.graph.getEdge(this.graphe.get(SommetDepart),this.graphe.get(SommetArrivee)).setDescription(Description.REGULAR);	
-							
+								this.graphe.get(SommetDepart).setFixing(true);
 								currentStep = 6;
 							}
-							else{
-							currentStep=7;
-							if(SommetArrivee != SommetDepart && SommetArrivee!=NbIteration){
-								commentaires="On cherche un chemin entre "+SommetDepart+" et"+SommetArrivee+" passant par "+NbIteration;
-								update(SommetDepart, NbIteration, SommetArrivee);
-								}
-							for(int i=0;i<graphe.size();i++)
-								this.graphe.get(i).setFixing(false);
-							SommetArrivee++;
-							afficherValPred();
+							else if(SommetArrivee==SommetDepart && SommetArrivee!=this.graphe.size()-1){
+								SommetArrivee++;
+								nextStep();
 							}
+							else{
+								currentStep=7;
+								commentaires="On cherche un chemin entre "+SommetDepart+" et "+SommetArrivee+" passant par "+NbIteration;
+								update(SommetDepart, NbIteration, SommetArrivee);
+								SommetArrivee=(SommetArrivee+1);
+								for(int i=0;i<graphe.size();i++){
+									this.graphe.get(i).setFixing(false);	
+								}
+							}	
 						}
 						else{
 							currentStep = 8;
 							SommetArrivee=0;
-							SommetDepart++;
+							step5=true;
+							SommetDepart=(SommetDepart+1);
 							for(int i=0;i<graphe.size();i++)
 								this.graphe.get(i).setFixing(false);
 						}
-				
-				
-			}
+					}
+				}
+				else{
+					commentaires="On a exploré toutes les paires de sommets";
+					currentStep = 9;
+					SommetArrivee=0;
+					SommetDepart=0;
+					afficherValPred();
+					PreviousVal = Val;
+					this.graphe.get(NbIteration).setUpdated(false);
+					NbIteration++;
+					clearGraphe();
+				}
+			}	
 			else{
-				commentaires="On a exploré toutes les paires de sommets";
-				currentStep = 9;
-				SommetDepart=0;
-				afficherValPred();
-				PreviousVal = Val;
-				this.graphe.get(NbIteration).setUpdated(false);
-				NbIteration++;
-				clearGraphe();
+				commentaires = "algorithme terminé";
+				currentStep=10;
 			}
-		}	
-		else currentStep=10;
+		}
 	}
 	
 
@@ -140,8 +161,6 @@ public class Floyd extends Algorithm{
 			Pred[i][j]=""+x;
 			commentaires="Le chemin passant par "+NbIteration+" est plus court que le chemin courant...";
 		}
-		else
-			commentaires="Le chemin passant par"+NbIteration+" n'est pas plus court que le chemin courant...";
 	}
 
 	@Override
@@ -179,8 +198,6 @@ public class Floyd extends Algorithm{
 				i.next().setValuated(true);
 			this.startingVertex = startingVertex;
 			this.startingVertex.setStart(true);
-			this.startingVertex.setValuation(0);
-			currentStep = 2;
 		}
 	}
 
@@ -223,8 +240,8 @@ public class Floyd extends Algorithm{
 		PreviousVal = Val;
 		afficherValPred();
 		currentStep = 2;
-		graphe.get(0).setFixing(true);
 		System.out.println("Fin de l'initialisation");
+		saveGraph2();
 	}
 
 	private void afficherValPred() {
@@ -268,5 +285,92 @@ public class Floyd extends Algorithm{
 		// TODO Auto-generated method stub
 		return algo;
 	}
+	
+	protected void restorePreviousGraph() {	
+		if (!verticesFlagHistory.isEmpty()){
+			Vector<boolean[]> verticesFlag = verticesFlagHistory.pop();
+			Vector<GWizVertex[]> verticesPred = verticesPredHistory.pop();
+			Vector<double[]> verticesValuation = verticesValuationHistory.pop();
+			Vector<Description> edgesDescription = edgesDescriptionHistory.pop();
+			
+			Iterator<GWizVertex> i = graph.vertexSet().iterator();
+			int j = 0;
+			while (i.hasNext()){
+				GWizVertex v = i.next();
+				v.setFixed(verticesFlag.get(j)[0]);
+				v.setFixing(verticesFlag.get(j)[1]);
+				v.setUpdated(verticesFlag.get(j)[2]);
+				v.setHasPred(verticesFlag.get(j)[3]);
+				v.setUpdatedDone(verticesFlag.get(j)[4]);
+				v.setPred(verticesPred.get(j)[0]);
+				v.setPreviousPred(verticesPred.get(j)[1]);
+				
+				v.setValuation(verticesValuation.get(j)[0]);
+				v.setPreviousValuation(verticesValuation.get(j)[1]);
+				
+				j++;
+			}
+			
+			Iterator<GWizEdge> e = graph.edgeSet().iterator();
+			int k =0;
+			while (e.hasNext()){
+				e.next().setDescription(edgesDescription.get(k));
+				k++;
+			}
+			currentStep = currentStepHistory.pop();
+			PreviousVal  = tabloPreviousVal.pop();
+			Val = tabloVal.pop();
+			Pred = tabloPred.pop();
+		}
+	}
+	
+	protected void saveGraph2() {
+		
+		Vector<boolean[]> verticesFlag = new Vector<boolean[]>();
+		Vector<GWizVertex[]> verticesPred = new Vector<GWizVertex[]>();
+		Vector<double[]> verticesValuation = new Vector<double[]>();
+		Vector<Description> edgesDescription = new Vector<Description>();
+		
+		Iterator<GWizVertex> i = graph.vertexSet().iterator();
+		while (i.hasNext()){
+			GWizVertex v = i.next();
+			
+			boolean[] t1 = new boolean[] {v.isFixed(), v.isFixing(), v.isUpdated(), v.hasPred(), v.isUpdatedDone()};
+			verticesFlag.add(t1);
+			
+			GWizVertex[] t2 = new GWizVertex[] {v.getPred(), v.getPreviousPred()};
+			verticesPred.add(t2);
+			
+			double[] t3 = new double[] {v.getValuation(), v.getPreviousValuation()};
+			verticesValuation.add(t3);
+		}
+		
+		verticesFlagHistory.add(verticesFlag);
+		verticesPredHistory.add(verticesPred);
+		verticesValuationHistory.add(verticesValuation);
+		
+		Iterator<GWizEdge> j = graph.edgeSet().iterator();
+		while (j.hasNext())
+			edgesDescription.add(j.next().getDescription());
+		
+		edgesDescriptionHistory.add(edgesDescription);
+		
+		currentStepHistory.add(Integer.valueOf(currentStep));
+		tabloPreviousVal.add(PreviousVal);
+		tabloVal.add(Val);
+		tabloPred.add(Pred);
+	}
+	
+	private void clearHistories(){
+		edgesDescriptionHistory.clear();
+		verticesFlagHistory.clear();
+		verticesPredHistory.clear();
+		verticesValuationHistory.clear();
+		currentStepHistory.clear();
+		tabloVal.clear();
+		tabloPred.clear();
+	}
 
+	
+	
 }
