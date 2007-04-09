@@ -135,8 +135,9 @@ public class ValPred extends JPanel{
             }
         }
         else update2(graph,(Floyd) algo);
-        tablePred.setRowHeight(Math.max(12, 25-NbSommet)+2);
-        tableVal.setRowHeight(Math.max(12, 25-NbSommet)+2);
+        
+        tablePred.setRowHeight(Math.max(10, 25-NbSommet)+1);
+        tableVal.setRowHeight(Math.max(10, 25-NbSommet)+1);
 
 	}
 	
@@ -170,7 +171,11 @@ public class ValPred extends JPanel{
         	tableVal.clearSelection();
         	tableVal.changeSelection(1, 1, true, true);
         	tableVal.getModel().setValueAt(algo.getVal()[algo.getDepart()][algo.getArrivee()], algo.getDepart(), algo.getArrivee()+1);
-        }
+        	tableVal.getCellRenderer(algo.getDepart(), algo.getArrivee()+1).getTableCellRendererComponent(tableVal, algo.getVal()[algo.getDepart()][algo.getArrivee()], false, false, algo.getDepart(), algo.getArrivee()+1).setBackground(Color.white);
+        	tablePred.getCellRenderer(algo.getDepart(), algo.getArrivee()+1).getTableCellRendererComponent(tableVal, algo.getVal()[algo.getDepart()][algo.getArrivee()], false, false, algo.getDepart(), algo.getArrivee()+1).setBackground(Color.white);
+    		
+        }	
+        
         columnNames[NbSommet]= "<html><font size="+Math.max(4, 7-NbSommet/3)+">"+(NbSommet-1)+"</font></html>";
         valData.setColumnIdentifiers(columnNames);
         columnNames[0]="";
