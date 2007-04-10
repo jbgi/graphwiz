@@ -593,7 +593,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(new AbstractAction("Save graph", saveIcon) {
 			public void actionPerformed(ActionEvent e) {
 				serializeGraph();
-				navigation.commentaires.setText("Entrez le nom du graphe courant � enregistrer");
+				navigation.commentaires.setText("Entrez le nom du graphe courant à enregistrer");
 				
 			}
 		});
@@ -693,7 +693,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		toolbar.add(new AbstractAction("", zoomOutIcon) {
 			public void actionPerformed(ActionEvent e) {
 				graph.setScale(graph.getScale() / 1.5);
-				navigation.commentaires.setText("Zoom arri�re du graphe");
+				navigation.commentaires.setText("Zoom arrière du graphe");
 				
 			}
 		});
@@ -766,11 +766,11 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		        panel.add(Jbegin);
 		        panel.add(new JLabel("     "));
 		        ImageIcon back = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/btn_bf.gif"));
-				JLabel Jback = new JLabel("<html><font size=4 color=#2B65EC><I>Back Forward:</I> Retour � l'�tape pr�c�dente</font></html>",back,JLabel.LEFT);
+				JLabel Jback = new JLabel("<html><font size=4 color=#2B65EC><I>Back Forward:</I> Retour à l'étape précédente</font></html>",back,JLabel.LEFT);
 		        panel.add(Jback);
 		        panel.add(new JLabel("     "));
 		        ImageIcon pause = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/btn_pause.gif"));
-				JLabel JPause = new JLabel("<html><font size=4 color=#2B65EC><I>Pause:</I> Arr�te la simulation </font></html>",pause,JLabel.LEFT);
+				JLabel JPause = new JLabel("<html><font size=4 color=#2B65EC><I>Pause:</I> Arrête la simulation </font></html>",pause,JLabel.LEFT);
 		        panel.add(JPause);
 		        panel.add(new JLabel("     "));
 		        ImageIcon play = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/btn_play.gif"));
@@ -782,19 +782,19 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		        panel.add(JForward);
 		        panel.add(new JLabel("     "));
 		        ImageIcon end = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/btn_end.gif"));
-				JLabel JEnd = new JLabel("<html><font size=4 color=#2B65EC><I>End:</I> Ex�cute l'algorithme en une �tape</font></html>",end,JLabel.LEFT);
+				JLabel JEnd = new JLabel("<html><font size=4 color=#2B65EC><I>End:</I> Exécute l'algorithme en une étape</font></html>",end,JLabel.LEFT);
 		        panel.add(JEnd);
 		        panel.add(new JLabel("     "));
 		        ImageIcon connect = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/connecton.gif"));
-				JLabel JConnect = new JLabel("<html><font size=4 color=#2B65EC><I>Connect Off:</I> D�placement unique des sommets sans ajout de fl�ches possible</font></html>",connect,JLabel.LEFT);
+				JLabel JConnect = new JLabel("<html><font size=4 color=#2B65EC><I>Connect Off:</I> Déplacement unique des sommets sans ajout de flèches possible</font></html>",connect,JLabel.LEFT);
 		        panel.add(JConnect);
 		        panel.add(new JLabel("     "));
 		        ImageIcon connectoff = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/connectoff.gif"));
-				JLabel JConnectoff = new JLabel("<html><font size=4 color=#2B65EC><I>Connect On:</I> Permet de connecter les sommets en ajoutant des fl�ches entre elles, et de donner une valuation en double cliquant sur une fl�che</font></html>",connectoff,JLabel.LEFT);
+				JLabel JConnectoff = new JLabel("<html><font size=4 color=#2B65EC><I>Connect On:</I> Permet de connecter les sommets en ajoutant des fl�ches entre elles, et de donner une valuation en double cliquant sur une flèche</font></html>",connectoff,JLabel.LEFT);
 		        panel.add(JConnectoff);
 		        panel.add(new JLabel("     "));
 		        ImageIcon delete = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/delete.gif"));
-				JLabel JDelete = new JLabel("<html><font size=4 color=#2B65EC><I>Delete:</I> Effacer des sommets en un click apr�s avoir selectionn� le bouton</font></html>",delete,JLabel.LEFT);
+				JLabel JDelete = new JLabel("<html><font size=4 color=#2B65EC><I>Delete:</I> Effacer des sommets en un click après avoir selectionn� le bouton</font></html>",delete,JLabel.LEFT);
 		        panel.add(JDelete);
 		        panel.add(new JLabel("     "));
 		        ImageIcon help = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/help.jpg"));
@@ -802,15 +802,15 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		        panel.add(JHelp);
 		        panel.add(new JLabel("     "));
 		        ImageIcon expand = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/expandAll.gif"));
-				JLabel JExpand = new JLabel("<html><font size=4 color=#2B65EC><I>Expand All:</I> Affiche le graphe � la taille de l��diteur et arrange la disposition al�atoirement</font></html>",expand,JLabel.LEFT);
+				JLabel JExpand = new JLabel("<html><font size=4 color=#2B65EC><I>Expand All:</I> Affiche le graphe é la taille de l'éditeur et arrange la disposition aléatoirement</font></html>",expand,JLabel.LEFT);
 		        panel.add(JExpand);
 		        panel.add(new JLabel("     "));
 		        ImageIcon insert = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/insert.gif"));
-				JLabel JInsert= new JLabel("<html><font size=4 color=#2B65EC><I>Insert:</I> Introduit un nouveau sommet dans l'espace d'�dition</font></html>",insert,JLabel.LEFT);
+				JLabel JInsert= new JLabel("<html><font size=4 color=#2B65EC><I>Insert:</I> Introduit un nouveau sommet dans l'espace d'édition</font></html>",insert,JLabel.LEFT);
 		        panel.add(JInsert);
 		        panel.add(new JLabel("     "));
 		        ImageIcon zoom = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/zoom.gif"));
-				JLabel JZoom = new JLabel("<html><font size=4 color=#2B65EC><I>Zoom:</I> Affiche le graphe � la taille de l��cran</font></html>",zoom,JLabel.LEFT);
+				JLabel JZoom = new JLabel("<html><font size=4 color=#2B65EC><I>Zoom:</I> Affiche le graphe à la taille de l'écran</font></html>",zoom,JLabel.LEFT);
 		        panel.add(JZoom);
 		        panel.add(new JLabel("     "));
 		        ImageIcon zoomin = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/zoomin.gif"));
@@ -826,7 +826,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		        frame.add(panel);
 				frame.setSize(800,690);
 				frame.setVisible(true);
-				navigation.commentaires.setText("Nous esp�rons que la rubrique vous aura �t� utile");
+				navigation.commentaires.setText("Nous espérons que la rubrique vous aura été utile");
 				
 			}
 		});
