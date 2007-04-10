@@ -790,11 +790,11 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		        panel.add(JConnect);
 		        panel.add(new JLabel("     "));
 		        ImageIcon connectoff = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/connectoff.gif"));
-				JLabel JConnectoff = new JLabel("<html><font size=4 color=#2B65EC><I>Connect On:</I> Permet de connecter les sommets en ajoutant des fl�ches entre elles, et de donner une valuation en double cliquant sur une flèche</font></html>",connectoff,JLabel.LEFT);
+				JLabel JConnectoff = new JLabel("<html><font size=4 color=#2B65EC><I>Connect On:</I> Permet de connecter les sommets en ajoutant des flèches entre elles, et de donner une valuation en double cliquant sur une flèche</font></html>",connectoff,JLabel.LEFT);
 		        panel.add(JConnectoff);
 		        panel.add(new JLabel("     "));
 		        ImageIcon delete = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/delete.gif"));
-				JLabel JDelete = new JLabel("<html><font size=4 color=#2B65EC><I>Delete:</I> Effacer des sommets en un click après avoir selectionn� le bouton</font></html>",delete,JLabel.LEFT);
+				JLabel JDelete = new JLabel("<html><font size=4 color=#2B65EC><I>Delete:</I> Effacer des sommets en un click après avoir selectionnéss le bouton</font></html>",delete,JLabel.LEFT);
 		        panel.add(JDelete);
 		        panel.add(new JLabel("     "));
 		        ImageIcon help = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/help.jpg"));
@@ -802,7 +802,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		        panel.add(JHelp);
 		        panel.add(new JLabel("     "));
 		        ImageIcon expand = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/expandAll.gif"));
-				JLabel JExpand = new JLabel("<html><font size=4 color=#2B65EC><I>Expand All:</I> Affiche le graphe é la taille de l'éditeur et arrange la disposition aléatoirement</font></html>",expand,JLabel.LEFT);
+				JLabel JExpand = new JLabel("<html><font size=4 color=#2B65EC><I>Expand All:</I> Affiche le graphe à la taille de l'éditeur et arrange la disposition aléatoirement</font></html>",expand,JLabel.LEFT);
 		        panel.add(JExpand);
 		        panel.add(new JLabel("     "));
 		        ImageIcon insert = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/insert.gif"));
@@ -818,7 +818,7 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 		        panel.add(JZoomin);
 		        panel.add(new JLabel("     "));
 		        ImageIcon zoomout = new ImageIcon(GraphEditor.class.getClassLoader().getResource("graphWiz/resources/zoomout.gif"));
-				JLabel JZoomout = new JLabel("<html><font size=4 color=#2B65EC><I>Zoom Out:</I> Zoom arri�re du graphe</font></html>",zoomout,JLabel.LEFT);
+				JLabel JZoomout = new JLabel("<html><font size=4 color=#2B65EC><I>Zoom Out:</I> Zoom arrière du graphe</font></html>",zoomout,JLabel.LEFT);
 		        panel.add(JZoomout);
 		        panel.add(new JLabel("     "));
 		        
