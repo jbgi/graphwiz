@@ -23,7 +23,8 @@ public class ValPred extends JPanel{
 
 	JScrollPane panneau;
 	String[] columnNames;
-	
+	int colR = -1;
+	int rowR = -1;
 	JTable tableVal;
 	JTable tablePred;
     DefaultTableModel valData;
@@ -41,24 +42,37 @@ public class ValPred extends JPanel{
 		decFormatter = (DecimalFormat)numberFormatter;
 		
 		rN = new DefaultTableCellRenderer() {
-			  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-			    Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+			    Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
 			    // Create and put formatted double in cell
 			    setText(decFormatter.format((Double)value));
 			    // Reset right justify again as it gets lost
 			    setHorizontalAlignment(JLabel.CENTER);
+			    
+			    if (row==rowR && col==colR)
+			    	setForeground(Color.RED);
+			    else
+			    	setForeground(Color.BLACK);
+			    
 			    return renderer;
 			  }
 			};
 		
 		rT = new DefaultTableCellRenderer() {
-			  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-				    Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+				    Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
 				    // Create and put formatted double in cell
 				    if (value!=null)
 				    	setText(value.toString());
 				    // Reset right justify again as it gets lost
 				    setHorizontalAlignment(JLabel.CENTER);
+				    
+				    if (row==rowR && col==colR)
+				    	setForeground(Color.RED);
+				    else
+				    	setForeground(Color.BLACK);
+				    
+				    
 				    return renderer;
 				  }
 				};
@@ -100,6 +114,8 @@ public class ValPred extends JPanel{
 	}
 	
 	public void update(GWizGraph graph, Algorithm algo){
+		rowR=-1;
+		colR=-1;
 		int NbSommet=graph.vertexSet().size();
         int TailleColumn = 5;
         if(NbSommet>6)
@@ -119,8 +135,13 @@ public class ValPred extends JPanel{
         	while (i.hasNext()){
         		GWizVertex v = i.next();
         		tableVal.getModel().setValueAt(v.getValuation(), 0, b);
-        		if (v.hasPred() && v.getPred()!=null)
+        		if (v.hasPred() && v.getPred()!=null){
         			tablePred.getModel().setValueAt(v.getPred().getName(), 0, b);
+        			if (v == algo.getCurrentVertex()){
+        				rowR=0;
+        				colR=b;
+        			}
+        		}
         		else tablePred.getModel().setValueAt(v.getName(), 0, b);
         		columnNames[b]= "<html><font size="+Math.max(4, 7-NbSommet/3)+">"+v.getName()+"</font></html>";
         		b++;
@@ -168,12 +189,8 @@ public class ValPred extends JPanel{
 				
         }
         if(algo.getArrivee()<NbSommet && algo.getDepart()<NbSommet){
-        	tableVal.clearSelection();
-        	tableVal.changeSelection(1, 1, true, true);
-        	tableVal.getModel().setValueAt(algo.getVal()[algo.getDepart()][algo.getArrivee()], algo.getDepart(), algo.getArrivee()+1);
-        	tableVal.getCellRenderer(algo.getDepart(), algo.getArrivee()+1).getTableCellRendererComponent(tableVal, algo.getVal()[algo.getDepart()][algo.getArrivee()], false, false, algo.getDepart(), algo.getArrivee()+1).setBackground(Color.white);
-        	tablePred.getCellRenderer(algo.getDepart(), algo.getArrivee()+1).getTableCellRendererComponent(tableVal, algo.getVal()[algo.getDepart()][algo.getArrivee()], false, false, algo.getDepart(), algo.getArrivee()+1).setBackground(Color.white);
-    		
+        	rowR = algo.getDepart();
+        	colR = algo.getArrivee()+1;
         }	
         
         columnNames[NbSommet]= "<html><font size="+Math.max(4, 7-NbSommet/3)+">"+(NbSommet-1)+"</font></html>";

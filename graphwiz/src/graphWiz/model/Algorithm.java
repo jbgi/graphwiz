@@ -8,33 +8,37 @@ import java.util.Vector;
 
 public abstract class Algorithm {
 	
-	Stack<Vector<Description>> edgesDescriptionHistory;
+	GWizVertex startingVertex, endVertex, currentVertex;
 	
-	GWizGraph graph;
+	private Stack<Vector<Description>> edgesDescriptionHistory;
+	
+	private GWizGraph graph;
 
-	Stack<Vector<boolean[]>> verticesFlagHistory;
+	private Stack<Vector<boolean[]>> verticesFlagHistory;
 	
-	Stack<Vector<GWizVertex[]>> verticesPredHistory;
+	private Stack<Vector<GWizVertex[]>> verticesPredHistory;
 	
-	Stack<Vector<double[]>> verticesValuationHistory;
+	private Stack<Vector<double[]>> verticesValuationHistory;
 	
-	Stack<Integer> currentStepHistory;
+	private Stack<Integer> currentStepHistory;
+	
+	private Stack<String> commentsHistory;
 	
 	//public Commentaires comm = new Commentaires();
 	
 	int currentStep = 1;
 	
-	String commentaires = "";
+	String comments = "";
 	
 	public Algorithm(GWizGraph graph) {
 		
 		this.graph=graph;
-		commentaires = "essai";
 		edgesDescriptionHistory = new Stack<Vector<Description>>();
 		verticesFlagHistory = new Stack<Vector<boolean[]>>();
 		verticesPredHistory = new Stack<Vector<GWizVertex[]>>();
 		verticesValuationHistory = new Stack<Vector<double[]>>();
 		currentStepHistory = new Stack<Integer>();
+		commentsHistory = new Stack<String>();
 	}
 	
 	/**
@@ -49,6 +53,7 @@ public abstract class Algorithm {
 		verticesPredHistory.clear();
 		verticesValuationHistory.clear();
 		currentStepHistory.clear();
+		commentsHistory.clear();
 	}
 	
 	public final void retoreInitialState(){
@@ -116,6 +121,7 @@ public abstract class Algorithm {
 		verticesPredHistory.clear();
 		verticesValuationHistory.clear();
 		currentStepHistory.clear();
+		commentsHistory.clear();
 	}
 	
 	public abstract void setStartingVertex (GWizVertex startingVertex);
@@ -152,6 +158,7 @@ public abstract class Algorithm {
 				k++;
 			}
 			currentStep = currentStepHistory.pop();
+			comments = commentsHistory.pop();
 		}
 	}
 	
@@ -187,12 +194,33 @@ public abstract class Algorithm {
 		edgesDescriptionHistory.add(edgesDescription);
 		
 		currentStepHistory.add(Integer.valueOf(currentStep));
+		commentsHistory.add(comments.toString());
 	}
 
 	public abstract boolean isRunnable();
 	
-	public String getCommentaires(){
-		return commentaires;
+	public String getComments(){
+		return comments;
+	}
+
+	public GWizVertex getCurrentVertex() {
+		return currentVertex;
+	}
+
+	protected void setCurrentVertex(GWizVertex currentVertex) {
+		this.currentVertex = currentVertex;
+	}
+
+	protected GWizVertex getStartingVertex() {
+		return startingVertex;
+	}
+
+	protected GWizVertex getEndVertex() {
+		return endVertex;
+	}
+
+	protected void setComments(String comments) {
+		this.comments = comments;
 	}
 
 }

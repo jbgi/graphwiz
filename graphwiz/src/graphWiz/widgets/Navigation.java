@@ -57,6 +57,8 @@ public class Navigation extends JPanel{
 	public Navigation(){
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		commentaires.setFont(commentaires.getFont().deriveFont((float)15));
+		commentaires.setLineWrap(true);
 	}
 	
 	public void start(JGraph editorGraph, ValPred valpred){
@@ -92,9 +94,7 @@ public class Navigation extends JPanel{
 				algo = dijkstra;
 				algoText.setListData(algo.getAlgo());
 				algo.initialize();
-				valPred.update(algo.getGraph(),algo);
-				commentaires.setText(algo.getCommentaires());
-				algoText.setSelectedIndex(algo.getCurrentStep());
+				updateAlgo();
 			}
 			if (choixAlgo.getSelectedIndex()==2){
 				algo.retoreInitialState();
@@ -102,18 +102,14 @@ public class Navigation extends JPanel{
 				
 				algoText.setListData(algo.getAlgo());
 				algo.initialize();
-				valPred.update(algo.getGraph(),algo);
-				commentaires.setText(algo.getCommentaires());
-				algoText.setSelectedIndex(algo.getCurrentStep());
+				updateAlgo();
 			}
 			if (choixAlgo.getSelectedIndex()==3){
 				algo.retoreInitialState();
 				algo = floyd;
 				algoText.setListData(algo.getAlgo());
 				algo.initialize();
-				valPred.update(algo.getGraph(),algo);
-				commentaires.setText(algo.getCommentaires());
-				algoText.setSelectedIndex(algo.getCurrentStep());
+				updateAlgo();
 			}
 			}
         });
@@ -127,9 +123,7 @@ public class Navigation extends JPanel{
         bHor.add(new AbstractAction("",begin){
         	public void actionPerformed(ActionEvent arg0) {
 				algo.retoreInitialState();
-				valPred.update(algo.getGraph(),algo);
-				algoText.setSelectedIndex(algo.getCurrentStep());
-				commentaires.setText("Retour au graphe initial");
+				updateAlgo();
 				jgraph.repaint();
 			}});
         bHor.addSeparator();
@@ -137,9 +131,7 @@ public class Navigation extends JPanel{
         bHor.add(new AbstractAction("", back) {
 			public void actionPerformed(ActionEvent e) {
 				algo.previousStep();
-				valPred.update(algo.getGraph(),algo);
-				algoText.setSelectedIndex(algo.getCurrentStep());
-				commentaires.setText("étape précédente");
+				updateAlgo();
 				jgraph.repaint();
 			}
         });	
@@ -150,7 +142,7 @@ public class Navigation extends JPanel{
 			public void actionPerformed(ActionEvent arg0) {
 				if (updateAlgo!=null)
 					updateAlgo.cancel();
-				commentaires = new JTextArea("Cliquez sur play pour continuer");
+				updateAlgo();;
 			}
 		});
         
@@ -163,9 +155,7 @@ public class Navigation extends JPanel{
 				    public void run(){
 				    	if (algo.isRunnable()){
 							algo.nextStep();
-							valPred.update(algo.getGraph(),algo);
-							algoText.setSelectedIndex(algo.getCurrentStep());
-							commentaires.setText(algo.getCommentaires());
+							updateAlgo();
 							jgraph.repaint();
 				    	}
 				    	
@@ -179,9 +169,7 @@ public class Navigation extends JPanel{
         bHor.add(new AbstractAction("", forward) {
 			public void actionPerformed(ActionEvent e) {
 				algo.nextStep();
-				algoText.setSelectedIndex(algo.getCurrentStep());
-				commentaires.setText(algo.getCommentaires());
-				valPred.update(algo.getGraph(),algo);
+				updateAlgo();
 				jgraph.repaint();
 			}
 		});
@@ -194,10 +182,8 @@ public class Navigation extends JPanel{
 				while (!algo.isEnd())
 					algo.nextStep();
 				jgraph.repaint();
-				commentaires.setText(algo.getCommentaires());
-				valPred.update(algo.getGraph(),algo);
         		}
-        		algoText.setSelectedIndex(algo.getCurrentStep());
+        		updateAlgo();
 			}});
         bHor.addSeparator();
         
@@ -221,10 +207,10 @@ public class Navigation extends JPanel{
 		"graphWiz/resources/logo.png");
 		ImageIcon logo = new ImageIcon(logoUrl);
 		JButton jLogo = new JButton(logo);
-		jLogo.setToolTipText("Crédits");
+		jLogo.setToolTipText("Cr&eacute;dits");
 		jLogo.setAction(new AbstractAction("", logo) {
 			public void actionPerformed(ActionEvent e) {
-				JFrame frame = new JFrame("Crédits");
+				JFrame frame = new JFrame("Cr&eacutedits");
 				JPanel panel = new JPanel();
 				Object[][] tableau = {{"<html><b>Version du logiciel</b></html>","<html><b>1.0.1</b></html>"},
 									{"<html><b>Tuteurs</b></html>","JUSSIEN Christelle"},
@@ -232,7 +218,7 @@ public class Navigation extends JPanel{
 									  {"<html><b>Chef de projet</b></html>","RAJESSON Fanja"},
 									  {"<html><b>Responsable technique</b></html>","GIRAUDEAU Jean-Baptiste"},
 									  {"<html><b>Autres Membres de </b></html>","OLIVIER Luc"},
-									  {"<html><b> l'équipe projet</b></html>","CANTU Paulina"},
+									  {"<html><b> l'&eacutequipe projet</b></html>","CANTU Paulina"},
 									  {" ","REYES Felix"}};
 				String[] Colonnes={"1","2"};
 				JTable table = new JTable(tableau,Colonnes);
@@ -269,6 +255,7 @@ public class Navigation extends JPanel{
 		for (int i = 0; i< (bHor.getComponentCount()-1);i++)
 			bHor.getComponent(i).setEnabled(false);
 		jgraph.getGraphLayoutCache().reload();
+		updateAlgo();
 	}
 
 	public void startExplorer() {
@@ -281,9 +268,7 @@ public class Navigation extends JPanel{
 			view.translate(0, -9);
 		}
 		algo.initialize();
-		commentaires.setText(algo.getCommentaires());
-		valPred.update(algo.getGraph(),algo);
-		algoText.setSelectedIndex(algo.getCurrentStep());
+		updateAlgo();
 	}
 
 	public void inhiberChoixAlgo(){
@@ -294,5 +279,11 @@ public class Navigation extends JPanel{
 	public void activerChoixAlgo(){
 		this.choixAlgo.setEnabled(true);
 		this.choixAlgo.setOpaque(false);
+	}
+	
+	public void updateAlgo(){
+		commentaires.setText(algo.getComments());
+		valPred.update(algo.getGraph(),algo);
+		algoText.setSelectedIndex(algo.getCurrentStep());
 	}
 }

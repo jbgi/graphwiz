@@ -8,9 +8,6 @@ import java.util.Iterator;
  */
 public class Dijkstra extends Algorithm {
 	
-	private GWizVertex startingVertex;
-	private GWizVertex endVertex;
-	
 	private String[] algo;
 	
 	public Dijkstra(GWizGraph graph) {
@@ -23,18 +20,18 @@ public class Dijkstra extends Algorithm {
 			+ "W(x,y) = poids de l'arc (x,y)</font><br >"
 			+ "<br ><br><font size=5><U>Algorithme: </U></font><br ></html>";
 		
-		algo[1] = "<html><br ><font size=4><U>Pr�-requis :</U><br >" +
-				"Le graphe est orient� et ses arcs <br>ont des poids n�gatifs ou nul.<br></font></html>" +
+		algo[1] = "<html><br ><font size=4><U>Pr&eacute;-requis :</U><br >" +
+				"Le graphe est orient&eacute; et ses arcs <br>ont des poids positif ou nul.<br></font></html>" +
 				"";
 
-		algo[2] = "<html><br><font size=4>Initialiser la valuation du sommet de d�part � 0 <br>"
-			+ "et celle de tous les autres sommets � +&#8734 </font><br><br></html>";
+		algo[2] = "<html><br><font size=4>Initialiser la valuation du sommet de d&eacute;part &agrave; 0 <br>"
+			+ "et celle de tous les autres sommets &agrave; +&#8734 </font><br><br></html>";
 		
-		algo[3] = "<html><font size=4>Tant que tous les sommets ne sont pas fix�s<br></font></html>";
+		algo[3] = "<html><font size=4>Tant que tous les sommets ne sont pas fix&eacute;s<br></font></html>";
 
-		algo[4] = "<html><blockquote><font size=4>S�lectionner le sommet x non fix�<br>de plus petite valuation</font></blockquote></html>";
+		algo[4] = "<html><blockquote><font size=4>S&eacute;lectionner le sommet x non fix&eacute;<br>de plus petite valuation</font></blockquote></html>";
 
-		algo[5] = "<html><blockquote><font size=4>Pour chaque successeur non fix� y de x</blockquote>"
+		algo[5] = "<html><blockquote><font size=4>Pour chaque successeur non fix&eacute; y de x</blockquote>"
 			+"<blockquote><blockquote><font size=4><b>Si</b>  V[x] + W(x,y)"+" &lt "+" v[y] <br> <b> alors </b> V[y] = V[x] + W(x,y)</blockquote></blockquote></font></html>";
 
 		algo[6] = "<html><blockquote><font size=4>FinPour</blockquote>"
@@ -51,11 +48,11 @@ public class Dijkstra extends Algorithm {
 
 	public boolean isEligible() {
 		boolean eligible = true;
-		Iterator<GWizVertex> i = graph.vertexSet().iterator();
+		Iterator<GWizVertex> i = getGraph().vertexSet().iterator();
 		while (i.hasNext() && eligible){
-			Iterator<GWizVertex> j = graph.vertexSet().iterator();
+			Iterator<GWizVertex> j = getGraph().vertexSet().iterator();
 			while(j.hasNext() && eligible){
-				eligible = (graph.getEdgeWeight(graph.getEdge(i.next(),j.next())) > 0);
+				eligible = (getGraph().getEdgeWeight(getGraph().getEdge(i.next(),j.next())) > 0);
 			}
 		}
 		return eligible;
@@ -63,20 +60,24 @@ public class Dijkstra extends Algorithm {
 	
 	public boolean isEnd() {
 		boolean allFixed = true;
-		Iterator<GWizVertex> i = graph.vertexSet().iterator();
+		Iterator<GWizVertex> i = getGraph().vertexSet().iterator();
 		while (i.hasNext() && allFixed)
 			allFixed = allFixed && i.next().isFixed();
-		if (allFixed)
+		if (allFixed){
 			currentStep = 7;
+			setComments("Tous les sommet sont fixés, l'algorithme est fini.\n"+
+					"Cilquez sur un sommet pour faire apparaître le chemin optimum.");
+		}
+		
 		return allFixed;
 	}
 
 	public boolean isStart() {
-		return (startingVertex==null || (!startingVertex.isFixed() && !startingVertex.isFixing()));
+		return (getStartingVertex()==null || (!getStartingVertex().isFixed() && !getStartingVertex().isFixing()));
 	}
 	
 	public void nextStep(){
-		if (startingVertex!=null && startingVertex.isStart()){
+		if (getStartingVertex()!=null && getStartingVertex().isStart()){
 		if (!isEnd()){
 			saveGraph();
 			GWizVertex selectedVertex = selectVertex();
@@ -85,78 +86,79 @@ public class Dijkstra extends Algorithm {
 			else if (!selectedVertex.isFixed())
 				selectedVertex.setFixing(true);
 		}
-		else
-			currentStep = 7;
 		}
 	}
 
 	@Override
 	public void setEndVertex(GWizVertex endVertex) {
 		if (endVertex!=null) {
-			if (this.endVertex == null || !this.endVertex.isEnd())
+			if (getEndVertex() == null || !getEndVertex().isEnd())
 				saveGraph();
 			else
-				this.endVertex.setEnd(false);
+				getEndVertex().setEnd(false);
 			this.endVertex=endVertex;
 			endVertex.setEnd(true);
-			Iterator<GWizEdge> e = graph.edgeSet().iterator();
+			Iterator<GWizEdge> e = getGraph().edgeSet().iterator();
 			while (e.hasNext())
 				e.next().setDescription(Description.EXPLORED);
 			GWizVertex pred = endVertex;
 			while (pred.hasPred()){
-				graph.getEdge(pred.getPred(), pred).setDescription(Description.PATH);
+				getGraph().getEdge(pred.getPred(), pred).setDescription(Description.PATH);
 				pred = pred.getPred();
 			}
+			setComments("Voici le chemin optimum de " + getStartingVertex().getName()+ " à " + getEndVertex().getName()+ "d'après le tableau des prédécesseurs.");
 		}
-		else if (this.endVertex != null )
-			if (this.endVertex.isEnd()){
+		else if (getEndVertex() != null )
+			if (this.getEndVertex().isEnd()){
 				restorePreviousGraph();
-				this.endVertex.setEnd(false);
+				this.getEndVertex().setEnd(false);
 			}
 	}
 
 	/**
-	 * @param startingVertex  the startingVertex to set
-	 * @uml.property  name="startingVertex"
+	 * @param getStartingVertex()  the getStartingVertex() to set
+	 * @uml.property  name="getStartingVertex()"
 	 */
-	public void setStartingVertex (GWizVertex startingVertex) {
+	public void setStartingVertex(GWizVertex startingVertex) {
 		if (startingVertex!=null){
-			if (this.startingVertex!=null)
-				this.startingVertex.reset();
-			Iterator<GWizVertex> i = graph.vertexSet().iterator();
+			if (getStartingVertex()!=null)
+				getStartingVertex().reset();
+			Iterator<GWizVertex> i = getGraph().vertexSet().iterator();
 			while (i.hasNext())
 				i.next().setValuated(true);
-			this.startingVertex = startingVertex;
-			this.startingVertex.setStart(true);
-			this.startingVertex.setValuation(0);
+			this.startingVertex=startingVertex;
+			getStartingVertex().setStart(true);
+			getStartingVertex().setValuation(0);
 			currentStep = 2;
+			setComments("Les valuation ont été initialiser, "+getStartingVertex()+" est le sommet de départ (valuation à 0)");
 		}
 	}
 
 	private void checkAllSuccessorUpdated(GWizVertex vertex){
-		Iterator<GWizEdge> i = graph.outgoingEdgesOf(vertex).iterator();
+		Iterator<GWizEdge> i = getGraph().outgoingEdgesOf(vertex).iterator();
 		boolean allUpdated = true;
 		while (i.hasNext() && allUpdated){
 			GWizEdge edge = i.next();
-			GWizVertex n = graph.getEdgeTarget(edge);
+			GWizVertex n = getGraph().getEdgeTarget(edge);
 			allUpdated = (n.isUpdated()||n.isFixed()) && allUpdated;
-			if (graph.getEdgeTarget(edge).isUpdated()||graph.getEdgeTarget(edge).isFixed())
+			if (getGraph().getEdgeTarget(edge).isUpdated()||getGraph().getEdgeTarget(edge).isFixed())
 				edge.setDescription(Description.EXPLORED);
 		}
 		if (allUpdated){
 			vertex.setFixed(true);
 			vertex.setFixing(false);
 			currentStep = 6;
-			Iterator<GWizEdge> j = graph.outgoingEdgesOf(vertex).iterator();
+			setComments("Tous les successeur de "+vertex.getName()+" ont été mis à jour.");
+			Iterator<GWizEdge> j = getGraph().outgoingEdgesOf(vertex).iterator();
 			while (j.hasNext())
-				graph.getEdgeTarget(j.next()).setUpdated(false);
+				getGraph().getEdgeTarget(j.next()).setUpdated(false);
 		}
 	}
 
 	private GWizVertex selectVertex() {
-		GWizVertex selectedVertex = startingVertex;
+		GWizVertex selectedVertex = getStartingVertex();
 		double minValuation = Double.POSITIVE_INFINITY;
-		Iterator<GWizVertex> i = graph.vertexSet().iterator();
+		Iterator<GWizVertex> i = getGraph().vertexSet().iterator();
 		GWizVertex nextVertex;
 		while (i.hasNext()){
 			nextVertex = i.next();
@@ -168,6 +170,7 @@ public class Dijkstra extends Algorithm {
 			if (nextVertex.getValuation() <= minValuation && !nextVertex.isFixed()){
 				selectedVertex = nextVertex;
 				minValuation = selectedVertex.getValuation();
+				setComments(selectedVertex.getName()+" est le sommet non-fixé de plus petite valuation.");
 				currentStep = 4;
 			}
 		}
@@ -175,18 +178,24 @@ public class Dijkstra extends Algorithm {
 	}
 
 	private void updateSuccessorOf(GWizVertex vertex){
-		Iterator<GWizEdge> i = graph.outgoingEdgesOf(vertex).iterator();
+		Iterator<GWizEdge> i = getGraph().outgoingEdgesOf(vertex).iterator();
 		GWizVertex succ;
 		GWizEdge edge;
 		boolean oneUpdate=false;
 		while (i.hasNext() && !oneUpdate){
 			edge = i.next();
-		   	succ = graph.getEdgeTarget(edge);
+		   	succ = getGraph().getEdgeTarget(edge);
 		   	if (!succ.isFixed() && !succ.isUpdated()){
-		   		if (vertex.getValuation() + graph.getEdgeWeight(edge) < succ.getValuation()){
-		   			succ.setValuation(vertex.getValuation()+graph.getEdgeWeight(edge));
+		   		if (vertex.getValuation() + getGraph().getEdgeWeight(edge) < succ.getValuation()){
+		   			succ.setValuation(vertex.getValuation()+getGraph().getEdgeWeight(edge));
 		   			succ.setPred(vertex);
+		   			setComments("La valuation du sommet "+succ.getName()+" a été mis à jour ("+(int) vertex.getValuation()+"+"+ (int) getGraph().getEdgeWeight(edge)+"="+ (int)(vertex.getValuation()+getGraph().getEdgeWeight(edge))+")\n"
+		   					+ vertex.getName()+" est maintenant le prédecesseur de "+succ.getName()+"."); 
 		   		}
+		   		else 
+		   			setComments("La valuation du sommet "+succ.getName()+" n'a pas été mis à jour (car "+(int) vertex.getValuation()+"+"+ (int) getGraph().getEdgeWeight(edge)+">="+ succ.getValuation()+")\n"
+		   					+ succ.getPred().getName()+" reste le prédecesseur de "+succ.getName()+"."); 
+		   		setCurrentVertex(succ);
 		   		succ.setUpdated(true);
 				edge.setDescription(Description.EXPLORER);
 				oneUpdate = true;
@@ -199,15 +208,16 @@ public class Dijkstra extends Algorithm {
 
 	@Override
 	public boolean isRunnable() {
-		return (startingVertex != null && startingVertex.isStart());
+		return (getStartingVertex() != null && getStartingVertex().isStart());
 	}
 
 	@Override
 	public void initialize() {
-		Iterator<GWizVertex> i = graph.vertexSet().iterator();
+		Iterator<GWizVertex> i = getGraph().vertexSet().iterator();
 		while (i.hasNext())
 			i.next().setValuation(Float.POSITIVE_INFINITY);
 		currentStep = 1;
+		setComments("Cliquez sur un sommet de départ");
 	}
 	
 	public String[] getAlgo() {
