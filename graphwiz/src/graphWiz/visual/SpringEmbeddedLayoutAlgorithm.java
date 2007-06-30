@@ -109,6 +109,8 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
     private int myMaxIterations = -1;
     
     private double scale = 1;
+    
+    private GraphLayoutCache layoutCache;
 
     public SpringEmbeddedLayoutAlgorithm() {
         myFrame = new Rectangle(0, 0, 500, 500); //It's ok 500,500
@@ -180,7 +182,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
         // ---------------------------------------------------------------------------
         // initial work
         // ---------------------------------------------------------------------------
-        GraphLayoutCache layoutCache = graph.getGraphLayoutCache();
+        layoutCache = graph.getGraphLayoutCache();
         List vertices = new ArrayList(); // vertices
         List edges = new ArrayList(); // Edges
         List verticesWithOutEdges = new ArrayList();
@@ -572,7 +574,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
             if (cell == null) {
                 continue;
             } else if (cell instanceof EdgeView) {
-                cell.update();
+                cell.update(layoutCache);
             } else if (cell instanceof VertexView) {
                 // get the current view object
                 VertexView vertex = (VertexView) cell;
@@ -597,7 +599,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
                 // update the view
                 AttributeMap vertAttrib = new AttributeMap();
                 GraphConstants.setBounds(vertAttrib, newPosition);
-                vertex.changeAttributes(vertAttrib);
+                vertex.changeAttributes(layoutCache , vertAttrib);
                 // The statement above fixes a bug in the original code
 
                 viewMap.put(cells[loop], vertAttrib);
@@ -621,7 +623,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
 
          * below. This fixes a bug in the original code.
          */
-        vert.changeAttributes(vertAttrib);
+        vert.changeAttributes(layoutCache, vertAttrib);
     }
 
     private Rectangle2D getVertexPosition(CellView vert, String PosField) {
@@ -644,7 +646,7 @@ public class SpringEmbeddedLayoutAlgorithm extends JGraphLayoutAlgorithm {
          * seemingly redundant call to CellView.setAttributes msut be made
          * below. This fixes a bug in the original code.
          */
-        vert.changeAttributes(vertAttrib);
+        vert.changeAttributes(layoutCache, vertAttrib);
 
         return (result);
     }

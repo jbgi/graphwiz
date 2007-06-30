@@ -44,7 +44,6 @@ public class GWizEdgeView extends EdgeView {
 		super(cell);
 		this.jgAdapter = jgAdapter;
 		renderer = new GWizEdgeRenderer();
-		
 	}
 
 	//

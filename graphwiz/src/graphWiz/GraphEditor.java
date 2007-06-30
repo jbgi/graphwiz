@@ -301,6 +301,8 @@ public class GraphEditor extends JPanel implements GraphSelectionListener,
 			GraphConstants.setFont(map, GraphConstants.DEFAULTFONT
 					.deriveFont(13f));
 		}
+		//GraphConstants.setRouting(map, GraphConstants.ROUTING_SIMPLE);
+		//GraphConstants.setLineStyle(map, GraphConstants.STYLE_SPLINE);
 		// Add a label along edge attribute
 		GraphConstants.setLabelAlongEdge(map, true);
 		return map;
